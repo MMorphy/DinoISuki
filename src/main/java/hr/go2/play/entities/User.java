@@ -49,5 +49,9 @@ public class User {
 
 	@OneToMany
 	@JoinColumn(name="user_id")
-	private Collection<Term> reserverTerms;
+	private Collection<Term> reservedTerms;
+
+	@OneToMany
+	@JoinColumn(name="user_id")
+	private Collection<Sports> likedSpords;
 }
