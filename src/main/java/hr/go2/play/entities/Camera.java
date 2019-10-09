@@ -26,4 +26,39 @@ public class Camera {
 	@JoinColumn(name = "camera_id")
 	private Collection<Video> videos;
 	
+	public Camera() {
+
+	}
+
+	public Camera(Long id, String name, Collection<Video> videos) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.videos = videos;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Collection<Video> getVideos() {
+		return videos;
+	}
+
+	public void setVideos(Collection<Video> videos) {
+		this.videos = videos;
+	}
+
 }

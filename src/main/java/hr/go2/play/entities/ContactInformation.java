@@ -19,4 +19,40 @@ public class ContactInformation {
 	private int telephoneNumber;
 
 	private String email;
+
+	public ContactInformation() {
+
+	}
+
+	public ContactInformation(Long id, int telephoneNumber, String email) {
+		super();
+		this.id = id;
+		this.telephoneNumber = telephoneNumber;
+		this.email = email;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public int getTelephoneNumber() {
+		return telephoneNumber;
+	}
+
+	public void setTelephoneNumber(int telephoneNumber) {
+		this.telephoneNumber = telephoneNumber;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 }

@@ -31,4 +31,49 @@ public class Field {
 	@OneToMany()
 	@JoinColumn(name = "field_id")
 	private Collection<Camera> cameras;
+
+	public Field() {
+
+	}
+
+	public Field(Long id, Sports sport, Collection<Term> terms, Collection<Camera> cameras) {
+		super();
+		this.id = id;
+		this.sport = sport;
+		this.terms = terms;
+		this.cameras = cameras;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Sports getSport() {
+		return sport;
+	}
+
+	public void setSport(Sports sport) {
+		this.sport = sport;
+	}
+
+	public Collection<Term> getTerms() {
+		return terms;
+	}
+
+	public void setTerms(Collection<Term> terms) {
+		this.terms = terms;
+	}
+
+	public Collection<Camera> getCameras() {
+		return cameras;
+	}
+
+	public void setCameras(Collection<Camera> cameras) {
+		this.cameras = cameras;
+	}
+
 }

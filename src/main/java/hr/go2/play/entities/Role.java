@@ -30,4 +30,48 @@ public class Role {
 	@JoinColumn(name="role_id", nullable = true)
 	private Collection<Location> locations;
 
+	public Role() {
+
+	}
+
+	public Role(Long id, String name, Collection<User> users, Collection<Location> locations) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.users = users;
+		this.locations = locations;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Collection<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Collection<User> users) {
+		this.users = users;
+	}
+
+	public Collection<Location> getLocations() {
+		return locations;
+	}
+
+	public void setLocations(Collection<Location> locations) {
+		this.locations = locations;
+	}
+
 }

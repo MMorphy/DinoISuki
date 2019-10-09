@@ -54,4 +54,77 @@ public class User {
 	@OneToMany
 	@JoinColumn(name="user_id")
 	private Collection<Sports> likedSpords;
+
+	public User() {
+
+	}
+
+	public User(Long id, Collection<Role> roles, Date createdAt, boolean enabled, Collection<Video> paidVideos,
+			Collection<Term> reservedTerms, Collection<Sports> likedSpords) {
+		super();
+		this.id = id;
+		this.roles = roles;
+		this.createdAt = createdAt;
+		this.enabled = enabled;
+		this.paidVideos = paidVideos;
+		this.reservedTerms = reservedTerms;
+		this.likedSpords = likedSpords;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Collection<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Collection<Role> roles) {
+		this.roles = roles;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public Collection<Video> getPaidVideos() {
+		return paidVideos;
+	}
+
+	public void setPaidVideos(Collection<Video> paidVideos) {
+		this.paidVideos = paidVideos;
+	}
+
+	public Collection<Term> getReservedTerms() {
+		return reservedTerms;
+	}
+
+	public void setReservedTerms(Collection<Term> reservedTerms) {
+		this.reservedTerms = reservedTerms;
+	}
+
+	public Collection<Sports> getLikedSpords() {
+		return likedSpords;
+	}
+
+	public void setLikedSpords(Collection<Sports> likedSpords) {
+		this.likedSpords = likedSpords;
+	}
+
 }

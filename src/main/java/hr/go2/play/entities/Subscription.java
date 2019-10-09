@@ -35,4 +35,57 @@ public class Subscription {
 	@JoinColumn(name = "subscription_type_id")
 	private SubscriptionType subscriptionType;
 
+	public Subscription() {
+
+	}
+
+	public Subscription(Long id, boolean valid, Date validFrom, Date validTo, SubscriptionType subscriptionType) {
+		super();
+		this.id = id;
+		this.valid = valid;
+		this.validFrom = validFrom;
+		this.validTo = validTo;
+		this.subscriptionType = subscriptionType;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public boolean isValid() {
+		return valid;
+	}
+
+	public void setValid(boolean valid) {
+		this.valid = valid;
+	}
+
+	public Date getValidFrom() {
+		return validFrom;
+	}
+
+	public void setValidFrom(Date validFrom) {
+		this.validFrom = validFrom;
+	}
+
+	public Date getValidTo() {
+		return validTo;
+	}
+
+	public void setValidTo(Date validTo) {
+		this.validTo = validTo;
+	}
+
+	public SubscriptionType getSubscriptionType() {
+		return subscriptionType;
+	}
+
+	public void setSubscriptionType(SubscriptionType subscriptionType) {
+		this.subscriptionType = subscriptionType;
+	}
+
 }
