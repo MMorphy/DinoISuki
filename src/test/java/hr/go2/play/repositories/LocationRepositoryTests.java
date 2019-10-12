@@ -46,14 +46,14 @@ public class LocationRepositoryTests {
 		
 		user.setCreatedAt(new Date());
 		user.setEnabled(true);
-		user.setUsername("user");
+		user.setUsername("userLoc");
 		user.setPassword("123");
 		user.setDateOfBirth(new Date());
 		
 		wh.setFromTime(new Date());
 		wh.setToTime(new Date());
 		
-		location.setAddress("Zagreb, Smiciklasova 12");
+		location.setAddress("Zagreb, Krapinska 12");
 		location.setContactUser(user);
 		location.setHours(wh);
 		location.setFields(fields);
