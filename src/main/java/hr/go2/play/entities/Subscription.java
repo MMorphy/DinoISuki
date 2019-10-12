@@ -2,6 +2,7 @@ package hr.go2.play.entities;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,7 +32,7 @@ public class Subscription {
 	@Column(name = "valid_to")
 	private Date validTo;
 
-	@ManyToOne()
+	@ManyToOne(cascade = {CascadeType.ALL})
 	@JoinColumn(name = "subscription_type_id")
 	private SubscriptionType subscriptionType;
 

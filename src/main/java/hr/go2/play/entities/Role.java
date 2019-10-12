@@ -2,6 +2,7 @@ package hr.go2.play.entities;
 
 import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,7 +27,7 @@ public class Role {
 	@ManyToMany(mappedBy = "roles")
 	private Collection<User> users;
 
-	@OneToMany
+	@OneToMany(cascade = {CascadeType.ALL})
 	@JoinColumn(name="role_id", nullable = true)
 	private Collection<Location> locations;
 

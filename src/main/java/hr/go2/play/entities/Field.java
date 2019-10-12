@@ -2,6 +2,7 @@ package hr.go2.play.entities;
 
 import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -20,15 +21,15 @@ public class Field {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
 	@JoinColumn(name = "sport_id")
 	private Sports sport;
 
-	@OneToMany()
+	@OneToMany(cascade = {CascadeType.ALL})
 	@JoinColumn(name = "field_id")
 	private Collection<Term> terms;
 
-	@OneToMany()
+	@OneToMany(cascade = {CascadeType.ALL})
 	@JoinColumn(name = "field_id")
 	private Collection<Camera> cameras;
 

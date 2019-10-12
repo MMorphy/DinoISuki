@@ -2,6 +2,7 @@ package hr.go2.play.entities;
 
 import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,7 +23,7 @@ public class Camera {
 	@Column(nullable = false)
 	private String name;
 
-	@OneToMany
+	@OneToMany(cascade = {CascadeType.ALL})
 	@JoinColumn(name = "camera_id")
 	private Collection<Video> videos;
 	

@@ -3,6 +3,7 @@ package hr.go2.play.entities;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,7 +39,7 @@ public class Term {
 	@ColumnDefault(value = "false")
 	private boolean available;
 
-	@OneToMany
+	@OneToMany(cascade = {CascadeType.ALL})
 	@JoinColumn(name="term_id", nullable = true)
 	private Collection<Video> videos;
 

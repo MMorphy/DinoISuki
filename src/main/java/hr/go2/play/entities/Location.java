@@ -2,6 +2,7 @@ package hr.go2.play.entities;
 
 import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,18 +23,18 @@ public class Location {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
 	@JoinColumn(name = "working_hours_id")
 	private WorkingHours hours;
 
-	@OneToMany()
+	@OneToMany(cascade = {CascadeType.ALL})
 	@JoinColumn(name = "location_id")
 	private Collection<Field> fields;
 
 	@Column(nullable = false)
 	private String address;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
 	@JoinColumn(name = "contact_user_id")
 	private User contactUser;
 

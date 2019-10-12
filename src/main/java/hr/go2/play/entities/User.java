@@ -3,6 +3,7 @@ package hr.go2.play.entities;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -43,15 +44,15 @@ public class User {
 	@Column(nullable = false)
 	private boolean enabled;
 
-	@OneToMany
+	@OneToMany(cascade = {CascadeType.ALL})
 	@JoinColumn(name = "user_id")
 	private Collection<Video> paidVideos;
 
-	@OneToMany
+	@OneToMany(cascade = {CascadeType.ALL})
 	@JoinColumn(name="user_id")
 	private Collection<Term> reservedTerms;
 
-	@OneToMany
+	@OneToMany(cascade = {CascadeType.ALL})
 	@JoinColumn(name="user_id")
 	private Collection<Sports> likedSpords;
 
