@@ -49,7 +49,7 @@ public class User {
 
 	@OneToMany(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "user_id")
-	private Collection<Sports> likedSpords;
+	private Collection<Sports> likedSports;
 
 	@Column(nullable = false)
 	private String username;
@@ -75,7 +75,7 @@ public class User {
 		this.enabled = enabled;
 		this.paidVideos = paidVideos;
 		this.reservedTerms = reservedTerms;
-		this.likedSpords = likedSpords;
+		this.likedSports = likedSpords;
 		this.username = username;
 		this.password = password;
 		this.dateOfBirth = dateOfBirth;
@@ -129,12 +129,12 @@ public class User {
 		this.reservedTerms = reservedTerms;
 	}
 
-	public Collection<Sports> getLikedSpords() {
-		return likedSpords;
+	public Collection<Sports> getLikedSports() {
+		return likedSports;
 	}
 
-	public void setLikedSpords(Collection<Sports> likedSpords) {
-		this.likedSpords = likedSpords;
+	public void setLikedSports(Collection<Sports> likedSpords) {
+		this.likedSports = likedSpords;
 	}
 
 	public String getUsername() {
