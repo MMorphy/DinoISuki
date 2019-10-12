@@ -16,7 +16,7 @@ public class ContactInformation {
 	private Long id;
 
 	@Column(name = "telephone_number")
-	private int telephoneNumber;
+	private String telephoneNumber;
 
 	private String email;
 
@@ -24,7 +24,7 @@ public class ContactInformation {
 
 	}
 
-	public ContactInformation(Long id, int telephoneNumber, String email) {
+	public ContactInformation(Long id, String telephoneNumber, String email) {
 		super();
 		this.id = id;
 		this.telephoneNumber = telephoneNumber;
@@ -39,11 +39,11 @@ public class ContactInformation {
 		this.id = id;
 	}
 
-	public int getTelephoneNumber() {
+	public String getTelephoneNumber() {
 		return telephoneNumber;
 	}
 
-	public void setTelephoneNumber(int telephoneNumber) {
+	public void setTelephoneNumber(String telephoneNumber) {
 		this.telephoneNumber = telephoneNumber;
 	}
 
