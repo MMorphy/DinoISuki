@@ -28,12 +28,7 @@ public class User {
 	private Long id;
 
 	@ManyToMany
-    @JoinTable( 
-            name = "user_roles", 
-            joinColumns = @JoinColumn(
-              name = "user_id", referencedColumnName = "id"), 
-            inverseJoinColumns = @JoinColumn(
-              name = "role_id", referencedColumnName = "id"))
+	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Collection<Role> roles;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -44,24 +39,35 @@ public class User {
 	@Column(nullable = false)
 	private boolean enabled;
 
-	@OneToMany(cascade = {CascadeType.ALL})
+	@OneToMany(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "user_id")
 	private Collection<Video> paidVideos;
 
-	@OneToMany(cascade = {CascadeType.ALL})
-	@JoinColumn(name="user_id")
+	@OneToMany(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "user_id")
 	private Collection<Term> reservedTerms;
 
-	@OneToMany(cascade = {CascadeType.ALL})
-	@JoinColumn(name="user_id")
+	@OneToMany(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "user_id")
 	private Collection<Sports> likedSpords;
+
+	@Column(nullable = false)
+	private String username;
+
+	@Column(nullable = false)
+	private String password;
+
+	@Column(nullable = false)
+	@Temporal(TemporalType.DATE)
+	private Date dateOfBirth;
 
 	public User() {
 
 	}
 
 	public User(Long id, Collection<Role> roles, Date createdAt, boolean enabled, Collection<Video> paidVideos,
-			Collection<Term> reservedTerms, Collection<Sports> likedSpords) {
+			Collection<Term> reservedTerms, Collection<Sports> likedSpords, String username, String password,
+			Date dateOfBirth) {
 		super();
 		this.id = id;
 		this.roles = roles;
@@ -70,6 +76,9 @@ public class User {
 		this.paidVideos = paidVideos;
 		this.reservedTerms = reservedTerms;
 		this.likedSpords = likedSpords;
+		this.username = username;
+		this.password = password;
+		this.dateOfBirth = dateOfBirth;
 	}
 
 	public Long getId() {
@@ -126,6 +135,30 @@ public class User {
 
 	public void setLikedSpords(Collection<Sports> likedSpords) {
 		this.likedSpords = likedSpords;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Date getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	public void setDateOfBirth(Date dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
 	}
 
 }
