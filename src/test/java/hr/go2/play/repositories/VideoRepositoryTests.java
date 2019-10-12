@@ -34,7 +34,7 @@ public class VideoRepositoryTests {
 	public void init() {
         video.setLocation("Split");
 
-		videoRepository.save(video);
+        video.setId(videoRepository.save(video).getId());
 	}
 	
 	@Test
