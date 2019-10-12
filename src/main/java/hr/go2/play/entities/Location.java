@@ -34,6 +34,9 @@ public class Location {
 	@Column(nullable = false)
 	private String address;
 
+	@Column(nullable=false)
+	private String name;
+
 	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
 	@JoinColumn(name = "contact_user_id")
 	private User contactUser;
@@ -42,12 +45,13 @@ public class Location {
 
 	}
 
-	public Location(Long id, WorkingHours hours, Collection<Field> fields, String address, User contactUser) {
+	public Location(Long id, WorkingHours hours, Collection<Field> fields, String address, String name, User contactUser) {
 		super();
 		this.id = id;
 		this.hours = hours;
 		this.fields = fields;
 		this.address = address;
+		this.name = name;
 		this.contactUser = contactUser;
 	}
 
@@ -81,6 +85,14 @@ public class Location {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public User getContactUser() {
