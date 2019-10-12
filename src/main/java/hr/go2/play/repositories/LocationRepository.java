@@ -17,7 +17,7 @@ public interface LocationRepository extends JpaRepository<Location, Long>{
 
 	public Optional<Location> findByContactUser(User contactUser);
 
-	public Collection<Location> findByWorkingHours(WorkingHours wh);
+	public Collection<Location> findByHours(WorkingHours wh);
 
 	public Optional<Location> findByFields_Sport(String sport);
 }
