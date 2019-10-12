@@ -9,7 +9,7 @@ import hr.go2.play.entities.Field;
 
 public interface FieldRepository extends JpaRepository<Field, Long>{
 
-	Collection<Field> findBySport(String sport);
+	Collection<Field> findBySport_Name(String sport);
 
 	Optional<Field> findByCameras_Name(String name);
 
