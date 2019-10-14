@@ -8,13 +8,15 @@ public interface CameraService {
 	
 	public abstract List<Camera> findAllCameras();
 	
-	public abstract List<Camera> findCameraById();
+	public abstract Camera findCameraById(Long id);
 
-	public abstract List<Camera> findCameraByName();
+	public abstract List<Camera> findCameraByName(String name);
 	
-	public abstract List<Camera> findCameraByVideoLocation();
+	public abstract List<Camera> findCameraByVideoLocation(String location);
 	
-	public abstract void deleteCameraByName();
+	public abstract void deleteCameraByName(String name);
+	
+	public abstract void deleteCameraById(Long id);
 	
 	public abstract Camera saveCamera(Camera camera);
 	
