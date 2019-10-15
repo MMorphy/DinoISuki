@@ -23,6 +23,8 @@ public interface TermService {
 	
 	public abstract Term findTermByVideosLocation(String path);
 	
+	public abstract void deleteTermById(Long id);
+
 	public abstract Term saveTerm(Term term);
 	
 	public abstract Term updateTerm(Long id, Term term);
