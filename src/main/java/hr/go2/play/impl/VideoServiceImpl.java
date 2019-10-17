@@ -5,11 +5,13 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import hr.go2.play.entities.Video;
 import hr.go2.play.repositories.VideoRepository;
 import hr.go2.play.services.VideoService;
 
+@Service
 public class VideoServiceImpl implements VideoService {
 	
 	@Autowired

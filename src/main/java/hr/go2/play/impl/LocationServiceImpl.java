@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import hr.go2.play.entities.Location;
 import hr.go2.play.entities.User;
@@ -12,6 +13,7 @@ import hr.go2.play.entities.WorkingHours;
 import hr.go2.play.repositories.LocationRepository;
 import hr.go2.play.services.LocationService;
 
+@Service
 public class LocationServiceImpl implements LocationService {
 	
 	@Autowired

@@ -6,11 +6,13 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import hr.go2.play.entities.WorkingHours;
 import hr.go2.play.repositories.WorkingHoursRepository;
 import hr.go2.play.services.WorkingHoursService;
 
+@Service
 public class WorkingHoursServiceImpl implements WorkingHoursService {
 	
 	@Autowired

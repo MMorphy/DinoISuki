@@ -5,11 +5,13 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import hr.go2.play.entities.Field;
 import hr.go2.play.repositories.FieldRepository;
 import hr.go2.play.services.FieldService;
 
+@Service
 public class FieldServiceImpl implements FieldService{
 	
 	@Autowired

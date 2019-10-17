@@ -6,11 +6,13 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import hr.go2.play.entities.Term;
 import hr.go2.play.repositories.TermRepository;
 import hr.go2.play.services.TermService;
 
+@Service
 public class TermServiceImpl implements TermService {
 
 	@Autowired

@@ -6,11 +6,13 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import hr.go2.play.entities.Subscription;
 import hr.go2.play.repositories.SubscriptionRepository;
 import hr.go2.play.services.SubscriptionService;
 
+@Service
 public class SubscriptionServiceImpl implements SubscriptionService {
 	
 	@Autowired

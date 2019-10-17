@@ -5,11 +5,13 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import hr.go2.play.entities.Sports;
 import hr.go2.play.repositories.SportsRepository;
 import hr.go2.play.services.SportsService;
 
+@Service
 public class SportsServiceImpl implements SportsService {
 	
 	@Autowired
