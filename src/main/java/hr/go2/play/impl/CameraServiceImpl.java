@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,7 @@ import hr.go2.play.repositories.CameraRepository;
 import hr.go2.play.services.CameraService;
 
 @Service
+@Transactional
 public class CameraServiceImpl implements CameraService{
 	
 	@Autowired
@@ -53,6 +56,11 @@ public class CameraServiceImpl implements CameraService{
 	@Override
 	public void deleteCameraById(Long id) {
 		this.cameraRepo.deleteById(id);
+	}
+
+	@Override
+	public void deleteAllCameras() {
+		this.cameraRepo.deleteAll();
 	}
 
 	@Override

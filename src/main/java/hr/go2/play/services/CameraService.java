@@ -21,4 +21,6 @@ public interface CameraService {
 	public abstract Camera saveCamera(Camera camera);
 	
 	public abstract Camera updateCamera(Long id, Camera camera);
+
+	public abstract void deleteAllCameras();
 }
