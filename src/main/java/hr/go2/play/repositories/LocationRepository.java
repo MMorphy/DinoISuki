@@ -20,4 +20,6 @@ public interface LocationRepository extends JpaRepository<Location, Long>{
 	public Collection<Location> findByHours(WorkingHours wh);
 
 	public Optional<Location> findByFields_Sport_Name(String sport);
+
+	public Optional<Location> findByName(String name);
 }

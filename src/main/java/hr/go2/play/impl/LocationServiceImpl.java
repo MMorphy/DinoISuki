@@ -15,11 +15,11 @@ import hr.go2.play.services.LocationService;
 
 @Service
 public class LocationServiceImpl implements LocationService {
-	
+
 	@Autowired
 	private LocationRepository locationRepo;
-	
-	public LocationServiceImpl (LocationRepository locationRepo) {
+
+	public LocationServiceImpl(LocationRepository locationRepo) {
 		this.locationRepo = locationRepo;
 	}
 
@@ -90,7 +90,7 @@ public class LocationServiceImpl implements LocationService {
 
 	@Override
 	public Location updateLocation(Long id, Location location) {
-		Optional<Location> optLocation= this.locationRepo.findById(id);
+		Optional<Location> optLocation = this.locationRepo.findById(id);
 		if (optLocation.isPresent()) {
 			Location loc = optLocation.get();
 			loc.setAddress(location.getAddress());
@@ -101,6 +101,15 @@ public class LocationServiceImpl implements LocationService {
 			return this.locationRepo.save(loc);
 		} else {
 			return this.locationRepo.save(location);
+		}
+	}
+
+	@Override
+	public Location findLocationByName(String name) {
+		try {
+			return this.locationRepo.findByName(name).get();
+		} catch (NoSuchElementException ex) {
+			return null;
 		}
 	}
 

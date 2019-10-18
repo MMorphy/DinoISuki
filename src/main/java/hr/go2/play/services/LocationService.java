@@ -17,11 +17,13 @@ public interface LocationService {
 	public abstract Location findLocationByAddressLike(String address);
 	
 	public abstract Location findLocationByContactUser(User contactUser);
-	
+
+	public abstract Location findLocationByName(String name);
+
 	public abstract List<Location> findLocationByWorkingHours(WorkingHours wh);
 	
 	public abstract Location findLocationByFieldsSportName(String name);
-	
+
 	public abstract void deleteLocationById(Long id);
 	
 	public abstract Location saveLocation(Location location);

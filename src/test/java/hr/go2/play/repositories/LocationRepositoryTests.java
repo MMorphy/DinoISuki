@@ -16,18 +16,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.annotation.Order;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import hr.go2.play.entities.Camera;
 import hr.go2.play.entities.Field;
 import hr.go2.play.entities.Location;
 import hr.go2.play.entities.Sports;
-import hr.go2.play.entities.Term;
 import hr.go2.play.entities.User;
 import hr.go2.play.entities.WorkingHours;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class LocationRepositoryTests {
-	
+
 	@Autowired
 	private LocationRepository locationRepository;
 
@@ -43,25 +41,25 @@ public class LocationRepositoryTests {
 		sport.setName("tenis");
 		field.setSport(sport);
 		fields.add(field);
-		
+
 		user.setCreatedAt(new Date());
 		user.setEnabled(true);
 		user.setUsername("userLoc");
 		user.setPassword("123");
 		user.setDateOfBirth(new Date());
-		
+
 		wh.setFromTime(new Date());
 		wh.setToTime(new Date());
-		
+
 		location.setAddress("Zagreb, Krapinska 12");
 		location.setContactUser(user);
 		location.setHours(wh);
 		location.setFields(fields);
 		location.setName("Rudes");
-		
+
 		location.setId(locationRepository.save(location).getId());
 	}
-	
+
 	@Test
 	@Order(1)
 	public void findByAddress() {
@@ -69,7 +67,7 @@ public class LocationRepositoryTests {
 		assertThat(locationTest.isPresent()).isTrue();
 		assertThat(locationTest.get().getId()).isEqualTo(location.getId());
 	}
-	
+
 	@Test
 	@Order(2)
 	public void findByAddressLike() {
@@ -77,7 +75,7 @@ public class LocationRepositoryTests {
 		assertThat(locationTest.isPresent()).isTrue();
 		assertThat(locationTest.get().getId()).isEqualTo(location.getId());
 	}
-	
+
 	@Test
 	@Order(3)
 	public void findByContactUser() {
@@ -85,14 +83,14 @@ public class LocationRepositoryTests {
 		assertThat(locationTest.isPresent()).isTrue();
 		assertThat(locationTest.get().getId()).isEqualTo(location.getId());
 	}
-	
+
 	@Test
 	@Order(4)
 	public void findByHours() {
 		List<Location> locationTest = (List<Location>) locationRepository.findByHours(wh);
 		assertThat(locationTest.get(0).getId()).isEqualTo(location.getId());
 	}
-	
+
 	@Test
 	@Order(5)
 	public void findByFields_Sport_Name() {
@@ -100,7 +98,15 @@ public class LocationRepositoryTests {
 		assertThat(locationTest.isPresent()).isTrue();
 		assertThat(locationTest.get().getId()).isEqualTo(location.getId());
 	}
-	
+
+	@Test
+	@Order(6)
+	public void findByName() {
+		Optional<Location> locationTest = locationRepository.findByName("Rudes");
+		assertThat(locationTest.isPresent()).isTrue();
+		assertThat(locationTest.get().getId()).isEqualTo(location.getName());
+	}
+
 	@After
 	public void deleteAll() {
 		locationRepository.deleteAll();
