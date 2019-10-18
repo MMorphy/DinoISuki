@@ -24,4 +24,6 @@ public interface ContactInformationService {
 	
 	public abstract ContactInformation updateContactInformation(Long id, ContactInformation contactInformation);
 
+	public abstract void deleteAllContactInformations();
+
 }

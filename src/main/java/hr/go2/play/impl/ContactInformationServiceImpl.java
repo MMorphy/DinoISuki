@@ -69,6 +69,11 @@ public class ContactInformationServiceImpl implements ContactInformationService{
 	}
 
 	@Override
+	public void deleteAllContactInformations() {
+		this.contactInformationRepo.deleteAll();
+	}
+
+	@Override
 	public ContactInformation saveContactInformation(ContactInformation contactInformation) {
 		return this.contactInformationRepo.save(contactInformation);
 	}

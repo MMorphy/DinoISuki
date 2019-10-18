@@ -5,8 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +16,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import hr.go2.play.entities.Camera;
 import hr.go2.play.entities.Video;
-import hr.go2.play.repositories.CameraRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
