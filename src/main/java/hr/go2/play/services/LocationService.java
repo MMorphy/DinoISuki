@@ -30,4 +30,6 @@ public interface LocationService {
 	
 	public abstract Location updateLocation(Long id, Location location);
 
+	public abstract void deleteAllLocations();
+
 }

@@ -84,6 +84,11 @@ public class LocationServiceImpl implements LocationService {
 	}
 
 	@Override
+	public void deleteAllLocations() {
+		this.locationRepo.deleteAll();
+	}
+
+	@Override
 	public Location saveLocation(Location location) {
 		return this.locationRepo.save(location);
 	}
