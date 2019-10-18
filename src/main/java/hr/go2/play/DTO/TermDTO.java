@@ -1,5 +1,6 @@
 package hr.go2.play.DTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TermDTO {
@@ -17,6 +18,7 @@ public class TermDTO {
 	private List<VideoDTO> videos;
 
 	public TermDTO() {
+		this.videos = new ArrayList<>();
 	}
 
 	public TermDTO(Long id, String date, String timeFrom, String timeTo, String available, List<VideoDTO> videos) {

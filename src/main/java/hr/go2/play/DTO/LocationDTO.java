@@ -1,5 +1,6 @@
 package hr.go2.play.DTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LocationDTO {
@@ -17,6 +18,7 @@ public class LocationDTO {
 	private UserDTO contactUser;
 
 	public LocationDTO() {
+		this.fields = new ArrayList<>();
 	}
 
 	public LocationDTO(Long id, WorkingHoursDTO hours, List<FieldDTO> fields, String address, String name,

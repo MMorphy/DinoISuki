@@ -1,5 +1,6 @@
 package hr.go2.play.DTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RoleDTO {
@@ -13,6 +14,8 @@ public class RoleDTO {
 	private List<LocationDTO> locations;
 
 	public RoleDTO() {
+		this.users = new ArrayList<>();
+		this.locations = new ArrayList<>();
 	}
 	
 	public RoleDTO(Long id, String name, List<UserDTO> users, List<LocationDTO> locations) {

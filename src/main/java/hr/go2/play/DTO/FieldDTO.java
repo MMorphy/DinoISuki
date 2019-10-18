@@ -1,5 +1,6 @@
 package hr.go2.play.DTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FieldDTO {
@@ -13,6 +14,8 @@ public class FieldDTO {
 	private List<CameraDTO> cameras;
 
 	public FieldDTO() {
+		this.terms = new ArrayList<>();
+		this.cameras = new ArrayList<>();
 	}
 
 	public FieldDTO(Long id, SportsDTO sport, List<TermDTO> terms, List<CameraDTO> cameras) {

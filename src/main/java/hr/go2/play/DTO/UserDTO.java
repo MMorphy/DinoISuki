@@ -1,5 +1,6 @@
 package hr.go2.play.DTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDTO {
@@ -25,6 +26,9 @@ public class UserDTO {
 	private String dateOfBirth;
 
 	public UserDTO() {
+		this.paidVideos = new ArrayList<>();
+		this.reservedTerms = new ArrayList<>();
+		this.likedSports = new ArrayList<>();
 	}
 
 	public UserDTO(Long id, List<RoleDTO> roles, String createdAt, String enabled, List<VideoDTO> paidVideos,

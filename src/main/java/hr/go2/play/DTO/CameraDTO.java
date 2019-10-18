@@ -1,5 +1,6 @@
 package hr.go2.play.DTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CameraDTO {
@@ -12,6 +13,7 @@ public class CameraDTO {
 
 	public CameraDTO() {
 		super();
+		this.videos = new ArrayList<>();
 	}
 
 	public CameraDTO(Long id, String name, List<VideoDTO> videos) {
