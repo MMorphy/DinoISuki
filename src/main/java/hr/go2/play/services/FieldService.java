@@ -22,4 +22,6 @@ public interface FieldService {
 	
 	public abstract Field updateField(Long id, Field field);
 
+	public abstract void deleteAllFields();
+
 }

@@ -60,6 +60,11 @@ public class FieldServiceImpl implements FieldService{
 	}
 
 	@Override
+	public void deleteAllFields() {
+		this.fieldRepo.deleteAll();;
+	}
+
+	@Override
 	public Field saveField(Field field) {
 		return this.fieldRepo.save(field);
 	}
