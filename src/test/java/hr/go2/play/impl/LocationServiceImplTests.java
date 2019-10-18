@@ -105,6 +105,13 @@ public class LocationServiceImplTests {
 		assertThat(locationService.findLocationById(location.getId()).getAddress()).isEqualTo(location.getAddress());
 	}
 	
+	@Test
+	@Order(7)
+	public void findByName() {
+		Location locationTest = locationService.findLocationByName("Rudes");
+		assertThat(locationTest.getName()).isEqualTo(location.getName());
+	}
+	
 	@After
 	public void deleteAll() {
 		locationService.deleteAllLocations();

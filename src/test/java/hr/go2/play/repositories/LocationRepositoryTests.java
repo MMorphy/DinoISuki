@@ -104,7 +104,7 @@ public class LocationRepositoryTests {
 	public void findByName() {
 		Optional<Location> locationTest = locationRepository.findByName("Rudes");
 		assertThat(locationTest.isPresent()).isTrue();
-		assertThat(locationTest.get().getId()).isEqualTo(location.getName());
+		assertThat(locationTest.get().getName()).isEqualTo(location.getName());
 	}
 
 	@After
