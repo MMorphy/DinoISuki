@@ -1,0 +1,40 @@
+package hr.go2.play.impl;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import hr.go2.play.entities.Location;
+import hr.go2.play.entities.Role;
+import hr.go2.play.entities.User;
+import hr.go2.play.services.AdminService;
+
+public class AdminServiceImpl implements AdminService {
+
+	@Autowired
+	UserServiceImpl userService;
+	@Autowired
+	RoleServiceImpl roleService;
+	@Autowired
+	CameraServiceImpl cameraService;
+	@Autowired
+	LocationServiceImpl locationService;
+	@Autowired
+	WorkingHoursServiceImpl whService;
+	@Autowired
+	SubscriptionServiceImpl subService;
+	@Autowired
+	SubscriptionTypeServiceImpl subTypeService;
+
+	//Returns null if username or locationName can't be found
+	public User promoteUserToLocationAdmin(String usernameToPromote, String locationName) {
+		Optional<User> user = Optional.of(userService.findUserByUsername(usernameToPromote));
+		Optional<Location> location = Optional.of(locationService.findLocationByName(locationName));
+		if (!user.isPresent() || !location.isPresent()) {
+			return null;
+		}
+		List<Role> role = roleService.findRoleByUsersUsername(usernameToPromote);
+
+	}
+}
