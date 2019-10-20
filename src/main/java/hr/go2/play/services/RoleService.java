@@ -15,7 +15,9 @@ public interface RoleService {
 	public abstract Role findRoleByLocationsName(String name);
 	
 	public abstract Role findRoleByLocationsAddress(String address);
-	
+
+	public abstract Role findRoleByNameAndLocationsName(String name, String locationName);
+
 	public abstract List<Role> findRoleByUsersUsername(String username);
 	
 	public abstract void deleteRoleById(Long id);

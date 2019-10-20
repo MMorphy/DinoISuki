@@ -34,7 +34,17 @@ public class AdminServiceImpl implements AdminService {
 		if (!user.isPresent() || !location.isPresent()) {
 			return null;
 		}
-		List<Role> role = roleService.findRoleByUsersUsername(usernameToPromote);
-
+		Optional<Role> roleOpt = Optional.of(roleService.findRoleByNameAndLocationsName("ADMIN", locationName));
+		if (roleOpt.isPresent()) {
+			return user.get();
+		}
+		else {
+			Role role = new Role();
+			role.addLocation(location.get());
+			role.setName("ADMIN");
+			role.addUser(user.get());
+			roleService.saveRole(role);
+			return userService.findUserByUsername(usernameToPromote);
+		}
 	}
 }

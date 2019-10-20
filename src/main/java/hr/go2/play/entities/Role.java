@@ -24,11 +24,11 @@ public class Role {
 	@Column(nullable = false)
 	private String name;
 
-	@ManyToMany(mappedBy = "roles", cascade = {CascadeType.ALL})
+	@ManyToMany(mappedBy = "roles", cascade = { CascadeType.ALL })
 	private Collection<User> users;
 
-	@OneToMany(cascade = {CascadeType.ALL})
-	@JoinColumn(name="role_id", nullable = true)
+	@OneToMany(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "role_id", nullable = true)
 	private Collection<Location> locations;
 
 	public Role() {
@@ -67,12 +67,20 @@ public class Role {
 		this.users = users;
 	}
 
+	public boolean addUser(User user) {
+		return this.users.add(user);
+	}
+
 	public Collection<Location> getLocations() {
 		return locations;
 	}
 
 	public void setLocations(Collection<Location> locations) {
 		this.locations = locations;
+	}
+
+	public boolean addLocation(Location location) {
+		return this.locations.add(location);
 	}
 
 }

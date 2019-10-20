@@ -12,11 +12,11 @@ import hr.go2.play.repositories.RoleRepository;
 import hr.go2.play.services.RoleService;
 
 @Service
-public class RoleServiceImpl implements RoleService{
-	
+public class RoleServiceImpl implements RoleService {
+
 	@Autowired
 	private RoleRepository roleRepo;
-	
+
 	public RoleServiceImpl(RoleRepository roleRepo) {
 		this.roleRepo = roleRepo;
 	}
@@ -64,9 +64,18 @@ public class RoleServiceImpl implements RoleService{
 	}
 
 	@Override
+	public Role findRoleByNameAndLocationsName(String name, String locationName) {
+		try {
+			return this.roleRepo.findByNameAndLocations_name(name, locationName).get();
+		} catch (NoSuchElementException ex) {
+			return null;
+		}
+	}
+
+	@Override
 	public void deleteRoleById(Long id) {
 		this.roleRepo.deleteById(id);
-		
+
 	}
 
 	@Override

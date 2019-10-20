@@ -16,5 +16,7 @@ public interface RoleRepository extends JpaRepository<Role, Long>{
 	Optional<Role> findByLocations_Address (String address);
 
 	Collection<Role> findByUsers_Username (String username);
+
+	Optional<Role> findByNameAndLocations_name(String name, String locationName);
 }
 
