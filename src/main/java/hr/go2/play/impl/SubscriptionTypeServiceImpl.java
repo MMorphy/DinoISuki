@@ -46,6 +46,11 @@ public class SubscriptionTypeServiceImpl implements SubscriptionTypeService {
 	}
 
 	@Override
+	public void deleteAllSubscriptionTypes() {
+		this.subTypeRepo.deleteAll();
+	}
+
+	@Override
 	public SubscriptionType saveSubscriptionType(SubscriptionType subType) {
 		return this.subTypeRepo.save(subType);
 	}

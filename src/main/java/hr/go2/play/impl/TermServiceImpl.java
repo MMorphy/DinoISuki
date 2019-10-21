@@ -76,6 +76,11 @@ public class TermServiceImpl implements TermService {
 	}
 
 	@Override
+	public void deleteAllTerms() {
+		this.termRepo.deleteAll();	
+	}
+
+	@Override
 	public Term saveTerm(Term term) {
 		return this.termRepo.save(term);
 	}

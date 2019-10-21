@@ -18,4 +18,6 @@ public interface SubscriptionTypeService {
 	
 	public abstract SubscriptionType updateSubscriptionType(Long id, SubscriptionType subType);
 
+	public abstract void deleteAllSubscriptionTypes();
+
 }

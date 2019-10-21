@@ -18,4 +18,6 @@ public interface SportsService {
 	
 	public abstract Sports updateSports(Long id, Sports sports);
 
+	public abstract void deleteAllSports();
+
 }

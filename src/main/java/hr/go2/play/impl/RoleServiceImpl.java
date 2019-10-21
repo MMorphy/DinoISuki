@@ -79,6 +79,11 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
+	public void deleteAllRoles() {
+		this.roleRepo.deleteAll();
+	}
+
+	@Override
 	public Role saveRole(Role role) {
 		return this.roleRepo.save(role);
 	}

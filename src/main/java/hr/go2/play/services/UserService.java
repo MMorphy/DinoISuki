@@ -27,4 +27,6 @@ public interface UserService {
 	
 	public abstract User updateUser(Long id, User user);
 
+	public abstract void deleteAllUsers();
+
 }

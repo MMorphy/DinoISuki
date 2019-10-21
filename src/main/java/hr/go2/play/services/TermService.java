@@ -29,4 +29,6 @@ public interface TermService {
 	
 	public abstract Term updateTerm(Long id, Term term);
 
+	public abstract void deleteAllTerms();
+
 }

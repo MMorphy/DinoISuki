@@ -50,6 +50,11 @@ public class SportsServiceImpl implements SportsService {
 	}
 
 	@Override
+	public void deleteAllSports() {
+		this.sportsRepo.deleteAll();
+	}
+
+	@Override
 	public Sports saveSports(Sports sports) {
 		return this.sportsRepo.save(sports);
 	}

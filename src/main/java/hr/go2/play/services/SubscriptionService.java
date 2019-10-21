@@ -23,4 +23,6 @@ public interface SubscriptionService {
 	
 	public abstract Subscription updateSubscription(Long id, Subscription subscription);
 
+	public abstract void deleteAllSubscriptions();
+
 }

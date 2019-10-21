@@ -50,6 +50,11 @@ public class VideoServiceImpl implements VideoService {
 	}
 
 	@Override
+	public void deleteAllVideos() {
+		this.videoRepo.deleteAll();
+	}
+
+	@Override
 	public Video saveVideo(Video video) {
 		return this.videoRepo.save(video);
 	}

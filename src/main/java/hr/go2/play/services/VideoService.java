@@ -18,4 +18,6 @@ public interface VideoService {
 	
 	public abstract Video updateVideo(Long id, Video video);
 
+	public abstract void deleteAllVideos();
+
 }

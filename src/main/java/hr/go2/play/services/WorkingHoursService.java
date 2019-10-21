@@ -23,4 +23,6 @@ public interface WorkingHoursService {
 	
 	public abstract WorkingHours updateWorkingHours(Long id, WorkingHours wh);
 
+	public abstract void deleteAllWorkingHours();
+
 }

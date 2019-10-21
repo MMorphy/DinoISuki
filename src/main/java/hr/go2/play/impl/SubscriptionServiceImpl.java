@@ -57,6 +57,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 
 	@Override
+	public void deleteAllSubscriptions() {
+		this.subRepo.deleteAll();
+	}
+
+	@Override
 	public Subscription saveSubscription(Subscription subscription) {
 		return this.subRepo.save(subscription);
 	}

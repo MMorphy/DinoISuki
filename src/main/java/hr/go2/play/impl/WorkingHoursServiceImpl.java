@@ -57,6 +57,11 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
 	}
 
 	@Override
+	public void deleteAllWorkingHours() {
+		this.whRepo.deleteAll();
+	}
+
+	@Override
 	public WorkingHours saveWorkingHours(WorkingHours wh) {
 		return this.whRepo.save(wh);
 	}

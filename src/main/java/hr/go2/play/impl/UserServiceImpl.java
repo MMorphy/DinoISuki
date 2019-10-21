@@ -71,6 +71,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public void deleteAllUsers() {
+		this.userRepo.deleteAll();
+	}
+
+	@Override
 	public User saveUser(User user) {
 		return this.userRepo.save(user);
 	}
