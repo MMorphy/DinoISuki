@@ -32,7 +32,7 @@ public class Subscription {
 	@Column(name = "valid_to")
 	private Date validTo;
 
-	@ManyToOne(cascade = {CascadeType.ALL})
+	@ManyToOne(cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "subscription_type_id")
 	private SubscriptionType subscriptionType;
 

@@ -21,15 +21,15 @@ public class Field {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "sport_id")
 	private Sports sport;
 
-	@OneToMany(cascade = {CascadeType.ALL})
+	@OneToMany(cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "field_id")
 	private Collection<Term> terms;
 
-	@OneToMany(cascade = {CascadeType.ALL})
+	@OneToMany(cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "field_id")
 	private Collection<Camera> cameras;
 

@@ -27,7 +27,7 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToMany(cascade = {CascadeType.ALL})
+	@ManyToMany(cascade = {CascadeType.MERGE})
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Collection<Role> roles;
 
@@ -39,15 +39,15 @@ public class User {
 	@Column(nullable = false)
 	private boolean enabled;
 
-	@OneToMany(cascade = { CascadeType.ALL })
+	@OneToMany(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "user_id")
 	private Collection<Video> paidVideos;
 
-	@OneToMany(cascade = { CascadeType.ALL })
+	@OneToMany(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "user_id")
 	private Collection<Term> reservedTerms;
 
-	@OneToMany(cascade = { CascadeType.ALL })
+	@OneToMany(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "user_id")
 	private Collection<Sports> likedSports;
 

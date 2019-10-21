@@ -23,11 +23,11 @@ public class Location {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "working_hours_id")
 	private WorkingHours hours;
 
-	@OneToMany(cascade = {CascadeType.ALL})
+	@OneToMany(cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "location_id")
 	private Collection<Field> fields;
 
@@ -37,7 +37,7 @@ public class Location {
 	@Column(nullable=false)
 	private String name;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "contact_user_id")
 	private User contactUser;
 

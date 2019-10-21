@@ -24,10 +24,10 @@ public class Role {
 	@Column(nullable = false)
 	private String name;
 
-	@ManyToMany(mappedBy = "roles", cascade = { CascadeType.ALL })
+	@ManyToMany(mappedBy = "roles", cascade = { CascadeType.MERGE })
 	private Collection<User> users;
 
-	@OneToMany(cascade = { CascadeType.ALL })
+	@OneToMany(cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "role_id", nullable = true)
 	private Collection<Location> locations;
 
