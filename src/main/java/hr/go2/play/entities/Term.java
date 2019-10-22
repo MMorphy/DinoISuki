@@ -39,7 +39,7 @@ public class Term {
 	@ColumnDefault(value = "false")
 	private boolean available;
 
-	@OneToMany(cascade = {CascadeType.MERGE})
+	@OneToMany(cascade = {CascadeType.ALL})
 	@JoinColumn(name="term_id", nullable = true)
 	private Collection<Video> videos;
 

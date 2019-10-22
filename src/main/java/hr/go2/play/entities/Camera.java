@@ -23,7 +23,7 @@ public class Camera {
 	@Column(nullable = false)
 	private String name;
 
-	@OneToMany(cascade = {CascadeType.MERGE})
+	@OneToMany(cascade = {CascadeType.ALL})
 	@JoinColumn(name = "camera_id")
 	private Collection<Video> videos;
 	
