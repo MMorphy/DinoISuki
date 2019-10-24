@@ -79,45 +79,12 @@ public class DummyDataRest {
 	public void populateDB(){
 		
 		createContactInformations();
-		createVideos();
-		createCameras();
-		createSports();
-		createTerms();
-		createFields();
-		createLocations();
-		createRoles();
 		createUsers();
 		createWorkingHours();
-		createSubscriptionTypes();
 		createSubscriptions();
 	}
 	
 	private void createSubscriptions() {
-		Subscription sub1 = new Subscription();
-		sub1.setSubscriptionType(subTypeService.findSubscriptionTypeByName("tip1").get(0));
-		sub1.setValid(true);
-		sub1.setValidFrom(new Date(120, 0, 23));
-		sub1.setValidTo(new Date(121, 0, 23));
-		
-		Subscription sub2 = new Subscription();
-		sub2.setSubscriptionType(subTypeService.findSubscriptionTypeByName("tip2").get(0));
-		sub2.setValid(true);
-		sub2.setValidFrom(new Date(120, 0, 23));
-		sub2.setValidTo(new Date(121, 0, 23));
-		
-		Subscription sub3 = new Subscription();
-		sub3.setSubscriptionType(subTypeService.findSubscriptionTypeByName("tip3").get(0));
-		sub3.setValid(true);
-		sub3.setValidFrom(new Date(120, 0, 23));
-		sub3.setValidTo(new Date(121, 0, 23));
-		
-		subService.saveSubscription(sub1);
-		subService.saveSubscription(sub2);
-		subService.saveSubscription(sub3);
-		
-	}
-	
-	private void createSubscriptionTypes() {
 		SubscriptionType subType1 = new SubscriptionType();
 		subType1.setName("tip1");
 		
@@ -127,9 +94,27 @@ public class DummyDataRest {
 		SubscriptionType subType3 = new SubscriptionType();
 		subType3.setName("tip3");
 		
-		subTypeService.saveSubscriptionType(subType1);
-		subTypeService.saveSubscriptionType(subType2);
-		subTypeService.saveSubscriptionType(subType3);
+		Subscription sub1 = new Subscription();
+		sub1.setSubscriptionType(subType1);
+		sub1.setValid(true);
+		sub1.setValidFrom(new Date(120, 0, 23));
+		sub1.setValidTo(new Date(121, 0, 23));
+		
+		Subscription sub2 = new Subscription();
+		sub2.setSubscriptionType(subType2);
+		sub2.setValid(true);
+		sub2.setValidFrom(new Date(120, 0, 23));
+		sub2.setValidTo(new Date(121, 0, 23));
+		
+		Subscription sub3 = new Subscription();
+		sub3.setSubscriptionType(subType3);
+		sub3.setValid(true);
+		sub3.setValidFrom(new Date(120, 0, 23));
+		sub3.setValidTo(new Date(121, 0, 23));
+		
+		subService.saveSubscription(sub1);
+		subService.saveSubscription(sub2);
+		subService.saveSubscription(sub3);
 		
 	}
 	
@@ -175,126 +160,6 @@ public class DummyDataRest {
 		locationService.updateLocation(locationService.findLocationByAddress("Split").getId(), location3);
 	}
 	
-	private void createLocations() {
-		Location location1 = new Location();
-		location1.setAddress("Zagreb");
-		location1.setFields(fieldService.findFieldBySportName("Nogomet"));
-		location1.setName("location1");
-		
-		Location location2 = new Location();
-		location2.setAddress("Rijeka");
-		location2.setFields(fieldService.findFieldBySportName("Tenis"));
-		location2.setName("location2");
-		
-		Location location3 = new Location();
-		location3.setAddress("Split");
-		location3.setFields(fieldService.findFieldBySportName("Kosarka"));
-		location3.setName("location3");
-		
-		locationService.saveLocation(location1);
-		locationService.saveLocation(location2);
-		locationService.saveLocation(location3);
-	}
-	
-	private void createRoles() {
-		Role role1 = new Role();
-		role1.setLocations(Stream.of(locationService.findLocationByName("location1")).collect(Collectors.toList()));
-		role1.setName("admin");
-		
-		Role role2 = new Role();
-		role2.setLocations(Stream.of(locationService.findLocationByName("location2")).collect(Collectors.toList()));
-		role2.setName("private");
-		
-		Role role3 = new Role();
-		role3.setLocations(Stream.of(locationService.findLocationByName("location3")).collect(Collectors.toList()));
-		role3.setName("oper");
-		
-		roleService.saveRole(role1);
-		roleService.saveRole(role2);
-		roleService.saveRole(role3);
-		
-	}
-	
-	private void createTerms() {
-		Term term1 = new Term();
-		term1.setAvailable(true);
-		term1.setDate(new Date(120, 0, 21));
-		term1.setTimeFrom(new Date(120, 0, 21, 12, 0));
-		term1.setTimeTo(new Date(120, 0, 21, 13, 9));
-		term1.setVideos(Stream.of(videoService.findVideoByLocation("/path1")).collect(Collectors.toList()));
-		
-		Term term2 = new Term();
-		term2.setAvailable(true);
-		term2.setDate(new Date(120, 1, 22));
-		term2.setTimeFrom(new Date(120, 1, 22, 14, 0));
-		term2.setTimeTo(new Date(120, 1, 22, 15, 0));
-		term2.setVideos(Stream.of(videoService.findVideoByLocation("/path2")).collect(Collectors.toList()));
-		
-		Term term3 = new Term();
-		term3.setAvailable(true);
-		term3.setDate(new Date(120, 2, 23));
-		term3.setTimeFrom(new Date(120, 2, 23, 16, 0));
-		term3.setTimeTo(new Date(120, 2, 23, 17, 0));
-		term3.setVideos(Stream.of(videoService.findVideoByLocation("/path3")).collect(Collectors.toList()));
-		
-		termService.saveTerm(term1);
-		termService.saveTerm(term2);
-		termService.saveTerm(term3);
-	}
-	
-	private void createSports() {
-		Sports sport1 = new Sports();
-		sport1.setName("Nogomet");
-		
-		Sports sport2 = new Sports();
-		sport2.setName("Tenis");
-		
-		Sports sport3 = new Sports();
-		sport3.setName("Kosarka");
-		
-		sportsService.saveSports(sport1);
-		sportsService.saveSports(sport2);
-		sportsService.saveSports(sport3);
-	}
-	
-	private void createVideos() {
-		Video video1 = new Video();
-		video1.setLocation("/path1");
-		
-		Video video2 = new Video();
-		video2.setLocation("/path2");
-		
-		Video video3 = new Video();
-		video3.setLocation("/path3");
-		
-		videoService.saveVideo(video1);
-		videoService.saveVideo(video2);
-		videoService.saveVideo(video3);
-	}
-	
-	private void createFields () {
-		
-		Field field1 = new Field();
-		field1.setCameras(cameraService.findCameraByName("cam1"));
-		field1.setSport(sportsService.findSportsByName("Nogomet"));
-		field1.setTerms(Stream.of(termService.findTermByVideosLocation("/path1")).collect(Collectors.toList()));
-		
-		Field field2 = new Field();
-		field2.setCameras(cameraService.findCameraByName("cam2"));
-		field2.setSport(sportsService.findSportsByName("Tenis"));
-		field2.setTerms(Stream.of(termService.findTermByVideosLocation("/path2")).collect(Collectors.toList()));
-		
-		Field field3 = new Field();
-		field3.setCameras(cameraService.findCameraByName("cam3"));
-		field3.setSport(sportsService.findSportsByName("Kosarka"));
-		field3.setTerms(Stream.of(termService.findTermByVideosLocation("/path3")).collect(Collectors.toList()));
-		
-		fieldService.saveField(field1);
-		fieldService.saveField(field2);
-		fieldService.saveField(field3);
-		
-	}
-	
 	private void createContactInformations () {
 		ContactInformation contactInfo1 = new ContactInformation();
 		contactInfo1.setEmail("bla.bla");
@@ -315,16 +180,109 @@ public class DummyDataRest {
 	}
 	
 	private  void createUsers() {
+		Video video1 = new Video();
+		video1.setLocation("/path1");
+		
+		Video video2 = new Video();
+		video2.setLocation("/path2");
+		
+		Video video3 = new Video();
+		video3.setLocation("/path3");
+		
+		Camera cam1 = new Camera();
+		cam1.setName("cam1");
+		cam1.setVideos(Stream.of(video1).collect(Collectors.toList()));
+		
+		Camera cam2 = new Camera();
+		cam2.setName("cam2");
+		cam2.setVideos(Stream.of(video2).collect(Collectors.toList()));
+		
+		Camera cam3 = new Camera();
+		cam3.setName("cam3");
+		cam3.setVideos(Stream.of(video3).collect(Collectors.toList()));
+		
+		Sports sport1 = new Sports();
+		sport1.setName("Nogomet");
+		
+		Sports sport2 = new Sports();
+		sport2.setName("Tenis");
+		
+		Sports sport3 = new Sports();
+		sport3.setName("Kosarka");
+		
+		Term term1 = new Term();
+		term1.setAvailable(true);
+		term1.setDate(new Date(120, 0, 21));
+		term1.setTimeFrom(new Date(120, 0, 21, 12, 0));
+		term1.setTimeTo(new Date(120, 0, 21, 13, 9));
+		term1.setVideos(Stream.of(video1).collect(Collectors.toList()));
+		
+		Term term2 = new Term();
+		term2.setAvailable(true);
+		term2.setDate(new Date(120, 1, 22));
+		term2.setTimeFrom(new Date(120, 1, 22, 14, 0));
+		term2.setTimeTo(new Date(120, 1, 22, 15, 0));
+		term2.setVideos(Stream.of(video2).collect(Collectors.toList()));
+		
+		Term term3 = new Term();
+		term3.setAvailable(true);
+		term3.setDate(new Date(120, 2, 23));
+		term3.setTimeFrom(new Date(120, 2, 23, 16, 0));
+		term3.setTimeTo(new Date(120, 2, 23, 17, 0));
+		term3.setVideos(Stream.of(video3).collect(Collectors.toList()));
+		
+		Field field1 = new Field();
+		field1.setCameras(Stream.of(cam1).collect(Collectors.toList()));
+		field1.setSport(sport1);
+		field1.setTerms(Stream.of(term1).collect(Collectors.toList()));
+		
+		Field field2 = new Field();
+		field2.setCameras(Stream.of(cam2).collect(Collectors.toList()));
+		field2.setSport(sport2);
+		field2.setTerms(Stream.of(term2).collect(Collectors.toList()));
+		
+		Field field3 = new Field();
+		field3.setCameras(Stream.of(cam3).collect(Collectors.toList()));
+		field3.setSport(sport3);
+		field3.setTerms(Stream.of(term3).collect(Collectors.toList()));
+		
+		Location location1 = new Location();
+		location1.setAddress("Zagreb");
+		location1.setFields(Stream.of(field1).collect(Collectors.toList()));
+		location1.setName("location1");
+		
+		Location location2 = new Location();
+		location2.setAddress("Rijeka");
+		location2.setFields(Stream.of(field2).collect(Collectors.toList()));
+		location2.setName("location2");
+		
+		Location location3 = new Location();
+		location3.setAddress("Split");
+		location3.setFields(Stream.of(field3).collect(Collectors.toList()));
+		location3.setName("location3");
+		
+		Role role1 = new Role();
+		role1.setLocations(Stream.of(location1).collect(Collectors.toList()));
+		role1.setName("admin");
+		
+		Role role2 = new Role();
+		role2.setLocations(Stream.of(location2).collect(Collectors.toList()));
+		role2.setName("private");
+		
+		Role role3 = new Role();
+		role3.setLocations(Stream.of(location3).collect(Collectors.toList()));
+		role3.setName("oper");
+		
 		User user1 = new User();
 		user1.setDateOfBirth(new Date(91, 0, 21));
 		user1.setEnabled(true);
 		user1.setUsername("user1");
 		user1.setCreatedAt(new Date());
 		user1.setPassword("user1");
-		user1.setLikedSports(Stream.of(sportsService.findSportsByName("Nogomet")).collect(Collectors.toList()));
-		user1.setPaidVideos(Stream.of(videoService.findVideoByLocation("/path1")).collect(Collectors.toList()));
-		user1.setReservedTerms(Stream.of(termService.findTermByVideosLocation("/path1")).collect(Collectors.toList()));
-		user1.setRoles(roleService.findRoleByName("admin"));
+		user1.setLikedSports(Stream.of(sport1).collect(Collectors.toList()));
+		user1.setPaidVideos(Stream.of(video1).collect(Collectors.toList()));
+		user1.setReservedTerms(Stream.of(term1).collect(Collectors.toList()));
+		user1.setRoles(Stream.of(role1).collect(Collectors.toList()));
 		
 		User user2 = new User();
 		user2.setDateOfBirth(new Date(95, 2, 21));
@@ -332,10 +290,10 @@ public class DummyDataRest {
 		user2.setUsername("user2");
 		user2.setCreatedAt(new Date());
 		user2.setPassword("user2");
-		user2.setLikedSports(Stream.of(sportsService.findSportsByName("Tenis")).collect(Collectors.toList()));
-		user2.setPaidVideos(Stream.of(videoService.findVideoByLocation("/path2")).collect(Collectors.toList()));
-		user2.setReservedTerms(Stream.of(termService.findTermByVideosLocation("/path2")).collect(Collectors.toList()));
-		user2.setRoles(roleService.findRoleByName("private"));
+		user2.setLikedSports(Stream.of(sport2).collect(Collectors.toList()));
+		user2.setPaidVideos(Stream.of(video2).collect(Collectors.toList()));
+		user2.setReservedTerms(Stream.of(term2).collect(Collectors.toList()));
+		user2.setRoles(Stream.of(role2).collect(Collectors.toList()));
 		
 		User user3 = new User();
 		user3.setDateOfBirth(new Date(100,5, 12));
@@ -343,69 +301,13 @@ public class DummyDataRest {
 		user3.setUsername("user3");
 		user3.setCreatedAt(new Date());
 		user3.setPassword("user3");
-		user3.setLikedSports(Stream.of(sportsService.findSportsByName("Kosarka")).collect(Collectors.toList()));
-		user3.setPaidVideos(Stream.of(videoService.findVideoByLocation("/path3")).collect(Collectors.toList()));
-		user3.setReservedTerms(Stream.of(termService.findTermByVideosLocation("/path3")).collect(Collectors.toList()));
-		user3.setRoles(roleService.findRoleByName("oper"));
+		user3.setLikedSports(Stream.of(sport3).collect(Collectors.toList()));
+		user3.setPaidVideos(Stream.of(video3).collect(Collectors.toList()));
+		user3.setReservedTerms(Stream.of(term3).collect(Collectors.toList()));
+		user3.setRoles(Stream.of(role3).collect(Collectors.toList()));
 		
 		userService.saveUser(user1);
 		userService.saveUser(user2);
 		userService.saveUser(user3);
-		
-		Role role1 = new Role();
-		Location location1 = new Location();
-		role1.setUsers(Stream.of(userService.findUserByUsername("user1")).collect(Collectors.toList()));
-		role1.setName(roleService.findRoleByLocationsAddress("Zagreb").getName());
-		role1.setLocations(roleService.findRoleByLocationsAddress("Zagreb").getLocations());
-		location1.setContactUser(user1);
-		location1.setAddress(locationService.findLocationByAddress("Zagreb").getAddress());
-		location1.setFields(locationService.findLocationByAddress("Zagreb").getFields());
-		location1.setHours(locationService.findLocationByAddress("Zagreb").getHours());
-		location1.setName(locationService.findLocationByAddress("Zagreb").getName());
-		roleService.updateRole(roleService.findRoleByLocationsAddress("Zagreb").getId(), role1);
-		locationService.updateLocation(locationService.findLocationByAddress("Zagreb").getId(), location1);
-		
-		Role role2 = new Role();
-		Location location2 = new Location();
-		role2.setUsers(Stream.of(userService.findUserByUsername("user2")).collect(Collectors.toList()));
-		role2.setName(roleService.findRoleByLocationsAddress("Rijeka").getName());
-		role2.setLocations(roleService.findRoleByLocationsAddress("Rijeka").getLocations());
-		location2.setContactUser(user2);
-		location2.setAddress(locationService.findLocationByAddress("Rijeka").getAddress());
-		location2.setFields(locationService.findLocationByAddress("Rijeka").getFields());
-		location2.setHours(locationService.findLocationByAddress("Rijeka").getHours());
-		location2.setName(locationService.findLocationByAddress("Rijeka").getName());
-		roleService.updateRole(roleService.findRoleByLocationsAddress("Rijeka").getId(), role2);
-		locationService.updateLocation(locationService.findLocationByAddress("Rijeka").getId(), location2);
-		
-		Role role3 = new Role();
-		Location location3 = new Location();
-		role3.setUsers(Stream.of(userService.findUserByUsername("user3")).collect(Collectors.toList()));
-		role3.setName(roleService.findRoleByLocationsAddress("Split").getName());
-		role3.setLocations(roleService.findRoleByLocationsAddress("Split").getLocations());
-		location3.setContactUser(user3);
-		location3.setAddress(locationService.findLocationByAddress("Split").getAddress());
-		location3.setFields(locationService.findLocationByAddress("Split").getFields());
-		location3.setHours(locationService.findLocationByAddress("Split").getHours());
-		location3.setName(locationService.findLocationByAddress("Split").getName());
-		roleService.updateRole(roleService.findRoleByLocationsAddress("Split").getId(), role3);
-		locationService.updateLocation(locationService.findLocationByAddress("Split").getId(), location3);
-}
-	private  void createCameras() {
-		Camera cam1 = new Camera();
-		cam1.setName("cam1");
-		cam1.setVideos(Stream.of(videoService.findVideoByLocation("/path1")).collect(Collectors.toList()));
-		
-		Camera cam2 = new Camera();
-		cam2.setName("cam2");
-		cam2.setVideos(Stream.of(videoService.findVideoByLocation("/path2")).collect(Collectors.toList()));
-		
-		Camera cam3 = new Camera();
-		cam3.setName("cam3");
-		cam3.setVideos(Stream.of(videoService.findVideoByLocation("/path3")).collect(Collectors.toList()));
-		
-		cameraService.saveCamera(cam1);
-		cameraService.saveCamera(cam2);
-		cameraService.saveCamera(cam3);
 }
 }
