@@ -1,5 +1,5 @@
-vod.component('payment',{
-    templateUrl:'./pages/page-payment.template.html',
+vod.component('locations',{
+    templateUrl:'./pages/page-locations.template.html',
     controller:function () {
 
     },

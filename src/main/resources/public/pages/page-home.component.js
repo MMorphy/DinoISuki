@@ -3,5 +3,5 @@ vod.component('home',{
     controller:function () {
 
     },
-    controllerAs:'c'
+    controllerAs:'d'
 })
