@@ -70,14 +70,16 @@ public class ReservationRest {
 		Field field = mapper.map(reservationDto.getFieldDto(), Field.class);
 		
 		user.setReservedTerms(Stream.of(term).collect(Collectors.toList()));
-		field.setTerms(Stream.of(term).collect(Collectors.toList()));
+		field = fieldService.findFieldById(field.getId());
 		
 		if (user.getId() == null) {
 			user.setPassword("Opatija1");
 			userService.saveUser(user);
 		}
-		else
-		userService.updateUser(user.getId(), user);
+		else {
+			userService.updateUser(user.getId(), user);
+		}
+
 		termService.saveTerm(term);
 		fieldService.updateField(field.getId(), field);
 		
