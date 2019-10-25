@@ -1,7 +1,14 @@
 package hr.go2.play.DTO;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class TermDTO {
 
@@ -39,7 +46,14 @@ public class TermDTO {
 		this.id = id;
 	}
 
-	public String getDate() {
+	public Date getDate() {
+		Date date = null;
+		try {
+			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+			date = format.parse(this.date);
+		} catch (ParseException ex) {
+			ex.printStackTrace();
+		}
 		return date;
 	}
 
@@ -47,7 +61,14 @@ public class TermDTO {
 		this.date = date;
 	}
 
-	public String getTimeFrom() {
+	public Date getTimeFrom() {
+		Date timeFrom = null;
+		try {
+			SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+			timeFrom = format.parse(this.timeFrom);
+		} catch (ParseException ex) {
+			ex.printStackTrace();
+		}
 		return timeFrom;
 	}
 
@@ -55,7 +76,14 @@ public class TermDTO {
 		this.timeFrom = timeFrom;
 	}
 
-	public String getTimeTo() {
+	public Date getTimeTo() {
+		Date timeTo = null;
+		try {
+			SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+			timeTo = format.parse(this.timeTo);
+		} catch (ParseException ex) {
+			ex.printStackTrace();
+		}
 		return timeTo;
 	}
 
@@ -63,8 +91,8 @@ public class TermDTO {
 		this.timeTo = timeTo;
 	}
 
-	public String getAvailable() {
-		return available;
+	public boolean getAvailable() {
+		return Boolean.parseBoolean(available);
 	}
 
 	public void setAvailable(String available) {

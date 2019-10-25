@@ -51,7 +51,7 @@ public class User {
 	@JoinColumn(name = "user_id")
 	private Collection<Sports> likedSports;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String username;
 
 	@Column(nullable = false)

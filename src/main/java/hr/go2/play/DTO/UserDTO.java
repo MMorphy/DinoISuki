@@ -1,6 +1,9 @@
 package hr.go2.play.DTO;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class UserDTO {
@@ -63,7 +66,15 @@ public class UserDTO {
 		this.roles = roles;
 	}
 
-	public String getCreatedAt() {
+	public Date getCreatedAt() {
+		Date createdAt = null;
+		try {
+			//2019/10/24 13:13:30.183
+			SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.mmm");
+			createdAt = format.parse(this.createdAt);
+		} catch (ParseException ex) {
+			ex.printStackTrace();
+		}
 		return createdAt;
 	}
 
@@ -71,8 +82,8 @@ public class UserDTO {
 		this.createdAt = createdAt;
 	}
 
-	public String getEnabled() {
-		return enabled;
+	public boolean getEnabled() {
+		return Boolean.parseBoolean(enabled);
 	}
 
 	public void setEnabled(String enabled) {
@@ -119,7 +130,14 @@ public class UserDTO {
 		this.password = password;
 	}
 
-	public String getDateOfBirth() {
+	public Date getDateOfBirth() {
+		Date dateOfBirth = null;
+		try {
+			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+			dateOfBirth = format.parse(this.dateOfBirth);
+		} catch (ParseException ex) {
+			ex.printStackTrace();
+		}
 		return dateOfBirth;
 	}
 
