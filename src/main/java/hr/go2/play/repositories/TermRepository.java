@@ -12,6 +12,8 @@ public interface TermRepository extends JpaRepository<Term, Long>{
 
 	Collection<Term> findByDate(Date date);
 
+	Collection<Term> findByAvailable(boolean available);
+
 	Collection<Term> findByDateAndTimeFrom(Date date, Date timeFrom);
 
 	Collection<Term> findByDateAndTimeFromAndAvailable(Date date, Date timeFrom, boolean available);

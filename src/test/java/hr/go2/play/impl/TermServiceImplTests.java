@@ -81,6 +81,13 @@ public class TermServiceImplTests {
 	
 	@Test
 	@Order(6)
+	public void findByAvailable() {
+		List<Term> termTest = (List<Term>) termService.findTermsByAvailable(term.isAvailable());
+		assertThat(termTest.get(0).getId()).isEqualTo(term.getId());
+	}
+
+	@Test
+	@Order(7)
 	public void findByVideos_Location() {
 		Term termTest = termService.findTermByVideosLocation(video.getLocation());
 		assertThat(termTest.getId()).isEqualTo(term.getId());

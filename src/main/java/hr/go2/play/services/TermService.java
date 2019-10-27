@@ -12,6 +12,8 @@ public interface TermService {
 	public abstract Term findTermById(Long id);
 	
 	public abstract List<Term> findTermsByDate(Date date);
+
+	public abstract List<Term> findTermsByAvailable(boolean available);
 	
 	public abstract List<Term> findTermsByDateAndTimeFrom(Date date, Date timeFrom);
 	

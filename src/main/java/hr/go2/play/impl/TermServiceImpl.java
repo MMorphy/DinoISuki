@@ -101,4 +101,9 @@ public class TermServiceImpl implements TermService {
 		}
 	}
 
+	@Override
+	public List<Term> findTermsByAvailable(boolean available) {
+		return (List<Term>) this.termRepo.findByAvailable(available);
+	}
+
 }
