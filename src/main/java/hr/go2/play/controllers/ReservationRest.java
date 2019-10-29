@@ -1,13 +1,11 @@
 package hr.go2.play.controllers;
 
-import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.hibernate.collection.internal.PersistentBag;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import hr.go2.play.DTO.FieldDTO;
 import hr.go2.play.DTO.TermDTO;
-import hr.go2.play.DTO.UserDTO;
 import hr.go2.play.entities.Field;
 import hr.go2.play.entities.Term;
 import hr.go2.play.entities.User;
-import hr.go2.play.entities.Video;
 import hr.go2.play.impl.FieldServiceImpl;
 import hr.go2.play.impl.SportsServiceImpl;
 import hr.go2.play.impl.TermServiceImpl;
@@ -60,12 +55,12 @@ public class ReservationRest {
 	//Delete reservation for anonymous user
 	//Get all reservations for field by time
 	//Get all reservations for sport
+
 	//TODO 
 	@GetMapping("/")
 	public ResponseEntity<?> getAllReserved(){
-		 List<Term> terms = (List<Term>) termService.findTermsByAvailable(true);
-         Type listType = new TypeToken<List<TermDTO>>(){}.getType();
-         List<TermDTO> termDTOList = mapper.map(terms, listType);
+		 List<Term> terms = (List<Term>) termService.findTermsByAvailable(false);
+         List<TermDTO> termDTOList = terms.stream().map(term -> mapper.map(term, TermDTO.class)).collect(Collectors.toList());
          
          return new ResponseEntity<>(termDTOList, HttpStatus.OK);
 	}
@@ -74,12 +69,12 @@ public class ReservationRest {
 	 *
 	 * @param reservationDto
 	 * JSON body example:
-	 * { 
+{ 
    "termDto":{ 
       "id":null,
-      "date":"22/10/2019",
-      "timeFrom":"15:00",
-      "timeTo":"16:00",
+      "date":"2019-10-28",
+      "timeFrom":"15:00:00",
+      "timeTo":"16:00:00",
       "available":"false",
       "videos":[ 
          { 
@@ -88,31 +83,27 @@ public class ReservationRest {
          }
       ]
    },
-   "userDto":{ 
-      "id":"1",
-      "createdAt":"2019/10/24 13:13:30.183",
-      "enabled":"t",
-      "username":"user1",
-      "password":"user1",
-      "dateOfBirth":"1991/01/21"
-   },
-   "fieldDto":{ 
-      "id":3
-   }
+   "userId":"1",
+   "fieldId":"3"
 }
 	 * @return
 	 */
 	@PostMapping("/reserve")
 	public ResponseEntity<String> addReservation (@RequestBody ReservationDTO reservationDto) {
 		Term term = mapper.map(reservationDto.getTermDto(), Term.class);
-		User user = mapper.map(reservationDto.getUserDto(), User.class);
-		Field field = mapper.map(reservationDto.getFieldDto(), Field.class);
+		User user = userService.findUserById(reservationDto.getUserId());
+		Field field = fieldService.findFieldById(reservationDto.getFieldId());
 		
 		user.setReservedTerms(Stream.of(term).collect(Collectors.toList()));
-		field = fieldService.findFieldById(field.getId());
+		field.setTerms(Stream.of(term).collect(Collectors.toList()));
 		
+		//create anonymous user
 		if (user.getId() == null) {
+			user.setCreatedAt(new Date());
+			user.setEnabled(false);
+			user.setUsername("user");
 			user.setPassword("Opatija1");
+			user.setDateOfBirth(new Date());
 			userService.saveUser(user);
 		}
 		else {
@@ -128,14 +119,14 @@ public class ReservationRest {
 	@GetMapping("/update")
 	public ResponseEntity<String> updateReservation (@RequestBody ReservationDTO reservationDto) {
 		Term term = mapper.map(reservationDto.getTermDto(), Term.class);
-		User user = mapper.map(reservationDto.getUserDto(), User.class);
-		Field field = mapper.map(reservationDto.getFieldDto(), Field.class);
+		User user = userService.findUserById(reservationDto.getUserId());
+		Field field = fieldService.findFieldById(reservationDto.getFieldId());
 		
 		userService.updateUser(user.getId(), user);
 		termService.updateTerm(term.getId(), term);
 		fieldService.updateField(field.getId(), field);
 		
-		return new ResponseEntity<String>("Term reserved!", HttpStatus.CREATED);
+		return new ResponseEntity<String>("Term updated!", HttpStatus.CREATED);
 	}
 	
 	@PostMapping("/delete")
@@ -148,14 +139,14 @@ public class ReservationRest {
 
 	private static class ReservationDTO {
 		private TermDTO termDto;
-		private UserDTO userDto;
-		private FieldDTO fieldDto;
+		private long userId;
+		private long fieldId;
 		
-		public ReservationDTO(TermDTO termDto, UserDTO userDto, FieldDTO fieldDto) {
+		public ReservationDTO(TermDTO termDto, long userId, long fieldId) {
 			super();
 			this.termDto = termDto;
-			this.userDto = userDto;
-			this.fieldDto = fieldDto;
+			this.userId = userId;
+			this.fieldId = fieldId;
 		}
 
 		public TermDTO getTermDto() {
@@ -166,20 +157,20 @@ public class ReservationRest {
 			this.termDto = termDto;
 		}
 
-		public UserDTO getUserDto() {
-			return userDto;
+		public long getUserId() {
+			return userId;
 		}
 
-		public void setUserDto(UserDTO userDto) {
-			this.userDto = userDto;
+		public void setUserId(long userId) {
+			this.userId = userId;
 		}
 
-		public FieldDTO getFieldDto() {
-			return fieldDto;
+		public long getFieldId() {
+			return fieldId;
 		}
 
-		public void setFieldDto(FieldDTO fieldDto) {
-			this.fieldDto = fieldDto;
+		public void setFieldId(long fieldId) {
+			this.fieldId = fieldId;
 		}
 
 	}

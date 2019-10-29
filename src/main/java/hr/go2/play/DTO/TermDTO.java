@@ -49,7 +49,7 @@ public class TermDTO {
 	public Date getDate() {
 		Date date = null;
 		try {
-			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			date = format.parse(this.date);
 		} catch (ParseException ex) {
 			ex.printStackTrace();
@@ -57,14 +57,15 @@ public class TermDTO {
 		return date;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
+	public void setDate(Date date) {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		this.date = format.format(date);
 	}
 
 	public Date getTimeFrom() {
 		Date timeFrom = null;
 		try {
-			SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+			SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss");
 			timeFrom = format.parse(this.timeFrom);
 		} catch (ParseException ex) {
 			ex.printStackTrace();
@@ -79,7 +80,7 @@ public class TermDTO {
 	public Date getTimeTo() {
 		Date timeTo = null;
 		try {
-			SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+			SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss");
 			timeTo = format.parse(this.timeTo);
 		} catch (ParseException ex) {
 			ex.printStackTrace();
