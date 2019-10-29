@@ -141,7 +141,9 @@ public class ReservationRest {
 		private TermDTO termDto;
 		private long userId;
 		private long fieldId;
-		
+
+		public ReservationDTO(){}
+
 		public ReservationDTO(TermDTO termDto, long userId, long fieldId) {
 			super();
 			this.termDto = termDto;
