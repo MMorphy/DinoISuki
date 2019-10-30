@@ -29,4 +29,6 @@ public interface UserService {
 
 	public abstract void deleteAllUsers();
 
+	public abstract boolean existsUserById(Long id);
+
 }

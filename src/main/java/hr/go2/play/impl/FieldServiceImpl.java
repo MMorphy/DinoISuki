@@ -22,6 +22,11 @@ public class FieldServiceImpl implements FieldService{
 	}
 
 	@Override
+	public boolean existsFieldById (Long id) {
+		return fieldRepo.existsById(id);
+	}
+
+	@Override
 	public List<Field> findAllFields() {
 		return this.fieldRepo.findAll();
 	}

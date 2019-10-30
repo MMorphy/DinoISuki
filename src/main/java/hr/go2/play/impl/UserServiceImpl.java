@@ -23,6 +23,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public boolean existsUserById (Long id) {
+		return userRepo.existsById(id);
+	}
+
+	@Override
 	public List<User> findAllUsers() {
 		return this.userRepo.findAll();
 	}

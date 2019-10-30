@@ -33,4 +33,6 @@ public interface TermService {
 
 	public abstract void deleteAllTerms();
 
+	public abstract boolean existsTermById(Long id);
+
 }

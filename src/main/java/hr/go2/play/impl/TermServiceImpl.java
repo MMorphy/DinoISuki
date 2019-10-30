@@ -23,6 +23,11 @@ public class TermServiceImpl implements TermService {
 	}
 	
 	@Override
+	public boolean existsTermById (Long id) {
+		return termRepo.existsById(id);
+	}
+	
+	@Override
 	public List<Term> findAllTerms() {
 		return this.termRepo.findAll();
 	}

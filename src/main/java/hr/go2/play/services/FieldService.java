@@ -24,4 +24,6 @@ public interface FieldService {
 
 	public abstract void deleteAllFields();
 
+	public abstract boolean existsFieldById(Long id);
+
 }

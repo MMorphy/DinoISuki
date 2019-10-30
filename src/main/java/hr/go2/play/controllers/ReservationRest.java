@@ -116,7 +116,7 @@ public class ReservationRest {
 		return new ResponseEntity<String>("Term reserved!", HttpStatus.CREATED);
 	}
 
-	@GetMapping("/update")
+	@PostMapping("/update")
 	public ResponseEntity<String> updateReservation (@RequestBody ReservationDTO reservationDto) {
 		Term term = mapper.map(reservationDto.getTermDto(), Term.class);
 		User user = userService.findUserById(reservationDto.getUserId());
@@ -128,13 +128,23 @@ public class ReservationRest {
 		
 		return new ResponseEntity<String>("Term updated!", HttpStatus.CREATED);
 	}
-	
+
+	/**
+	 *
+	 * @param id
+	 * JSON body example:
+	 * 12
+	 *
+	 * @return
+	 */
 	@PostMapping("/delete")
-	public ResponseEntity<String> deleteReservation (@RequestBody TermDTO termDto) {
-		Term term = mapper.map(termDto, Term.class);
-		termService.deleteTermById(term.getId());
-		
-		return new ResponseEntity<String>("Term deleted!", HttpStatus.CREATED);
+	public ResponseEntity<String> deleteReservation (@RequestBody String id) {
+		if (termService.existsTermById(Long.parseLong(id))) {
+			termService.deleteTermById(Long.parseLong(id));
+			return new ResponseEntity<String>("Term deleted!", HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<String>("Term id doesn't exist!", HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	private static class ReservationDTO {
