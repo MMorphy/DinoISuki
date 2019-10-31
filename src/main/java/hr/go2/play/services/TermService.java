@@ -35,4 +35,8 @@ public interface TermService {
 
 	public abstract boolean existsTermById(Long id);
 
+	public abstract List<Term> findTermsByDateAndAvailableAndFieldId(Date date, boolean available, long id);
+
+	public abstract List<Term> findTermsByAvailableAndField_Id(boolean available, long id);
+
 }

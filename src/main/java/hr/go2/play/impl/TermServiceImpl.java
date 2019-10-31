@@ -1,5 +1,6 @@
 package hr.go2.play.impl;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -67,6 +68,16 @@ public class TermServiceImpl implements TermService {
 	}
 
 	@Override
+	public List<Term> findTermsByDateAndAvailableAndFieldId(Date date, boolean available, long id) {
+		return (List<Term>) this.termRepo.findByDateAndAvailableAndField_Id(date, available, id);
+	}
+
+	@Override
+	public List<Term> findTermsByAvailableAndField_Id(boolean available, long id) {
+		return (List<Term>) this.termRepo.findByAvailableAndField_Id(available, id);
+	}
+
+	@Override
 	public Term findTermByVideosLocation(String path) {
 		try {
 			return this.termRepo.findByVideos_Location(path).get();
@@ -110,5 +121,4 @@ public class TermServiceImpl implements TermService {
 	public List<Term> findTermsByAvailable(boolean available) {
 		return (List<Term>) this.termRepo.findByAvailable(available);
 	}
-
 }

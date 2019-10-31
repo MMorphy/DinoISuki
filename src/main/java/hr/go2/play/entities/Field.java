@@ -25,7 +25,7 @@ public class Field {
 	@JoinColumn(name = "sport_id")
 	private Sports sport;
 
-	@OneToMany(cascade = {CascadeType.ALL})
+	@OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
 	@JoinColumn(name = "field_id")
 	private Collection<Term> terms;
 

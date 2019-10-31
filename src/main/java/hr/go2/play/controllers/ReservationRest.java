@@ -1,5 +1,8 @@
 package hr.go2.play.controllers;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import hr.go2.play.DTO.TermDTO;
 import hr.go2.play.entities.Field;
+import hr.go2.play.entities.Sports;
 import hr.go2.play.entities.Term;
 import hr.go2.play.entities.User;
 import hr.go2.play.impl.FieldServiceImpl;
@@ -56,7 +60,7 @@ public class ReservationRest {
 	//Get all reservations for field by time
 	//Get all reservations for sport
 
-	//TODO 
+	//TODO: Reponse date and time doesn't match with date and time in db - wrong timezones?
 	@GetMapping("/")
 	public ResponseEntity<?> getAllReserved(){
 		 List<Term> terms = (List<Term>) termService.findTermsByAvailable(false);
@@ -66,39 +70,65 @@ public class ReservationRest {
 	}
 	
 	/**
+	 * @param frDto
+	 * id is field id
+	 * {
+   "date":"2020-03-23",
+   "available":"false",
+   "id":"3"
+}
+	 * @return
+	 */
+	@GetMapping("/field/reservations/byDate")
+	public ResponseEntity<?> getReservationsForFieldByDate(@RequestBody FieldReservationDTO frDto){
+		 List<Term> terms = (List<Term>) termService.findTermsByDateAndAvailableAndFieldId(frDto.getDate(), frDto.getAvailable(), frDto.getId());
+
+         List<TermDTO> termDTOList = terms.stream().map(term -> mapper.map(term, TermDTO.class)).collect(Collectors.toList());
+         return new ResponseEntity<>(termDTOList, HttpStatus.OK);
+	}
+
+	/**
+	 * @param frDto
+	 * id is sport id
+	 * {
+   "date":"2020-03-23",
+   "available":"false",
+   "id":"3"
+}
+	 * @return
+	 */
+	@GetMapping("/field/reservations/bySport")
+	public ResponseEntity<?> getReservationsForSport(@RequestBody FieldReservationDTO frDto){
+		 Sports sport = sportsService.findSportsById(frDto.getId());
+		 List<Field> fields = (List<Field>) fieldService.findFieldBySportName(sport.getName());
+
+		 List<Term> terms = new ArrayList<Term>();
+		 for (Field field : fields) {
+			 terms.addAll((List<Term>)termService.findTermsByAvailableAndField_Id(frDto.getAvailable(), field.getId()));
+		 }
+
+         List<TermDTO> termDTOList = terms.stream().map(term -> mapper.map(term, TermDTO.class)).collect(Collectors.toList());
+         return new ResponseEntity<>(termDTOList, HttpStatus.OK);
+	}
+
+	/**
 	 *
 	 * @param reservationDto
 	 * JSON body example:
 { 
-   "termDto":{ 
-      "id":null,
-      "date":"2019-10-28",
-      "timeFrom":"15:00:00",
-      "timeTo":"16:00:00",
-      "available":"false",
-      "videos":[ 
-         { 
-            "id":null,
-            "location":""
-         }
-      ]
-   },
+   "termId":"1",
    "userId":"1",
-   "fieldId":"3"
+   "fieldId":"1"
 }
 	 * @return
 	 */
 	@PostMapping("/reserve")
 	public ResponseEntity<String> addReservation (@RequestBody ReservationDTO reservationDto) {
-		Term term = mapper.map(reservationDto.getTermDto(), Term.class);
-		User user = userService.findUserById(reservationDto.getUserId());
-		Field field = fieldService.findFieldById(reservationDto.getFieldId());
+		User user = new User();
 		
-		user.setReservedTerms(Stream.of(term).collect(Collectors.toList()));
-		field.setTerms(Stream.of(term).collect(Collectors.toList()));
-		
-		//create anonymous user
-		if (user.getId() == null) {
+		if (userService.existsUserById(reservationDto.getUserId())) {
+			 user = userService.findUserById(reservationDto.getUserId());
+		} else { //create anonymous user
 			user.setCreatedAt(new Date());
 			user.setEnabled(false);
 			user.setUsername("user");
@@ -106,26 +136,42 @@ public class ReservationRest {
 			user.setDateOfBirth(new Date());
 			userService.saveUser(user);
 		}
-		else {
-			userService.updateUser(user.getId(), user);
-		}
 
-		termService.saveTerm(term);
-		fieldService.updateField(field.getId(), field);
+		Term term = termService.findTermById(reservationDto.getTermId());
+		if (!term.isAvailable()) {
+			return new ResponseEntity<String>("Term already reserved!", HttpStatus.BAD_REQUEST);
+		}
 		
+		List<Term> userTerms = (List<Term>) user.getReservedTerms();
+		userTerms.add(term);
+		
+		user.setReservedTerms(userTerms);
+
+		userService.updateUser(user.getId(), user);
 		return new ResponseEntity<String>("Term reserved!", HttpStatus.CREATED);
 	}
 
+	/**
+	 * @param reservationDto
+	 * JSON body example:
+{ 
+   "termId":"1",
+   "userId":"1",
+   "fieldId":"1"
+}
+	 * @return
+	 */
 	@PostMapping("/update")
 	public ResponseEntity<String> updateReservation (@RequestBody ReservationDTO reservationDto) {
-		Term term = mapper.map(reservationDto.getTermDto(), Term.class);
 		User user = userService.findUserById(reservationDto.getUserId());
-		Field field = fieldService.findFieldById(reservationDto.getFieldId());
+		Term term = termService.findTermById(reservationDto.getTermId());
 		
+		List<Term> userTerms = (List<Term>) user.getReservedTerms();
+		userTerms.add(term);
+		
+		user.setReservedTerms(userTerms);
+
 		userService.updateUser(user.getId(), user);
-		termService.updateTerm(term.getId(), term);
-		fieldService.updateField(field.getId(), field);
-		
 		return new ResponseEntity<String>("Term updated!", HttpStatus.CREATED);
 	}
 
@@ -133,38 +179,52 @@ public class ReservationRest {
 	 *
 	 * @param id
 	 * JSON body example:
-	 * 12
-	 *
+    { 
+   "termId":"1",
+   "userId":"1",
+   "fieldId":"1"
+    }
 	 * @return
 	 */
 	@PostMapping("/delete")
-	public ResponseEntity<String> deleteReservation (@RequestBody String id) {
-		if (termService.existsTermById(Long.parseLong(id))) {
-			termService.deleteTermById(Long.parseLong(id));
-			return new ResponseEntity<String>("Term deleted!", HttpStatus.CREATED);
+	public ResponseEntity<String> deleteReservation (@RequestBody ReservationDTO reservationDto) {
+		if (termService.existsTermById(reservationDto.getTermId())) {
+			Term term = termService.findTermById(reservationDto.getTermId());
+			User user = userService.findUserById(reservationDto.getUserId());
+
+			List<Term> userTerms = (List<Term>) user.getReservedTerms();
+			
+			userTerms.removeIf(t -> t.getId().equals(term.getId()));
+			term.setAvailable(true);
+			user.setReservedTerms(null);
+			user.setReservedTerms(userTerms);
+			
+			userService.updateUser(user.getId(), user);
+			
+			return new ResponseEntity<String>("Reservation deleted!", HttpStatus.CREATED);
 		} else {
 			return new ResponseEntity<String>("Term id doesn't exist!", HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	private static class ReservationDTO {
-		private TermDTO termDto;
+		private long termId;
 		private long userId;
 		private long fieldId;
 		
-		public ReservationDTO(TermDTO termDto, long userId, long fieldId) {
+		public ReservationDTO(long termId, long userId, long fieldId) {
 			super();
-			this.termDto = termDto;
+			this.termId = termId;
 			this.userId = userId;
 			this.fieldId = fieldId;
 		}
 
-		public TermDTO getTermDto() {
-			return termDto;
+		public long getTermId() {
+			return termId;
 		}
 
-		public void setTermDto(TermDTO termDto) {
-			this.termDto = termDto;
+		public void setTermDto(long termId) {
+			this.termId = termId;
 		}
 
 		public long getUserId() {
@@ -183,5 +243,43 @@ public class ReservationRest {
 			this.fieldId = fieldId;
 		}
 
+	}
+
+	private static class FieldReservationDTO {
+		private String date;
+		private String available;
+		private long id;
+		public FieldReservationDTO(String date, String available, long id) {
+			super();
+			this.date = date;
+			this.available = available;
+			this.id = id;
+		}
+		public Date getDate() {
+			Date date = null;
+			try {
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+				date = format.parse(this.date);
+			} catch (ParseException ex) {
+				ex.printStackTrace();
+			}
+			return date;
+		}
+		public void setDate(String date) {
+			this.date = date;
+		}
+		public boolean getAvailable() {
+			return Boolean.parseBoolean(available);
+		}
+
+		public void setAvailable(String available) {
+			this.available = available;
+		}
+		public long getId() {
+			return id;
+		}
+		public void setId(long id) {
+			this.id = id;
+		}
 	}
 }

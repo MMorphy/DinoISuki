@@ -211,21 +211,21 @@ public class DummyDataRest {
 		sport3.setName("Kosarka");
 		
 		Term term1 = new Term();
-		term1.setAvailable(true);
+		term1.setAvailable(false);
 		term1.setDate(new Date(120, 0, 21));
 		term1.setTimeFrom(new Date(120, 0, 21, 12, 0));
 		term1.setTimeTo(new Date(120, 0, 21, 13, 9));
 		term1.setVideos(Stream.of(video1).collect(Collectors.toList()));
 		
 		Term term2 = new Term();
-		term2.setAvailable(true);
+		term2.setAvailable(false);
 		term2.setDate(new Date(120, 1, 22));
 		term2.setTimeFrom(new Date(120, 1, 22, 14, 0));
 		term2.setTimeTo(new Date(120, 1, 22, 15, 0));
 		term2.setVideos(Stream.of(video2).collect(Collectors.toList()));
 		
 		Term term3 = new Term();
-		term3.setAvailable(true);
+		term3.setAvailable(false);
 		term3.setDate(new Date(120, 2, 23));
 		term3.setTimeFrom(new Date(120, 2, 23, 16, 0));
 		term3.setTimeTo(new Date(120, 2, 23, 17, 0));
@@ -281,7 +281,6 @@ public class DummyDataRest {
 		user1.setPassword("user1");
 		user1.setLikedSports(Stream.of(sport1).collect(Collectors.toList()));
 		user1.setPaidVideos(Stream.of(video1).collect(Collectors.toList()));
-		user1.setReservedTerms(Stream.of(term1).collect(Collectors.toList()));
 		user1.setRoles(Stream.of(role1).collect(Collectors.toList()));
 		
 		User user2 = new User();

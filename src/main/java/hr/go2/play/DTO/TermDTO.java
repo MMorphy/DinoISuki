@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -14,10 +15,13 @@ public class TermDTO {
 
 	private Long id;
 
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private String date;
 
+	@JsonFormat(pattern="hh:mm:ss")
 	private String timeFrom;
 
+	@JsonFormat(pattern="hh:mm:ss")
 	private String timeTo;
 
 	private String available;
@@ -57,9 +61,8 @@ public class TermDTO {
 		return date;
 	}
 
-	public void setDate(Date date) {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		this.date = format.format(date);
+	public void setDate(String date) {
+		this.date = date;
 	}
 
 	public Date getTimeFrom() {
