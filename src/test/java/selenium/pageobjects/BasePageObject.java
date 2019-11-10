@@ -7,13 +7,23 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class BasePageObject {
 
-    private WebDriver webDriver;
-    private WebDriverWait wait;
+    protected WebDriver webDriver;
+    protected WebDriverWait wait;
 
-    public BasePageObject(WebDriver driver) {
-        this.webDriver = driver;
+
+    public BasePageObject(WebDriver webDriver, WebDriverWait wait) {
+        this.webDriver = webDriver;
+        this.wait = wait;
     }
 
+    public BasePageObject(){}
+
+    /**
+     * Go to URL
+     *
+     * @author Leo Jakus-Mejarec
+     * @param url URL to visit
+     */
     public void visit(String url){
         if(url.contains("http")) {
             this.webDriver.get(url);
@@ -22,7 +32,7 @@ public class BasePageObject {
         }
     }
 
-    public WebElement find(By locator){
+    private WebElement find(By locator){
         return this.webDriver.findElement(locator);
     }
 
@@ -34,6 +44,13 @@ public class BasePageObject {
         find(locator).sendKeys(text);
     }
 
+    /**
+     * Checks if certain element is displayed, using default WebDriverWait
+     *
+     * @author Leo Jakus-Mejarec
+     * @param locator By locator of the element
+     * @return True if element is found, flase if not
+     */
     public boolean isDisplayed(By locator){
         try{
             return find(locator).isDisplayed();
@@ -42,6 +59,14 @@ public class BasePageObject {
         }
     }
 
+    /**
+     * Checks if certain element is displayed
+     *
+     * @author Leo Jakus-Mejarec
+     * @param locator By locator of the element
+     * @param timeout Timeout for the search
+     * @return True if element is found, flase if not
+     */
     public boolean isDisplayed(By locator, int timeout){
         try {
             wait = new WebDriverWait(webDriver, timeout);
@@ -51,4 +76,65 @@ public class BasePageObject {
         }
         return true;
     }
+
+    /**
+     * Compare current and expected title
+     *
+     * @author Leo Jakus-Mejarec
+     * @param expectedTitle Expected title
+     * @return Returns true if expected title matches current title, false if not
+     */
+    public boolean isTitle(String expectedTitle){
+        try {
+            wait.until(ExpectedConditions.titleIs(expectedTitle));
+        }catch (TimeoutException e){
+            return false;
+        }
+        return true;
+    }
+
+    public void click(WebElement element){
+        element.click();
+    }
+
+    /**
+     * Type wanted text into text input element
+     *
+     * @author Leo Jakus-Mejarec
+     * @param element TextInput element
+     * @param text Text that will entered
+     */
+    public void inputText(WebElement element, String text){
+        element.sendKeys(text);
+    }
+
+    /**
+     * Compare expected string and string from Web Element
+     *
+     * @author Leo Jakus-Mejarec
+     * @param locator Text element By locator
+     * @param expectedText Expected text that locator will be compared to
+     * @return True if text matches expected
+     */
+    public boolean compareText(By locator, String expectedText){
+        String currentText;
+        currentText = find(locator).getText();
+        if(currentText.equals(expectedText)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * Get text in certain element
+     *
+     * @author Leo Jakus-Mejarec
+     * @param locator Wanted element locator
+     * @return Text within wanted element
+     */
+    public String getText(By locator){
+        return find(locator).getText();
+    }
+
 }
