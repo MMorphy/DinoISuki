@@ -15,6 +15,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.springframework.data.annotation.CreatedDate;
+
 @Entity
 @Table(name = "notifications")
 public class Notification {
@@ -24,6 +26,8 @@ public class Notification {
 	private Long id;
 
 	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "created_at", nullable = false, updatable = false)
+	@CreatedDate
 	private Date createdAt;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
