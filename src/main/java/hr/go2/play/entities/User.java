@@ -44,8 +44,8 @@ public class User {
 	@Column(nullable = false)
 	private boolean enabled;
 
-	@OneToMany(cascade = { CascadeType.ALL })
-	@JoinColumn(name = "user_id")
+	@ManyToMany(cascade = { CascadeType.ALL })
+	@JoinTable(name = "user_videos", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "video_id", referencedColumnName = "id"))
 	private Collection<Video> paidVideos;
 
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
