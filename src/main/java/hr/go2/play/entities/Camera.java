@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ColumnDefault;
+
 @Entity
 @Table(name = "cameras")
 public class Camera {
@@ -27,16 +29,20 @@ public class Camera {
 	@OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
 	@JoinColumn(name = "camera_id")
 	private Collection<Video> videos;
+
+	@Column(nullable = false)
+	private boolean available = true;
 	
 	public Camera() {
 
 	}
 
-	public Camera(Long id, String name, Collection<Video> videos) {
+	public Camera(Long id, String name, Collection<Video> videos, boolean available) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.videos = videos;
+		this.available = available;
 	}
 
 	public Long getId() {
@@ -61,6 +67,14 @@ public class Camera {
 
 	public void setVideos(Collection<Video> videos) {
 		this.videos = videos;
+	}
+
+	public boolean isAvailable() {
+		return available;
+	}
+
+	public void setAvailable(boolean available) {
+		this.available = available;
 	}
 
 }

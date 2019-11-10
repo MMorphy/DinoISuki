@@ -32,6 +32,10 @@ public class User {
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Collection<Role> roles;
 
+	@ManyToMany(cascade = {CascadeType.ALL})
+	@JoinTable(name = "user_teams", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id"))
+	private Collection<Team> teams;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_at", nullable = false, updatable = false)
 	@CreatedDate
@@ -52,6 +56,10 @@ public class User {
 	@JoinColumn(name = "user_id")
 	private Collection<Sports> likedSports;
 
+	@OneToMany(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "user_id")
+	private Collection<Subscription> subscriptions;
+	
 	@Column(nullable = false, unique = true)
 	private String username;
 
@@ -66,17 +74,18 @@ public class User {
 
 	}
 
-	public User(Long id, Collection<Role> roles, Date createdAt, boolean enabled, Collection<Video> paidVideos,
-			Collection<Term> reservedTerms, Collection<Sports> likedSpords, String username, String password,
-			Date dateOfBirth) {
-		super();
+	public User(Long id, Collection<Role> roles, Collection<Team> teams, Date createdAt, boolean enabled,
+			Collection<Video> paidVideos, Collection<Term> reservedTerms, Collection<Sports> likedSports,
+			Collection<Subscription> subscriptions, String username, String password, Date dateOfBirth) {
 		this.id = id;
 		this.roles = roles;
+		this.teams = teams;
 		this.createdAt = createdAt;
 		this.enabled = enabled;
 		this.paidVideos = paidVideos;
 		this.reservedTerms = reservedTerms;
-		this.likedSports = likedSpords;
+		this.likedSports = likedSports;
+		this.subscriptions = subscriptions;
 		this.username = username;
 		this.password = password;
 		this.dateOfBirth = dateOfBirth;
@@ -160,6 +169,22 @@ public class User {
 
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
+	}
+
+	public Collection<Team> getTeams() {
+		return teams;
+	}
+
+	public void setTeams(Collection<Team> teams) {
+		this.teams = teams;
+	}
+
+	public Collection<Subscription> getSubscriptions() {
+		return subscriptions;
+	}
+
+	public void setSubscriptions(Collection<Subscription> subscriptions) {
+		this.subscriptions = subscriptions;
 	}
 
 }
