@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,7 +61,7 @@ public class ReservationRest {
 	//Get all reservations for field by time
 	//Get all reservations for sport
 
-	//TODO: Reponse date and time doesn't match with date and time in db - wrong timezones?
+	//TODO: Response date and time doesn't match with date and time in db - wrong timezones?
 	@GetMapping("/")
 	public ResponseEntity<?> getAllReserved(){
 		 List<Term> terms = (List<Term>) termService.findTermsByAvailable(false);
@@ -68,43 +69,55 @@ public class ReservationRest {
          
          return new ResponseEntity<>(termDTOList, HttpStatus.OK);
 	}
-	
+
 	/**
-	 * @param frDto
-	 * id is field id
-	 * {
-   "date":"2020-03-23",
-   "available":"false",
-   "id":"3"
-}
-	 * @return
+	 * 
+	 * @param stringDate
+	 * @param fieldId
+	 * @param isReserved
+	 * @return list of terms
+	 * HTTP request example:
+	 * http://localhost:8080/api/reservations/field/reservations/byDate/2020-03-23/3/false
 	 */
-	@GetMapping("/field/reservations/byDate")
-	public ResponseEntity<?> getReservationsForFieldByDate(@RequestBody FieldReservationDTO frDto){
-		 List<Term> terms = (List<Term>) termService.findTermsByDateAndAvailableAndFieldId(frDto.getDate(), frDto.getAvailable(), frDto.getId());
+	@GetMapping("/field/reservations/byDate/{stringDate}/{fieldId}/{isReserved}")
+	public ResponseEntity<?> getReservationsForFieldByDate(@PathVariable String stringDate, @PathVariable Long fieldId, @PathVariable boolean isReserved){
+		Date date = null;
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			date = format.parse(stringDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		 List<Term> terms = (List<Term>) termService.findTermsByDateAndAvailableAndFieldId(date, isReserved, fieldId);
 
          List<TermDTO> termDTOList = terms.stream().map(term -> mapper.map(term, TermDTO.class)).collect(Collectors.toList());
          return new ResponseEntity<>(termDTOList, HttpStatus.OK);
 	}
 
 	/**
-	 * @param frDto
-	 * id is sport id
-	 * {
-   "date":"2020-03-23",
-   "available":"false",
-   "id":"3"
-}
-	 * @return
+	 * 
+	 * @param stringDate
+	 * @param sportId
+	 * @param isReserved
+	 * @return list of terms
+	 * HTTP request example:
+	 * http://localhost:8080/api/reservations/field/reservations/bySport/2020-03-23/3/false
 	 */
-	@GetMapping("/field/reservations/bySport")
-	public ResponseEntity<?> getReservationsForSport(@RequestBody FieldReservationDTO frDto){
-		 Sports sport = sportsService.findSportsById(frDto.getId());
+	@GetMapping("/field/reservations/bySport/{stringDate}/{sportId}/{isReserved}")
+	public ResponseEntity<?> getReservationsForSport(@PathVariable String stringDate, @PathVariable Long sportId, @PathVariable boolean isReserved){
+		Date date = null;
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			date = format.parse(stringDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		 Sports sport = sportsService.findSportsById(sportId);
 		 List<Field> fields = (List<Field>) fieldService.findFieldBySportName(sport.getName());
 
 		 List<Term> terms = new ArrayList<Term>();
 		 for (Field field : fields) {
-			 terms.addAll((List<Term>)termService.findTermsByAvailableAndField_Id(frDto.getAvailable(), field.getId()));
+			 terms.addAll((List<Term>)termService.findTermsByAvailableAndField_Id(isReserved, field.getId()));
 		 }
 
          List<TermDTO> termDTOList = terms.stream().map(term -> mapper.map(term, TermDTO.class)).collect(Collectors.toList());
@@ -211,6 +224,10 @@ public class ReservationRest {
 		private long termId;
 		private long userId;
 		private long fieldId;
+
+		public ReservationDTO() {
+			
+		}
 		
 		public ReservationDTO(long termId, long userId, long fieldId) {
 			super();
@@ -243,43 +260,5 @@ public class ReservationRest {
 			this.fieldId = fieldId;
 		}
 
-	}
-
-	private static class FieldReservationDTO {
-		private String date;
-		private String available;
-		private long id;
-		public FieldReservationDTO(String date, String available, long id) {
-			super();
-			this.date = date;
-			this.available = available;
-			this.id = id;
-		}
-		public Date getDate() {
-			Date date = null;
-			try {
-				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-				date = format.parse(this.date);
-			} catch (ParseException ex) {
-				ex.printStackTrace();
-			}
-			return date;
-		}
-		public void setDate(String date) {
-			this.date = date;
-		}
-		public boolean getAvailable() {
-			return Boolean.parseBoolean(available);
-		}
-
-		public void setAvailable(String available) {
-			this.available = available;
-		}
-		public long getId() {
-			return id;
-		}
-		public void setId(long id) {
-			this.id = id;
-		}
 	}
 }
