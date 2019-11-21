@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import hr.go2.play.DTO.CameraDTO;
-import hr.go2.play.DTO.TermDTO;
+import hr.go2.play.DTO.LocationDTO;
 import hr.go2.play.entities.Camera;
-import hr.go2.play.entities.Term;
+import hr.go2.play.entities.Location;
 import hr.go2.play.impl.CameraServiceImpl;
 import hr.go2.play.impl.FieldServiceImpl;
 import hr.go2.play.impl.LocationServiceImpl;
@@ -125,7 +125,7 @@ public class AdminRest {
 	/**
 	 * 
 	 * @param id
-	 * JSON body example (camera id):
+	 * JSON body example - just sent camera id which you want to delete:
 	 * 4
 	 * @return
 	 */
@@ -134,5 +134,13 @@ public class AdminRest {
 		camService.deleteCameraById(Long.parseLong(id));
 		
 		return new ResponseEntity<String>("Camera deleted!", HttpStatus.CREATED);
+	}
+
+	@PostMapping("/create/location")
+	public ResponseEntity<String> createLocation (@RequestBody LocationDTO locationDto) {
+		Location loc = mapper.map(locationDto, Location.class);
+		locationService.saveLocation(loc);
+		
+		return new ResponseEntity<String>("Location created!", HttpStatus.CREATED);
 	}
 }

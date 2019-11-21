@@ -6,12 +6,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class UserDTO {
 
 	private Long id;
 
 	private List<RoleDTO> roles;
 
+	@JsonFormat(pattern="yyyy/MM/dd HH:mm:ss")
 	private String createdAt;
 
 	private String enabled;
@@ -26,6 +29,7 @@ public class UserDTO {
 
 	private String password;
 
+	@JsonFormat(pattern="dd/MM/yyyy")
 	private String dateOfBirth;
 
 	public UserDTO() {
@@ -70,7 +74,7 @@ public class UserDTO {
 		Date createdAt = null;
 		try {
 			//2019/10/24 13:13:30.183
-			SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.mmm");
+			SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			createdAt = format.parse(this.createdAt);
 		} catch (ParseException ex) {
 			ex.printStackTrace();

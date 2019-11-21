@@ -89,6 +89,11 @@
 			<artifactId>jtwig-core</artifactId>
 			<version>5.87.0.RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>

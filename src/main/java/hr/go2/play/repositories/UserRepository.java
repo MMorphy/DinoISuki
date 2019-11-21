@@ -19,4 +19,6 @@ public interface UserRepository extends JpaRepository<User, Long>{
 	Collection<User> findByLikedSports_Name(String name);
 
 	Optional<User> findByUsername(String username);
+	
+	Boolean existsByUsername(String username);
 }

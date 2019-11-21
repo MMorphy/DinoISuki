@@ -211,7 +211,7 @@ public class DummyDataRest {
 		sport3.setName("Kosarka");
 		
 		Term term1 = new Term();
-		term1.setAvailable(false);
+//		term1.setAvailable(false);
 		term1.setDate(new Date(120, 0, 21));
 		term1.setTimeFrom(new Date(120, 0, 21, 12, 0));
 		term1.setTimeTo(new Date(120, 0, 21, 13, 9));
