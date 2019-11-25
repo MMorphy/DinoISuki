@@ -1,6 +1,8 @@
 package hr.go2.play.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -62,9 +64,9 @@ public class UserAAARest {
             String username = user.getUsername();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, user.getPassword()));
             String token = jwtTokenProvider.createToken(username, (Set<Role>) user.getRoles());
-            Map<Object, Object> model = new HashMap<>();
-            model.put("username", username);
-            model.put("token", token);
+            List<Object> model = new ArrayList<>();
+            model.add("{\"username\":" +  "\"" + username + "\"}");
+            model.add("{\"token\":" + "\"" + token  + "\"}" );
             return new ResponseEntity<String>(model.toString(), HttpStatus.CREATED);
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username/password supplied");
@@ -89,8 +91,8 @@ public class UserAAARest {
             throw new BadCredentialsException("User with username: " + user.getUsername() + " already exists");
         }
         userDetailsService.saveUser(user);
-        Map<Object, Object> model = new HashMap<>();
-        model.put("message", "User registered successfully");
+        List<Object> model = new ArrayList<>();
+        model.add("\"User registered successfully\"");
         return new ResponseEntity<String>(model.toString(), HttpStatus.CREATED);
     }
 }
