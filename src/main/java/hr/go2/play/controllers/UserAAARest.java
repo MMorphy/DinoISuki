@@ -67,7 +67,7 @@ public class UserAAARest {
             model.add("{\"token\":" + "\"" + token  + "\"}" );
             return new ResponseEntity<String>(model.toString(), HttpStatus.CREATED);
         } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid username/password supplied");
+        	return new ResponseEntity<String>("Invalid username/password supplied", HttpStatus.BAD_REQUEST);
         }
     }
 
