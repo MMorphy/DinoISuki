@@ -35,12 +35,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-	    http.httpBasic().disable().csrf().disable().sessionManagement()
-	            .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-	            .antMatchers("/api/user/login").permitAll().antMatchers("/api/user/register").permitAll()
-	            .antMatchers("/api/user/logout").hasAuthority("ADMIN").anyRequest().authenticated().and().csrf()
-	            .disable().exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint()).and()
-	            .apply(new JwtConfigurer(jwtTokenProvider));
+		// Disable CSRF (cross site request forgery)
+		http.csrf().disable();
+
+		// No session will be created or used by spring security
+		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+		// Entry points
+		http.authorizeRequests()//
+		    .antMatchers("/api/user/login").permitAll()//
+		    .antMatchers("/api/user/register").permitAll()//
+		    // Disallow everything else..
+		    .anyRequest().authenticated();
+
+		// If a user try to access a resource without having enough permissions
+		http.exceptionHandling().accessDeniedPage("/api/user/login");
+
+		// Apply JWT
+		http.apply(new JwtConfigurer(jwtTokenProvider));
 	}
 
 	@Bean

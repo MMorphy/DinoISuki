@@ -1,9 +1,7 @@
 package hr.go2.play.controllers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.modelmapper.ModelMapper;
@@ -88,7 +86,7 @@ public class UserAAARest {
     public ResponseEntity register(@RequestBody UserDTO userDto) {
     	User user = mapper.map(userDto, User.class);
         if (userRepo.existsByUsername(user.getUsername())) {
-            throw new BadCredentialsException("User with username: " + user.getUsername() + " already exists");
+       	return new ResponseEntity<String>("User with username: " + user.getUsername() + " already exists", HttpStatus.BAD_REQUEST);
         }
         userDetailsService.saveUser(user);
         List<Object> model = new ArrayList<>();
