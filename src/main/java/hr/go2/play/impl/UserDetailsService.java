@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import hr.go2.play.entities.ContactInformation;
 import hr.go2.play.entities.Role;
 import hr.go2.play.entities.User;
 import hr.go2.play.repositories.RoleRepository;
@@ -28,11 +29,16 @@ public class UserDetailsService implements org.springframework.security.core.use
 	@Autowired
 	private PasswordEncoder bCryptPasswordEncoder;
 	
-	public void saveUser (User user) {
+	public void saveUser (User user, ContactInformation contactInfo) {
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		user.setEnabled(true);
-		List<Role> userRole = (List<Role>) roleRepo.findByName("admin");
+		List<Role> userRole = (List<Role>) roleRepo.findByName("role_user");
+		if (!roleRepo.existsByName("role_user")) {
+        	userRole.add(new Role(null, "role_user", null, null));
+        	roleRepo.save(userRole.get(0));
+        }
 		user.setRoles(userRole);
+		user.setContactInfo(contactInfo);
 		userRepo.save(user);
 	}
 	

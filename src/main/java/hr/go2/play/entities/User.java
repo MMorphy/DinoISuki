@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -60,6 +61,10 @@ public class User {
 	@JoinColumn(name = "user_id")
 	private Collection<Subscription> subscriptions;
 	
+	@OneToOne(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "contact_information_id")
+	private ContactInformation contactInfo;
+	
 	@Column(nullable = false, unique = true)
 	private String username;
 
@@ -76,7 +81,7 @@ public class User {
 
 	public User(Long id, Collection<Role> roles, Collection<Team> teams, Date createdAt, boolean enabled,
 			Collection<Video> paidVideos, Collection<Term> reservedTerms, Collection<Sports> likedSports,
-			Collection<Subscription> subscriptions, String username, String password, Date dateOfBirth) {
+			Collection<Subscription> subscriptions, ContactInformation contactInfo, String username, String password, Date dateOfBirth) {
 		this.id = id;
 		this.roles = roles;
 		this.teams = teams;
@@ -86,6 +91,7 @@ public class User {
 		this.reservedTerms = reservedTerms;
 		this.likedSports = likedSports;
 		this.subscriptions = subscriptions;
+		this.contactInfo = contactInfo;
 		this.username = username;
 		this.password = password;
 		this.dateOfBirth = dateOfBirth;
@@ -185,6 +191,14 @@ public class User {
 
 	public void setSubscriptions(Collection<Subscription> subscriptions) {
 		this.subscriptions = subscriptions;
+	}
+
+	public ContactInformation getContactInfo() {
+		return contactInfo;
+	}
+
+	public void setContactInfo(ContactInformation contactInfo) {
+		this.contactInfo = contactInfo;
 	}
 
 }

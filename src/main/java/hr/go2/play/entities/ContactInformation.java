@@ -18,6 +18,7 @@ public class ContactInformation {
 	@Column(name = "telephone_number")
 	private String telephoneNumber;
 
+	@Column(name = "email", unique=true)
 	private String email;
 
 	public ContactInformation() {

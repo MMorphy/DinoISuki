@@ -18,5 +18,7 @@ public interface RoleRepository extends JpaRepository<Role, Long>{
 	Collection<Role> findByUsers_Username (String username);
 
 	Optional<Role> findByNameAndLocations_name(String name, String locationName);
+	
+	Boolean existsByName (String name);
 }
 

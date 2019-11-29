@@ -16,4 +16,6 @@ public interface ContactInformationRepository extends JpaRepository<ContactInfor
 	public Optional<ContactInformation> findByTelephoneNumber(String telephoneNumber);
 
 	public Collection<ContactInformation> findByTelephoneNumberLike(String telephoneNumber);
+	
+	public Boolean existsByEmail(String email);
 }
