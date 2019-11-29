@@ -145,7 +145,5 @@ public class UserAAARest {
 		public void setContactInfoDto(ContactInformationDTO contactInfoDto) {
 			this.contactInfoDto = contactInfoDto;
 		}
-    	
-    	
     }
 }
