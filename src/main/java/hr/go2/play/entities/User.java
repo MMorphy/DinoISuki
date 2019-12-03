@@ -19,8 +19,14 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Transactional
 @Entity
 @Table(name = "users")
 public class User {
@@ -33,6 +39,7 @@ public class User {
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Collection<Role> roles;
 
+	@JsonIgnore
 	@ManyToMany(cascade = {CascadeType.ALL})
 	@JoinTable(name = "user_teams", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id"))
 	private Collection<Team> teams;
@@ -45,19 +52,23 @@ public class User {
 	@Column(nullable = false)
 	private boolean enabled;
 
+	@JsonIgnore
 	@ManyToMany(cascade = { CascadeType.ALL })
 	@JoinTable(name = "user_videos", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "video_id", referencedColumnName = "id"))
 	private Collection<Video> paidVideos;
 
+	@JsonIgnore
 	@OneToMany(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "user_id")
 	private Collection<Term> reservedTerms;
-
-	@OneToMany(cascade = { CascadeType.ALL })
+	
+	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
 	@JoinColumn(name = "user_id")
 	private Collection<Sports> likedSports;
 
-	@OneToMany(cascade = { CascadeType.ALL })
+	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
 	@JoinColumn(name = "user_id")
 	private Collection<Subscription> subscriptions;
 	

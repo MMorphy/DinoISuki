@@ -5,7 +5,6 @@ import java.util.Collection;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,8 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "roles")
@@ -28,9 +26,11 @@ public class Role {
 	@Column(nullable = false, unique=true)
 	private String name;
 
+	@JsonIgnore
 	@ManyToMany(mappedBy = "roles")
 	private Collection<User> users;
 
+	@JsonIgnore
 	@OneToMany(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "role_id", nullable = true)
 	private Collection<Location> locations;

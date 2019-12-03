@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -73,6 +75,17 @@ public class MyUserRest {
 		return new ResponseEntity<String>("User updated!", HttpStatus.CREATED);
 	}
 	
+	@GetMapping("/getUser/{username}")
+	public ResponseEntity<User> getUser(@PathVariable String username) {
+		if(userRepo.existsByUsername(username)) {
+			User user = userService.findUserByUsername(username);
+			user.getLikedSports();
+			return new ResponseEntity<User>(user, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<User>(new User(), HttpStatus.NOT_ACCEPTABLE);
+		}
+	}
+
     private static class UserWithContactInfoDTO {
     	private UserDTO userDto;
     	private ContactInformationDTO contactInfoDto;
