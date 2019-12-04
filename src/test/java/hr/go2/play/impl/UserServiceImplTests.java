@@ -55,15 +55,15 @@ public class UserServiceImplTests {
 		user.setUsername("userRol");
 		user.setPassword("1234");
 		user.setDateOfBirth(new Date());
-		reservedTerms.add(term);
-		user.setReservedTerms(reservedTerms);
+		//reservedTerms.add(term);
+		//user.setReservedTerms(reservedTerms);
 		sport.setName("plivanje");
 		likedSports.add(sport);
 		user.setLikedSports(likedSports);
 		users.add(user);
 		
-		role.setName("admin");
-		role.setLocations(locations);
+		role.setName("role_user");
+		//role.setLocations(locations);
 		role.setUsers(users);
 		roles.add(role);
 		
@@ -87,22 +87,22 @@ public class UserServiceImplTests {
 		assertThat(userTest.get(0).getId()).isEqualTo(user.getId());
 	}
 	
-	@Test
-	@Order(3)
-	public void findByReservedTerms() {
-		List<User> userTest = (List<User>) userService.findUsersByReservedTerms(term);
-		assertThat(userTest.get(0).getId()).isEqualTo(user.getId());
-	}
+//	@Test
+//	@Order(3)
+//	public void findByReservedTerms() {
+//		List<User> userTest = (List<User>) userService.findUsersByReservedTerms(term);
+//		assertThat(userTest.get(0).getId()).isEqualTo(user.getId());
+//	}
 	
 	@Test
-	@Order(4)
+	@Order(3)
 	public void findByLikedSports_Name() {
 		List<User> userTest = (List<User>) userService.findUsersByLikedSportsName(sport.getName());
 		assertThat(userTest.get(0).getId()).isEqualTo(user.getId());
 	}
 	
 	@Test
-	@Order(5)
+	@Order(4)
 	public void findByUsername() {
 		User userTest = userService.findUserByUsername(user.getUsername());
 		assertThat(userTest.getId()).isEqualTo(user.getId());
@@ -110,8 +110,8 @@ public class UserServiceImplTests {
 	
 	@After
 	public void deleteAll() {
-		roleService.deleteAllRoles();
 		userService.deleteAllUsers();
+		roleService.deleteAllRoles();
 	}
 
 }

@@ -51,7 +51,7 @@ public class RoleServiceTests {
 		user.setDateOfBirth(new Date());
 		users.add(user);
 
-		role.setName("admin");
+		role.setName("role_user");
 		role.setLocations(locations);
 		role.setUsers(users);
 		roles.add(role);
@@ -69,38 +69,38 @@ public class RoleServiceTests {
 		assertThat(roleTest.get(0).getId()).isEqualTo(role.getId());
 	}
 
+//	@Test
+//	@Order(2)
+//	public void findByLocations_Name() {
+//		Role roleTest = roleService.findRoleByLocationsName(location.getName());
+//		assertThat(roleTest.getId()).isEqualTo(role.getId());
+//	}
+//
+//	@Test
+//	@Order(3)
+//	public void findByLocations_Address() {
+//		Role roleTest = roleService.findRoleByLocationsAddress(location.getAddress());
+//		assertThat(roleTest.getId()).isEqualTo(role.getId());
+//	}
+
 	@Test
 	@Order(2)
-	public void findByLocations_Name() {
-		Role roleTest = roleService.findRoleByLocationsName(location.getName());
-		assertThat(roleTest.getId()).isEqualTo(role.getId());
-	}
-
-	@Test
-	@Order(3)
-	public void findByLocations_Address() {
-		Role roleTest = roleService.findRoleByLocationsAddress(location.getAddress());
-		assertThat(roleTest.getId()).isEqualTo(role.getId());
-	}
-
-	@Test
-	@Order(4)
 	public void findByUsers_Username() {
 		List<Role> roleTest = (List<Role>) roleService.findRoleByUsersUsername(user.getUsername());
 		assertThat(roleTest.get(0).getId()).isEqualTo(role.getId());
 	}
 
-	@Test
-	@Order(5)
-	public void findByNameAndLocationsName() {
-		Role roleTest = roleService.findRoleByNameAndLocationsName(role.getName(), location.getName());
-		assertThat(roleTest.getId()).isEqualTo(role.getId());
-	}
+//	@Test
+//	@Order(5)
+//	public void findByNameAndLocationsName() {
+//		Role roleTest = roleService.findRoleByNameAndLocationsName(role.getName(), location.getName());
+//		assertThat(roleTest.getId()).isEqualTo(role.getId());
+//	}
 
 	@After
 	public void deleteAll() {
-		roleService.deleteAllRoles();
 		userService.deleteAllUsers();
+		roleService.deleteAllRoles();
 	}
 
 }

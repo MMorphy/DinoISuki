@@ -53,15 +53,15 @@ public class UserRepositoryTests {
 		user.setUsername("userRol");
 		user.setPassword("1234");
 		user.setDateOfBirth(new Date());
-		reservedTerms.add(term);
-		user.setReservedTerms(reservedTerms);
+		//reservedTerms.add(term);
+		//user.setReservedTerms(reservedTerms);
 		sport.setName("plivanje");
 		likedSports.add(sport);
 		user.setLikedSports(likedSports);
 		users.add(user);
 		
-		role.setName("admin");
-		role.setLocations(locations);
+		role.setName("role_user");
+		//role.setLocations(locations);
 		role.setUsers(users);
 		roles.add(role);
 		
@@ -85,22 +85,22 @@ public class UserRepositoryTests {
 		assertThat(userTest.get(0).getId()).isEqualTo(user.getId());
 	}
 	
-	@Test
-	@Order(3)
-	public void findByReservedTerms() {
-		List<User> userTest = (List<User>) userRepository.findByReservedTerms(term);
-		assertThat(userTest.get(0).getId()).isEqualTo(user.getId());
-	}
+//	@Test
+//	@Order(3)
+//	public void findByReservedTerms() {
+//		List<User> userTest = (List<User>) userRepository.findByReservedTerms(term);
+//		assertThat(userTest.get(0).getId()).isEqualTo(user.getId());
+//	}
 	
 	@Test
-	@Order(4)
+	@Order(3)
 	public void findByLikedSports_Name() {
 		List<User> userTest = (List<User>) userRepository.findByLikedSports_Name(sport.getName());
 		assertThat(userTest.get(0).getId()).isEqualTo(user.getId());
 	}
 	
 	@Test
-	@Order(5)
+	@Order(4)
 	public void findByUsername() {
 		Optional<User> userTest = userRepository.findByUsername(user.getUsername());
 		assertThat(userTest.isPresent()).isTrue();
@@ -109,8 +109,8 @@ public class UserRepositoryTests {
 	
 	@After
 	public void deleteAll() {
-		roleRepository.deleteAll();
 		userRepository.deleteAll();
+		roleRepository.deleteAll();
 	}
 
 }
