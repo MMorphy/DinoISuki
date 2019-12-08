@@ -1,6 +1,7 @@
 package hr.go2.play.controllers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -25,6 +26,7 @@ import hr.go2.play.entities.ContactInformation;
 import hr.go2.play.entities.Role;
 import hr.go2.play.entities.User;
 import hr.go2.play.impl.UserDetailsService;
+import hr.go2.play.impl.UserServiceImpl;
 import hr.go2.play.jwt.JwtTokenProvider;
 import hr.go2.play.repositories.ContactInformationRepository;
 import hr.go2.play.repositories.RoleRepository;
@@ -58,11 +60,12 @@ public class UserAAARest {
 
     @Autowired
     private UserDetailsService userDetailsService;
+    
+    @Autowired
+    private UserServiceImpl userService;
  
     /**
      * { 
-          "createdAt":"2019/11/19 00:00:00",
-          "dateOfBirth":"1995/10/10",
           "username":"test4",
           "password":"test4"
        }
@@ -72,17 +75,25 @@ public class UserAAARest {
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody UserDTO userDto) {
         try {
-        	User user = mapper.map(userDto, User.class);
+        	if (!userRepo.existsByUsername(userDto.getUsername())) {
+        		logger.error("Invalid username");
+            	return new ResponseEntity<String>("Invalid username supplied", HttpStatus.BAD_REQUEST);
+        	}
+        	User user = userService.findUserByUsername(userDto.getUsername());
             String username = user.getUsername();
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, user.getPassword()));
-            String token = jwtTokenProvider.createToken(username, (Set<Role>) user.getRoles());
+            Set<String> roles = new HashSet<>();
+            for (Role role : user.getRoles()) {
+				roles.add(role.getName());
+			}
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, userDto.getPassword()));
+            String token = jwtTokenProvider.createToken(username, roles);
             List<Object> model = new ArrayList<>();
             model.add("{\"username\":" +  "\"" + username + "\"}");
             model.add("{\"token\":" + "\"" + token  + "\"}" );
             return new ResponseEntity<String>(model.toString(), HttpStatus.CREATED);
         } catch (AuthenticationException e) {
-        	logger.error("Invalid username/password supplied", e);
-        	return new ResponseEntity<String>("Invalid username/password supplied", HttpStatus.BAD_REQUEST);
+        	logger.error("Invalid password supplied", e);
+        	return new ResponseEntity<String>("Invalid password supplied", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -92,8 +103,8 @@ public class UserAAARest {
   "userDto": {
     "createdAt": "2019/11/19 00:00:00",
     "dateOfBirth": "1995/10/10",
-    "username": "test2",
-    "password": "test2"
+    "username": "test4",
+    "password": "test4"
   },
   "contactInfoDto": {
     "telephoneNumber": "0800 091 091",

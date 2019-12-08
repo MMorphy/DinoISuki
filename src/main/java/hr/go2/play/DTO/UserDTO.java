@@ -37,6 +37,11 @@ public class UserDTO {
 		this.reservedTerms = new ArrayList<>();
 		this.likedSports = new ArrayList<>();
 	}
+	
+	public UserDTO(String username, String password) {
+		this.username = username;
+		this.password = password;
+	}
 
 	public UserDTO(Long id, List<RoleDTO> roles, String createdAt, String enabled, List<VideoDTO> paidVideos,
 			List<TermDTO> reservedTerms, List<SportsDTO> likedSports, String username, String password,
