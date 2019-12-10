@@ -20,8 +20,8 @@ public class RestControllerTestUtility {
 
         System.out.println("Starting with setup");
         try{
-            postRequest(basicUrl + "/user/register", defaultLoginJSON);
-            token = getToken(basicUrl + "/user/login", defaultLoginJSON);
+            postRequest("/api/user/register", registerJSON);
+            token = getToken("/api/user/login", defaultLoginJSON);
 
 
         }catch (Exception e){
@@ -177,6 +177,7 @@ public class RestControllerTestUtility {
             response = new JsonNode("Exception occured");
         }
         try {
+            System.out.println("Json array: " + response.toString()); //TODO: remove
             return response.getArray().getJSONObject(1).getString("token");
         }catch (JSONException e){
             System.out.println("Mishandled JSON");

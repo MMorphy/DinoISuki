@@ -1,8 +1,6 @@
 package rest;
 
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import static org.testng.Assert.assertTrue;
 import static rest.RestControllerTestUtility.*;
@@ -20,15 +18,16 @@ public class AdminRestControllerTest extends AbstractTest {
     private String updateCameraUrl = "/admin/update/camera";
 
 
-    @BeforeTest
+    @BeforeMethod
     public void setup(){
 
         token = RestControllerTestUtility.setup();
         System.out.println("Token je: " + token);
     }
 
-    @AfterTest
+    @AfterMethod
     public void teardown(){
+        System.out.println("DEBUG:U teardownu sam!"); //TODO: remove
         RestControllerTestUtility.teardown();
     }
 
@@ -53,66 +52,68 @@ public class AdminRestControllerTest extends AbstractTest {
     }
 
     @Test
-    public void getAllCameras() {
-
-        String result = getRequest(getAllCamerasUrl);
-        assertTrue(result.equals("")); //may be null
+    public void getAllCamerasTest() {
+        postWithToken(createCameraUrl, createCameraJSON, token);
+        String result = getRequestWithToken(getAllCamerasUrl, token).toString();
+        assertTrue(result.contains("camName")); //may be null
     }
 
     @Test
-    public void updateCamera() {
+    public void updateCameraTest() {
         int result = postWithToken(updateCameraUrl, updateCameraJSON, token);
         assertTrue(result == statusSuccess);
     }
 
     @Test
-    public void updateSameCamera() {
+    public void updateSameCameraTest() {
         postWithToken(updateCameraUrl, updateCameraJSON, token);
         int result = postWithToken(updateCameraUrl, updateCameraJSON, token);
         assertTrue(result == statusSuccess);
     }
 
     @Test
-    public void updateNonExistingCamera() {
+    public void updateNonExistingCameraTest() {
         int result = postWithToken(updateCameraUrl, nonExistingCameraJSON, token);
         assertTrue(result == statusSuccess); //Should this fail?
     }
 
     @Test
-    public void deleteCameraUrl() {
+    public void deleteCameraTest() {
+        postWithToken(createCameraUrl, createCameraJSON, token);
         int result = postWithToken(deleteCameraUrl, "1", token);
         assertTrue(result == statusSuccess);
     }
 
     @Test
-    public void deleteNonExistingCameraUrl() {
+    public void deleteNonExistingCameraUrlTest() {
         int result = postWithToken(deleteCameraUrl, "0", token);
         assertTrue(result == statusFail); //if frontend breaks this should return false
     }
 
     @Test
-    public void doubleDeleteCamera() {
+    public void doubleDeleteCameraTest() {
+        postWithToken(createCameraUrl, createCameraJSON, token);
         postWithToken(deleteCameraUrl, "1", token);
         int result = postWithToken(deleteCameraUrl, "1", token);
         assertTrue(result == statusFail);
     }
 
     @Test
-    public void deleteNothing() {
+    public void deleteNothingTest() {
         int result = postWithToken(deleteCameraUrl, "", token);
         assertTrue(result == statusFail);
     }
 
     @Test
-    public void createFalseLocation() {
+    public void createFalseLocationTest() {
         int result = postWithToken(createLocationUrl, "", token);
         assertTrue(result == statusFail);
     }
 
     @Test
-    public void createLocation() {
+    public void createLocationTest() {
         int result = postWithToken(createLocationUrl, "camera", token);
-        assertTrue(result == statusSuccess);
+         assertTrue(result == statusSuccess);
     }
 
 }
