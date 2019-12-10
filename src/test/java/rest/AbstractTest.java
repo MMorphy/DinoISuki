@@ -2,6 +2,11 @@ package rest;
 
 public abstract class AbstractTest {
 
+    protected void suiteSetup(){
+    }
+
+    protected void suiteTeardown(){
+    }
 
     protected void setUp() {
     }
