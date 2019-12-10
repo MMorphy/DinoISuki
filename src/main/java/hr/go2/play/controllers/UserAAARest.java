@@ -77,7 +77,7 @@ public class UserAAARest {
         try {
         	if (!userRepo.existsByUsername(userDto.getUsername())) {
         		logger.error("Invalid username");
-            	return new ResponseEntity<String>("Invalid username supplied", HttpStatus.BAD_REQUEST);
+            	return new ResponseEntity<String>("{\"message\": \"Invalid username supplied\"}", HttpStatus.BAD_REQUEST);
         	}
         	User user = userService.findUserByUsername(userDto.getUsername());
             String username = user.getUsername();
@@ -93,7 +93,7 @@ public class UserAAARest {
             return new ResponseEntity<String>(model.toString(), HttpStatus.CREATED);
         } catch (AuthenticationException e) {
         	logger.error("Invalid password supplied", e);
-        	return new ResponseEntity<String>("Invalid password supplied", HttpStatus.BAD_REQUEST);
+        	return new ResponseEntity<String>("{\"message\": \"Invalid password supplied\"}", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -120,11 +120,11 @@ public class UserAAARest {
     	ContactInformation contactInfo = mapper.map(userContactDto.getContactInfoDto(), ContactInformation.class);
 
     	if (contactInfoRepo.existsByEmail(contactInfo.getEmail())) {
-    		return new ResponseEntity<String>("Email address already registered: " + contactInfo.getEmail(), HttpStatus.BAD_REQUEST);
+    		return new ResponseEntity<String>("{\"message\": \"Email address already registered: " + contactInfo.getEmail() + "\"}", HttpStatus.BAD_REQUEST);
     	}
 
         if (userRepo.existsByUsername(user.getUsername())) {
-       	return new ResponseEntity<String>("User with username: " + user.getUsername() + " already exists", HttpStatus.BAD_REQUEST);
+       	return new ResponseEntity<String>("{\"message\": \"User with username: " + user.getUsername() + " already exists!\"}", HttpStatus.BAD_REQUEST);
         }
 
         userDetailsService.saveUser(user, contactInfo);

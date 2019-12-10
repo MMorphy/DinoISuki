@@ -88,7 +88,7 @@ public class AdminRest {
 		Camera cam = mapper.map(camDto, Camera.class);
 		camService.saveCamera(cam);
 		
-		return new ResponseEntity<String>("Camera created!", HttpStatus.CREATED);
+		return new ResponseEntity<String>("{\"message\":\"Camera created!\"}", HttpStatus.CREATED);
 	}
 
 	@GetMapping("/get/cameras")
@@ -119,7 +119,7 @@ public class AdminRest {
 		Camera cam = mapper.map(camDto, Camera.class);
 		camService.updateCamera(cam.getId(), cam);
 		
-		return new ResponseEntity<String>("Camera updated!", HttpStatus.CREATED);
+		return new ResponseEntity<String>("{\"message\":\"Camera updated!\"}", HttpStatus.CREATED);
 	}
 	
 	/**
@@ -133,7 +133,7 @@ public class AdminRest {
 	public ResponseEntity<String> deleteCamera (@RequestBody String id) {
 		camService.deleteCameraById(Long.parseLong(id));
 		
-		return new ResponseEntity<String>("Camera deleted!", HttpStatus.CREATED);
+		return new ResponseEntity<String>("{\"message\":\"Camera deleted!\"}", HttpStatus.CREATED);
 	}
 
 	@PostMapping("/create/location")
@@ -141,6 +141,6 @@ public class AdminRest {
 		Location loc = mapper.map(locationDto, Location.class);
 		locationService.saveLocation(loc);
 		
-		return new ResponseEntity<String>("Location created!", HttpStatus.CREATED);
+		return new ResponseEntity<String>("{\"message\":\"Location created!\"}", HttpStatus.CREATED);
 	}
 }
