@@ -1,11 +1,15 @@
 package hr.go2.play.controllers;
 
+import java.util.NoSuchElementException;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +23,7 @@ import hr.go2.play.DTO.UserDTO;
 import hr.go2.play.entities.ContactInformation;
 import hr.go2.play.entities.User;
 import hr.go2.play.impl.ContactInformationServiceImpl;
+import hr.go2.play.impl.UserDetailsService;
 import hr.go2.play.impl.UserServiceImpl;
 import hr.go2.play.repositories.ContactInformationRepository;
 import hr.go2.play.repositories.UserRepository;
@@ -28,20 +33,23 @@ import hr.go2.play.repositories.UserRepository;
 @Secured("ROLE_USER")
 public class MyUserRest {
 	
-	ModelMapper mapper = new ModelMapper();
-	Logger logger = LoggerFactory.getLogger(MyUserRest.class);
+	private ModelMapper mapper = new ModelMapper();
+	private Logger logger = LoggerFactory.getLogger(MyUserRest.class);
 	
     @Autowired
-    UserRepository userRepo;
+    private UserRepository userRepo;
     
     @Autowired
-    UserServiceImpl userService;
+    private UserServiceImpl userService;
 
     @Autowired
-    ContactInformationRepository contactInfoRepo;
+    private ContactInformationRepository contactInfoRepo;
     
     @Autowired
-    ContactInformationServiceImpl contactInfoService;
+    private ContactInformationServiceImpl contactInfoService;
+    
+    @Autowired
+    private UserDetailsService userDetailsService;
     
     /**
      * JSON body example:
@@ -64,13 +72,24 @@ public class MyUserRest {
      */
 	@PostMapping("/update/user")
 	public ResponseEntity<String> updateUser (@RequestBody UserWithContactInfoDTO userContactInfoDto) {
-		User user = mapper.map(userContactInfoDto.getUserDto(), User.class);
+    	User user = new User();
+    	try {
+    		if (!userRepo.existsByUsername(userContactInfoDto.getUserDto().getUsername())) {
+    			return new ResponseEntity<String>("{\"message\": \"Username doesn't exist!\"}", HttpStatus.BAD_REQUEST);
+    		}
+    		user = mapper.map(userContactInfoDto.getUserDto(), User.class);
+    	} catch (HttpMessageNotReadableException | org.modelmapper.MappingException | NullPointerException | DataIntegrityViolationException e) {
+    		logger.error("Invalid JSON", e);
+        	return new ResponseEntity<String>("{\"message\": \"Invalid JSON\"}", HttpStatus.BAD_REQUEST);
+    	}
 		ContactInformation contactInfo = mapper.map(userContactInfoDto.getContactInfoDto(), ContactInformation.class);
 		
-		user.setContactInfo(contactInfo);
-		
-		contactInfoService.updateContactInformation(contactInfo.getId(), contactInfo);
-		userService.updateUser(user.getId(), user);
+		try {
+			contactInfoService.updateContactInformation(contactInfo.getId(), contactInfo);
+			userDetailsService.saveUser(user, contactInfo);
+		} catch (DataIntegrityViolationException e) {
+			return new ResponseEntity<String>("{\"message\": \"Invalid JSON\"}", HttpStatus.BAD_REQUEST);
+		}
 		
 		return new ResponseEntity<String>("User updated!", HttpStatus.CREATED);
 	}

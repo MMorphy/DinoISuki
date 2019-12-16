@@ -27,6 +27,7 @@ import hr.go2.play.impl.SubscriptionServiceImpl;
 import hr.go2.play.impl.SubscriptionTypeServiceImpl;
 import hr.go2.play.impl.UserServiceImpl;
 import hr.go2.play.impl.WorkingHoursServiceImpl;
+import hr.go2.play.repositories.CameraRepository;
 
 @RestController
 @RequestMapping(path = "/admin", produces = "application/json", method = {RequestMethod.GET, RequestMethod.PUT})
@@ -38,6 +39,9 @@ public class AdminRest {
 	
 	@Autowired
 	private CameraServiceImpl camService;
+	
+	@Autowired
+	private CameraRepository camRepo;
 	
 	@Autowired
 	private UserServiceImpl userService;
@@ -131,8 +135,10 @@ public class AdminRest {
 	 */
 	@PostMapping("/delete/camera")
 	public ResponseEntity<String> deleteCamera (@RequestBody String id) {
+		if (!camRepo.existsById(Long.parseLong(id))) {
+			return new ResponseEntity<String>("{\"message\":\"Camera doesn't exist!\"}", HttpStatus.BAD_REQUEST);
+		}
 		camService.deleteCameraById(Long.parseLong(id));
-		
 		return new ResponseEntity<String>("{\"message\":\"Camera deleted!\"}", HttpStatus.CREATED);
 	}
 

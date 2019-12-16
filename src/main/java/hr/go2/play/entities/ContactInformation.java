@@ -15,10 +15,10 @@ public class ContactInformation {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "telephone_number")
+	@Column(name = "telephone_number", nullable = false)
 	private String telephoneNumber;
 
-	@Column(name = "email", unique=true)
+	@Column(name = "email", unique=true, nullable = false)
 	private String email;
 
 	public ContactInformation() {

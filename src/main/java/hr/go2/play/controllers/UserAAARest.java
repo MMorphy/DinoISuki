@@ -5,12 +5,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.Valid;
+
+import org.hibernate.boot.MappingException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -116,7 +121,13 @@ public class UserAAARest {
      */
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody UserWithContactInfoDTO userContactDto) {
-    	User user = mapper.map(userContactDto.getUserDto(), User.class);
+    	User user = new User();
+    	try {
+    		user = mapper.map(userContactDto.getUserDto(), User.class);
+    	} catch (HttpMessageNotReadableException | org.modelmapper.MappingException | NullPointerException e) {
+    		logger.error("Invalid JSON", e);
+        	return new ResponseEntity<String>("{\"message\": \"Invalid JSON\"}", HttpStatus.BAD_REQUEST);
+    	}
     	ContactInformation contactInfo = mapper.map(userContactDto.getContactInfoDto(), ContactInformation.class);
 
     	if (contactInfoRepo.existsByEmail(contactInfo.getEmail())) {
