@@ -55,11 +55,7 @@ public class MyUserRest {
      * JSON body example:
      * {
   "userDto": {
-  	"id":"2",
-    "createdAt": "2019/11/19 00:00:00",
-    "dateOfBirth": "1995/10/10",
-    "username": "test2",
-    "password": "test2"
+    "username": "test2"
   },
   "contactInfoDto": {
   	"id":"2",
@@ -73,20 +69,25 @@ public class MyUserRest {
 	@PostMapping("/update/user")
 	public ResponseEntity<String> updateUser (@RequestBody UserWithContactInfoDTO userContactInfoDto) {
     	User user = new User();
+    	String username = userContactInfoDto.getUserDto().getUsername();
     	try {
-    		if (!userRepo.existsByUsername(userContactInfoDto.getUserDto().getUsername())) {
+    		if (!userRepo.existsByUsername(username)) {
     			return new ResponseEntity<String>("{\"message\": \"Username doesn't exist!\"}", HttpStatus.BAD_REQUEST);
     		}
-    		user = mapper.map(userContactInfoDto.getUserDto(), User.class);
+    		user = userService.findUserByUsername(username);
     	} catch (HttpMessageNotReadableException | org.modelmapper.MappingException | NullPointerException | DataIntegrityViolationException e) {
     		logger.error("Invalid JSON", e);
         	return new ResponseEntity<String>("{\"message\": \"Invalid JSON\"}", HttpStatus.BAD_REQUEST);
     	}
-		ContactInformation contactInfo = mapper.map(userContactInfoDto.getContactInfoDto(), ContactInformation.class);
+		ContactInformation contactInfo = user.getContactInfo();
+		
+		ContactInformation updatedContactInfo = new ContactInformation();
+		updatedContactInfo.setEmail(userContactInfoDto.getContactInfoDto().getEmail());
+		updatedContactInfo.setTelephoneNumber(userContactInfoDto.getContactInfoDto().getTelephoneNumber());
 		
 		try {
-			contactInfoService.updateContactInformation(contactInfo.getId(), contactInfo);
-			userDetailsService.saveUser(user, contactInfo);
+			contactInfoService.updateContactInformation(contactInfo.getId(), updatedContactInfo);
+			userDetailsService.saveUser(user, updatedContactInfo);
 		} catch (DataIntegrityViolationException e) {
 			return new ResponseEntity<String>("{\"message\": \"Invalid JSON\"}", HttpStatus.BAD_REQUEST);
 		}
