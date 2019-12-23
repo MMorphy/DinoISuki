@@ -86,8 +86,8 @@ public class MyUserRest {
 		updatedContactInfo.setTelephoneNumber(userContactInfoDto.getContactInfoDto().getTelephoneNumber());
 		
 		try {
-			contactInfoService.updateContactInformation(contactInfo.getId(), updatedContactInfo);
-			userDetailsService.saveUser(user, updatedContactInfo);
+			contactInfo = contactInfoService.updateContactInformation(contactInfo.getId(), updatedContactInfo);
+			userDetailsService.saveUser(user, contactInfo);
 		} catch (DataIntegrityViolationException e) {
 			return new ResponseEntity<String>("{\"message\": \"Invalid JSON\"}", HttpStatus.BAD_REQUEST);
 		}
