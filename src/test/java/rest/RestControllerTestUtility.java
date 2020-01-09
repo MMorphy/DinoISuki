@@ -6,7 +6,8 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONException;
 
 public class RestControllerTestUtility {
-    private static String basicUrl ="http://localhost:8080";
+    private static String basicUrl = System.getProperty("ip");
+    private static String psqlIP = System.getProperty("psqlIP");
     protected static int statusSuccess = 201;
     protected static int statusFail = 400;
     protected static int statusUnauthorized = 401;
@@ -154,7 +155,7 @@ public class RestControllerTestUtility {
 
     private static void deleteAllTableData(){
         try {
-            TableHandler tableHandler = new TableHandler();
+            TableHandler tableHandler = new TableHandler(psqlIP);
             tableHandler.clearTables();
         }catch(Exception e){
             System.out.println("Somthing broke :(");

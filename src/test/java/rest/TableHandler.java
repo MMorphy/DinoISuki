@@ -15,10 +15,12 @@ public class TableHandler {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private DataSource dataSource;
+    private String ip;
 
     private Connection connection;
 
-    public TableHandler() {
+    public TableHandler(String ip) {
+        this.ip = ip;
         dataSource = dataSource();
     }
 
@@ -74,7 +76,7 @@ public class TableHandler {
     private DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://192.168.0.26:5432/dinoisuki");
+        dataSource.setUrl("jdbc:postgresql://" + ip + ":5432/dinoisuki");
         dataSource.setUsername("admin");
         dataSource.setPassword("admin");
         return dataSource;

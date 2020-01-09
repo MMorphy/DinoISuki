@@ -23,6 +23,7 @@ public class UserAAARestControllerTest extends AbstractTest  {
 
     @AfterMethod
     public void teardown(){
+        System.out.println("Starting Teardown");
         RestControllerTestUtility.teardown();
     }
 
@@ -44,6 +45,16 @@ public class UserAAARestControllerTest extends AbstractTest  {
         postRequest(registerURL, registerJSON);
         int result = postRequest(registerURL, registerJSON);
         assertTrue(result == statusFail);
+    }
+
+    @Test
+    public void bulkRegisterTest(){
+        int bulk=1000;
+        for(int i=0; i<bulk; i++){
+            postRequest(registerURL, brokenJSON);
+        }
+        int result = postRequest(registerURL, registerJSON);
+        assertTrue(result == statusSuccess);
     }
 
     @Test
@@ -75,6 +86,27 @@ public class UserAAARestControllerTest extends AbstractTest  {
         assertTrue(result.equals("[]"));
     }
 
+    @Test
+    public void bulkLoginSingleUserTest(){
+        int bulk=1000;
+        postRequest(registerURL, registerJSON);
+        for(int i=0; i<bulk; i++){
+            postRequest(loginURL, fakeJSON);
+        }
+        int result = postRequest(loginURL, fakeJSON);
+        assertTrue(result == statusFail);
+    }
+
+    @Test
+    public void bulkLoginDoubleUserTest() {
+        int bulk = 1000;
+        postRequest(registerURL, registerJSON);
+        for (int i = 0; i < bulk; i++) {
+            postRequest(loginURL, fakeJSON);
+        }
+        int result = postRequest(loginURL, defaultLoginJSON);
+        assertTrue(result == statusSuccess);
+    }
     //TODO: provjere bez tokena!!!
 
 }

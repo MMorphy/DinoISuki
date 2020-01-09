@@ -26,7 +26,6 @@ public class MyUserRestControllerTest {
 
     @Test
     public void updateUserTest(){
-//        postRequest("/api/user/register", registerJSON);
         int result = postWithToken(myUserURL, myUserJson, token);
         assertTrue(result == statusSuccess);
     }
@@ -48,6 +47,15 @@ public class MyUserRestControllerTest {
     public void invalidUpdateUserJsonTest(){
         int result = postWithToken(myUserURL, brokenJson, token);
         assertTrue(result == statusSuccess);
+    }
+
+    @Test
+    public void bulkUpdateUserTest(){
+        int bulk=1000;
+        for(int i=0; i<bulk; i++){
+            String result = postWithTokenBody(myUserURL, myUserJson, token);
+            assertTrue(result.contains(successMsg), "Failed in iteration: " + i);
+        }
     }
 
 
