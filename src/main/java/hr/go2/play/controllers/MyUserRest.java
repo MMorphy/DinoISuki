@@ -85,9 +85,18 @@ public class MyUserRest {
 		updatedContactInfo.setEmail(userContactInfoDto.getContactInfoDto().getEmail());
 		updatedContactInfo.setTelephoneNumber(userContactInfoDto.getContactInfoDto().getTelephoneNumber());
 		
+		User updatedUser = new User();
+		updatedUser.setCreatedAt(user.getCreatedAt());
+		updatedUser.setDateOfBirth(userContactInfoDto.getUserDto().getDateOfBirth());
+		updatedUser.setEnabled(user.isEnabled());
+		updatedUser.setPassword(userContactInfoDto.getUserDto().getPassword());
+		updatedUser.setRoles(user.getRoles());
+		updatedUser.setContactInfo(updatedContactInfo);
+		updatedUser.setUsername(username);
+		
 		try {
-			contactInfo = contactInfoService.updateContactInformation(contactInfo.getId(), updatedContactInfo);
-			userDetailsService.saveUser(user, contactInfo);
+			contactInfoService.updateContactInformation(contactInfo.getId(), updatedContactInfo);
+			userDetailsService.updateUser(user.getId(), updatedUser, updatedContactInfo);
 		} catch (DataIntegrityViolationException e) {
 			return new ResponseEntity<String>("{\"message\": \"Invalid JSON\"}", HttpStatus.BAD_REQUEST);
 		}

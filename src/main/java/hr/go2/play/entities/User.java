@@ -73,6 +73,7 @@ public class User {
 	private Collection<Subscription> subscriptions;
 	
 	@OneToOne(cascade = { CascadeType.ALL })
+	@Fetch(value = FetchMode.JOIN)
 	@JoinColumn(name = "contact_information_id")
 	private ContactInformation contactInfo;
 	

@@ -2,6 +2,7 @@ package hr.go2.play.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import hr.go2.play.entities.ContactInformation;
 import hr.go2.play.entities.Role;
 import hr.go2.play.entities.User;
+import hr.go2.play.repositories.ContactInformationRepository;
 import hr.go2.play.repositories.RoleRepository;
 import hr.go2.play.repositories.UserRepository;
 
@@ -22,6 +24,9 @@ public class UserDetailsService implements org.springframework.security.core.use
 	
 	@Autowired
 	private UserRepository userRepo;
+	
+	@Autowired
+	private ContactInformationRepository contactInfoRepo;
 	
 	@Autowired
 	private RoleRepository roleRepo;
@@ -42,6 +47,22 @@ public class UserDetailsService implements org.springframework.security.core.use
 		userRepo.save(user);
 	}
 	
+	public User updateUser(Long id, User user, ContactInformation contactInfo) {
+		Optional<User> optUser = this.userRepo.findById(id);
+		if (optUser.isPresent()) {
+			User userNew = optUser.get();
+			userNew.setCreatedAt(user.getCreatedAt());
+			userNew.setDateOfBirth(user.getDateOfBirth());
+			userNew.setEnabled(user.isEnabled());
+			userNew.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+			userNew.setRoles(user.getRoles());
+			userNew.setUsername(user.getUsername());
+			return this.userRepo.save(userNew);
+		} else {
+			return this.userRepo.save(user);
+		}
+	}
+
 	public User findUserByUsername(String username) {
 	    return userRepo.findByUsername(username).get();
 	}
