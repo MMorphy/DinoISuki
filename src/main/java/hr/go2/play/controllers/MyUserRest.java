@@ -55,12 +55,13 @@ public class MyUserRest {
      * JSON body example:
      * {
   "userDto": {
-    "username": "test2"
+    "dateOfBirth": "1995/10/10",
+    "username": "Leo",
+    "password": "1234"
   },
   "contactInfoDto": {
-  	"id":"2",
-    "telephoneNumber": "0800 091 091",
-    "email": "ivan.ivanovic@gmail.com"
+    "telephoneNumber": "060222",
+    "email": "krivi.mail@mail.com"
   }
 }
      * @param userContactInfoDto
