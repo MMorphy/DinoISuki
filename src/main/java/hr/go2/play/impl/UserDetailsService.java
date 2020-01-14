@@ -54,7 +54,9 @@ public class UserDetailsService implements org.springframework.security.core.use
 			userNew.setCreatedAt(user.getCreatedAt());
 			userNew.setDateOfBirth(user.getDateOfBirth());
 			userNew.setEnabled(user.isEnabled());
-			userNew.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+			if (!user.getPassword().isEmpty()) {
+				userNew.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+			}
 			userNew.setRoles(user.getRoles());
 			userNew.setUsername(user.getUsername());
 			return this.userRepo.save(userNew);
