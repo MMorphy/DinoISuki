@@ -102,7 +102,7 @@ public class MyUserRest {
 			return new ResponseEntity<String>("{\"message\": \"Invalid JSON\"}", HttpStatus.BAD_REQUEST);
 		}
 		
-		return new ResponseEntity<String>("User updated!", HttpStatus.CREATED);
+		return new ResponseEntity<String>("{\"message\": \"User updated!\"}", HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/getUser/{username}")
