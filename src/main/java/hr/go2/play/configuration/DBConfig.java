@@ -32,7 +32,7 @@ public class DBConfig {
 	public DataSource dataSource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName("org.postgresql.Driver");
-		dataSource.setUrl("jdbc:postgresql://192.168.43.121:5432/dinoisuki");
+		dataSource.setUrl("jdbc:postgresql://localhost:5432/dinoisuki");
 		dataSource.setUsername("admin");
 		dataSource.setPassword("admin");
 		return dataSource;
@@ -51,7 +51,7 @@ public class DBConfig {
 	private final Properties hibernateProperties() {
 		Properties hibernateProperties = new Properties();
 		hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-		hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
+		hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "create");
 		hibernateProperties.setProperty("hibernate.jdbc.lob.non_contextual_creation", "true");
 		return hibernateProperties;
 	}

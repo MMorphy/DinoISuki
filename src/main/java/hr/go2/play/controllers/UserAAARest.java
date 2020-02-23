@@ -77,6 +77,7 @@ public class UserAAARest {
      * @param userDto
      * @return
      */
+    // in db for "test4" pw needs to be value: $2a$10$Z8d8RpMSb4sL7bengKNIBOHHVn/wYRgOfzS4vKnmeUtDAGEYxwre2
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody UserDTO userDto) {
         try {
