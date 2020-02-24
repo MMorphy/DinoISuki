@@ -36,6 +36,7 @@ import hr.go2.play.jwt.JwtTokenProvider;
 import hr.go2.play.repositories.ContactInformationRepository;
 import hr.go2.play.repositories.RoleRepository;
 import hr.go2.play.repositories.UserRepository;
+import hr.go2.play.util.Commons;
 
 @RestController
 @RequestMapping("/api/user")
@@ -68,6 +69,9 @@ public class UserAAARest {
     
     @Autowired
     private UserServiceImpl userService;
+
+    @Autowired
+    private Commons commons;
  
     /**
      * { 
@@ -141,7 +145,7 @@ public class UserAAARest {
 
         userDetailsService.saveUser(user, contactInfo);
         List<Object> model = new ArrayList<>();
-        model.add("\"User registered successfully\"");
+        model.add(commons.JSONfyReturnMessage("User registered successfully"));
         return new ResponseEntity<String>(model.toString(), HttpStatus.CREATED);
     }
     

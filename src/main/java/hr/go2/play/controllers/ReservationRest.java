@@ -31,6 +31,7 @@ import hr.go2.play.impl.FieldServiceImpl;
 import hr.go2.play.impl.SportsServiceImpl;
 import hr.go2.play.impl.TermServiceImpl;
 import hr.go2.play.impl.UserServiceImpl;
+import hr.go2.play.util.Commons;
 
 @RestController
 @RequestMapping(path = "/api/reservations", produces = "application/json", method = {RequestMethod.GET, RequestMethod.PUT})
@@ -51,6 +52,9 @@ public class ReservationRest {
 	
 	@Autowired
 	private SportsServiceImpl sportsService;
+
+	@Autowired
+	private Commons commons;
 	
 	//Create new reservation for current user
 	//Create new reservation for anonymous user
@@ -152,7 +156,7 @@ public class ReservationRest {
 
 		Term term = termService.findTermById(reservationDto.getTermId());
 		if (!term.isAvailable()) {
-			return new ResponseEntity<String>("Term already reserved!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Term already reserved!"), HttpStatus.BAD_REQUEST);
 		}
 		
 		List<Term> userTerms = (List<Term>) user.getReservedTerms();
@@ -161,7 +165,7 @@ public class ReservationRest {
 		user.setReservedTerms(userTerms);
 
 		userService.updateUser(user.getId(), user);
-		return new ResponseEntity<String>("Term reserved!", HttpStatus.CREATED);
+		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Term reserved!"), HttpStatus.CREATED);
 	}
 
 	/**
@@ -185,7 +189,7 @@ public class ReservationRest {
 		user.setReservedTerms(userTerms);
 
 		userService.updateUser(user.getId(), user);
-		return new ResponseEntity<String>("Term updated!", HttpStatus.CREATED);
+		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Term updated!"), HttpStatus.CREATED);
 	}
 
 	/**
@@ -214,9 +218,9 @@ public class ReservationRest {
 			
 			userService.updateUser(user.getId(), user);
 			
-			return new ResponseEntity<String>("Reservation deleted!", HttpStatus.CREATED);
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Reservation deleted!"), HttpStatus.CREATED);
 		} else {
-			return new ResponseEntity<String>("Term id doesn't exist!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Term id doesn't exist!"), HttpStatus.BAD_REQUEST);
 		}
 	}
 
