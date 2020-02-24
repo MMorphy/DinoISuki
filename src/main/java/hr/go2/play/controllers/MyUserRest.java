@@ -27,6 +27,7 @@ import hr.go2.play.impl.UserDetailsService;
 import hr.go2.play.impl.UserServiceImpl;
 import hr.go2.play.repositories.ContactInformationRepository;
 import hr.go2.play.repositories.UserRepository;
+import hr.go2.play.util.Commons;
 
 @RestController
 @RequestMapping("/api/myUser")
@@ -51,6 +52,8 @@ public class MyUserRest {
     @Autowired
     private UserDetailsService userDetailsService;
     
+    @Autowired
+    private Commons commons;
     /**
      * JSON body example:
      * {
@@ -73,12 +76,12 @@ public class MyUserRest {
     	String username = userContactInfoDto.getUserDto().getUsername();
     	try {
     		if (!userRepo.existsByUsername(username)) {
-    			return new ResponseEntity<String>("{\"message\": \"Username doesn't exist!\"}", HttpStatus.BAD_REQUEST);
+    			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Username doesn't exist!"), HttpStatus.BAD_REQUEST);
     		}
     		user = userService.findUserByUsername(username);
     	} catch (HttpMessageNotReadableException | org.modelmapper.MappingException | NullPointerException | DataIntegrityViolationException e) {
     		logger.error("Invalid JSON", e);
-        	return new ResponseEntity<String>("{\"message\": \"Invalid JSON\"}", HttpStatus.BAD_REQUEST);
+        	return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid JSON"), HttpStatus.BAD_REQUEST);
     	}
 		ContactInformation contactInfo = user.getContactInfo();
 		
@@ -99,10 +102,10 @@ public class MyUserRest {
 			contactInfoService.updateContactInformation(contactInfo.getId(), updatedContactInfo);
 			userDetailsService.updateUser(user.getId(), updatedUser, updatedContactInfo);
 		} catch (DataIntegrityViolationException e) {
-			return new ResponseEntity<String>("{\"message\": \"Invalid JSON\"}", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid JSON"), HttpStatus.BAD_REQUEST);
 		}
 		
-		return new ResponseEntity<String>("{\"message\": \"User updated!\"}", HttpStatus.CREATED);
+		return new ResponseEntity<String>(commons.JSONfyReturnMessage("User updated!"), HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/getUser/{username}")

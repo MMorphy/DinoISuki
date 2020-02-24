@@ -28,6 +28,7 @@ import hr.go2.play.impl.SubscriptionTypeServiceImpl;
 import hr.go2.play.impl.UserServiceImpl;
 import hr.go2.play.impl.WorkingHoursServiceImpl;
 import hr.go2.play.repositories.CameraRepository;
+import hr.go2.play.util.Commons;
 
 @RestController
 @RequestMapping(path = "/admin", produces = "application/json", method = {RequestMethod.GET, RequestMethod.PUT})
@@ -60,6 +61,9 @@ public class AdminRest {
 
 	@Autowired 
 	private LocationServiceImpl locationService;
+
+	@Autowired
+	private Commons commons;
 	
 
 	//Dodavanje novih rola userima
@@ -92,7 +96,7 @@ public class AdminRest {
 		Camera cam = mapper.map(camDto, Camera.class);
 		camService.saveCamera(cam);
 		
-		return new ResponseEntity<String>("{\"message\":\"Camera created!\"}", HttpStatus.CREATED);
+		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Camera created!"), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/get/cameras")
@@ -123,7 +127,7 @@ public class AdminRest {
 		Camera cam = mapper.map(camDto, Camera.class);
 		camService.updateCamera(cam.getId(), cam);
 		
-		return new ResponseEntity<String>("{\"message\":\"Camera updated!\"}", HttpStatus.CREATED);
+		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Camera updated!"), HttpStatus.CREATED);
 	}
 	
 	/**
@@ -136,10 +140,10 @@ public class AdminRest {
 	@PostMapping("/delete/camera")
 	public ResponseEntity<String> deleteCamera (@RequestBody String id) {
 		if (!camRepo.existsById(Long.parseLong(id))) {
-			return new ResponseEntity<String>("{\"message\":\"Camera doesn't exist!\"}", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Camera doesn't exist!"), HttpStatus.BAD_REQUEST);
 		}
 		camService.deleteCameraById(Long.parseLong(id));
-		return new ResponseEntity<String>("{\"message\":\"Camera deleted!\"}", HttpStatus.CREATED);
+		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Camera deleted!"), HttpStatus.CREATED);
 	}
 
 	@PostMapping("/create/location")
@@ -147,6 +151,6 @@ public class AdminRest {
 		Location loc = mapper.map(locationDto, Location.class);
 		locationService.saveLocation(loc);
 		
-		return new ResponseEntity<String>("{\"message\":\"Location created!\"}", HttpStatus.CREATED);
+		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Location created!"), HttpStatus.CREATED);
 	}
 }
