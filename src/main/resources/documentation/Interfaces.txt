@@ -1,0 +1,184 @@
+FE <-> BE Interfaces
+
+/api/user/login
+Description: Log in
+Type: post
+Input:
+{ "username":"test4", "password":"test4" }
+Output:
+[{"username":"test4"}, {"token":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0NCIsInJvbGVzIjpbXSwiaWF0IjoxNTgyNTY1OTg3LCJleHAiOjE1ODI1Njk1ODd9.DvJoe56MT9f3ZTxsz_2OYSsJh_QLqD_s5RwwuPrUr9E"}]
+
+/api/user/register
+Description: Create new user/login
+Type: post
+Input:
+{
+  "userDto": {
+    "createdAt": "2019/11/19 00:00:00",
+    "dateOfBirth": "1995/10/10",
+    "username": "test4",
+    "password": "test4"
+  },
+  "contactInfoDto": {
+    "telephoneNumber": "0800 091 091",
+    "email": "ivo.ivic@gmail.com"
+  }
+}
+Output:
+["User registered successfully"]
+
+/api/myUser/update/user
+Description: Update user details
+Type: post
+Input:
+{
+  "userDto": {
+    "dateOfBirth": "1995/10/10",
+    "username": "test5",
+    "password": "1234"
+  },
+  "contactInfoDto": {
+    "telephoneNumber": "060222",
+    "email": "krivi.mail@mail.com"
+  }
+}
+Output:
+{"message": "User updated!"}
+
+/api/myUser/getUser/{username}
+Description: Get user details
+Type: get
+Input: @PathVariable String username
+Output:
+{
+    "id": 2,
+    "roles": [
+        {
+            "id": 1,
+            "name": "role_user"
+        }
+    ],
+    "createdAt": "2019-11-18T23:00:00.000+0000",
+    "enabled": true,
+    "likedSports": [],
+    "subscriptions": [],
+    "contactInfo": {
+        "id": 2,
+        "telephoneNumber": "060222",
+        "email": "krivi.mail@mail.com"
+    },
+    "username": "test5",
+    "password": "$2a$10$zxAOQmTfjao2g7i5ADDR5OHqgbkpVOUPESV84F5S8DDuInOTokJcm",
+    "dateOfBirth": "0016-03-17"
+}
+
+/admin/create/camera
+Description: Create new camera
+Type: post
+Input: 
+{ 
+   "id":"",
+   "name":"camName",
+   "videos":[ 
+      { 
+         "id":null,
+         "location":""
+      }
+   ]
+}
+Output:
+{
+    "message": "Camera created!"
+}
+
+/admin/update/camera
+Description: Update existing camera
+Type: post
+Input: 
+{ 
+   "id":"1",
+   "name":"camName1",
+   "videos":[ 
+   ]
+}
+Output:
+{
+    "message": "Camera updated!"
+}
+
+/admin/delete/camera
+Description: Delete existing camera
+Type: post
+Input: {id}
+Output:
+{
+    "message": "Camera deleted!"
+}
+
+/api/reservations/reserve
+Description: Reserve term
+Type: post
+Input: 
+{ 
+   "termId":"1",
+   "userId":"1",
+   "fieldId":"1"
+}
+Output:
+Term reserved!
+
+/api/reservations/update
+Description: Update already reserved term
+Type: post
+Input: 
+{ 
+   "termId":"1",
+   "userId":"1",
+   "fieldId":"2"
+}
+Output:
+Term updated!
+
+/api/reservations/delete
+Description: Delete already reserved term
+Type: post
+Input: 
+{ 
+   "termId":"1",
+   "userId":"1",
+   "fieldId":"2"
+}
+Output:
+Term deleted!
+
+/api/reservations/
+Description: Get all available terms
+Type: get
+Input: none
+Output:
+[
+    {
+        "id": 2,
+        "date": "2020-01-01",
+        "timeFrom": "11:00:00",
+        "timeTo": "12:00:00",
+        "available": false,
+        "videos": []
+    }
+]
+
+/api/reservations/field/reservations/byDate/{stringDate}/{fieldId}/{isReserved}
+Description: Filter terms by date, field, isReserved
+Type: get
+Input: eg. /api/reservations/field/reservations/byDate/2020-01-01/1/true
+Output:
+[
+    {
+        "id": 1,
+        "date": "2019-12-31",
+        "timeFrom": "11:00:00",
+        "timeTo": "12:00:00",
+        "available": true,
+        "videos": []
+    }
+]
