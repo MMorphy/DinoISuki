@@ -1,5 +1,8 @@
 package hr.go2.play.util;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Commons {
 
 	public String JSONfyReturnMessage(String returnMsg) {
