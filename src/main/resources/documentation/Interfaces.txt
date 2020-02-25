@@ -8,8 +8,8 @@ Input:
 Output:
 [{"username":"test4"}, {"token":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0NCIsInJvbGVzIjpbXSwiaWF0IjoxNTgyNTY1OTg3LCJleHAiOjE1ODI1Njk1ODd9.DvJoe56MT9f3ZTxsz_2OYSsJh_QLqD_s5RwwuPrUr9E"}]
 
-/api/user/register
-Description: Create new user/login
+/api/user/createUser
+Description: Create new user
 Type: post
 Input:
 {
@@ -25,9 +25,9 @@ Input:
   }
 }
 Output:
-["User registered successfully"]
+["User created successfully"]
 
-/api/myUser/update/user
+/api/myUser/updateUser
 Description: Update user details
 Type: post
 Input:
@@ -68,7 +68,7 @@ Output:
         "email": "krivi.mail@mail.com"
     },
     "username": "test5",
-    "password": "$2a$10$zxAOQmTfjao2g7i5ADDR5OHqgbkpVOUPESV84F5S8DDuInOTokJcm",
+    "password": null,
     "dateOfBirth": "0016-03-17"
 }
 

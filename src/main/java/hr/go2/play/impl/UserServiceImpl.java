@@ -64,7 +64,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User findUserByUsername(String username) {
 		try {
-			return this.userRepo.findByUsername(username).get();
+			User user = this.userRepo.findByUsername(username).get();
+			if(user != null) {
+				user.setPassword(null);
+			}
+			return user;
 		} catch (NoSuchElementException ex) {
 			return null;
 		}

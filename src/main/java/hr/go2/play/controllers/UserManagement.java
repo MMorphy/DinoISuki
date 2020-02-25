@@ -5,9 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.validation.Valid;
-
-import org.hibernate.boot.MappingException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,16 +17,19 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import hr.go2.play.DTO.ContactInformationDTO;
 import hr.go2.play.DTO.UserDTO;
+import hr.go2.play.DTO.UserWithContactInfoDTO;
 import hr.go2.play.entities.ContactInformation;
 import hr.go2.play.entities.Role;
 import hr.go2.play.entities.User;
+import hr.go2.play.impl.ContactInformationServiceImpl;
 import hr.go2.play.impl.UserDetailsService;
 import hr.go2.play.impl.UserServiceImpl;
 import hr.go2.play.jwt.JwtTokenProvider;
@@ -41,13 +41,13 @@ import hr.go2.play.util.Commons;
 @RestController
 @RequestMapping("/api/user")
 @Secured("ROLE_USER")
-public class UserAAARest {
+public class UserManagement {
 
 	//Login
 	//Logout
 	//Register
 	ModelMapper mapper = new ModelMapper();
-	Logger logger = LoggerFactory.getLogger(UserAAARest.class);
+	Logger logger = LoggerFactory.getLogger(UserManagement.class);
 	
 	@Autowired
     AuthenticationManager authenticationManager;
@@ -69,11 +69,15 @@ public class UserAAARest {
     
     @Autowired
     private UserServiceImpl userService;
+    
+    @Autowired
+    private ContactInformationServiceImpl contactInfoService;
 
     @Autowired
     private Commons commons;
  
     /**
+     * Desc: User login
      * { 
           "username":"test4",
           "password":"test4"
@@ -83,7 +87,7 @@ public class UserAAARest {
      */
     // in db for "test4" pw needs to be value: $2a$10$Z8d8RpMSb4sL7bengKNIBOHHVn/wYRgOfzS4vKnmeUtDAGEYxwre2
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody UserDTO userDto) {
+    public ResponseEntity<String> login(@RequestBody UserDTO userDto) {
         try {
         	if (!userRepo.existsByUsername(userDto.getUsername())) {
         		logger.error("Invalid username");
@@ -108,24 +112,25 @@ public class UserAAARest {
     }
 
     /**
+     * Desc: Create new user
      * JSON body example:
      * {
-  "userDto": {
-    "createdAt": "2019/11/19 00:00:00",
-    "dateOfBirth": "1995/10/10",
-    "username": "test4",
-    "password": "test4"
-  },
-  "contactInfoDto": {
-    "telephoneNumber": "0800 091 091",
-    "email": "ivo.ivic@gmail.com"
-  }
-}
+		  "userDto": {
+		    "createdAt": "2019/11/19 00:00:00",
+		    "dateOfBirth": "1995/10/10",
+		    "username": "test4",
+		    "password": "test4"
+		  },
+		  "contactInfoDto": {
+		    "telephoneNumber": "0800 091 091",
+		    "email": "ivo.ivic@gmail.com"
+		  }
+		}
      * @param userDto
      * @return
      */
-    @PostMapping("/register")
-    public ResponseEntity register(@RequestBody UserWithContactInfoDTO userContactDto) {
+    @PostMapping("/createUser")
+    public ResponseEntity<String> createUser(@RequestBody UserWithContactInfoDTO userContactDto) {
     	User user = new User();
     	try {
     		user = mapper.map(userContactDto.getUserDto(), User.class);
@@ -144,32 +149,73 @@ public class UserAAARest {
         }
 
         userDetailsService.saveUser(user, contactInfo);
-        List<Object> model = new ArrayList<>();
-        return new ResponseEntity<String>(commons.JSONfyReturnMessage("User registered successfully"), HttpStatus.CREATED);
+        return new ResponseEntity<String>(commons.JSONfyReturnMessage("User created successfully"), HttpStatus.CREATED);
     }
     
-    private static class UserWithContactInfoDTO {
-    	private UserDTO userDto;
-    	private ContactInformationDTO contactInfoDto;
-		public UserWithContactInfoDTO() {
-			
+    /**
+     * Desc: Update existing user
+     * JSON body example:
+     * {
+		  "userDto": {
+		    "dateOfBirth": "1995/10/10",
+		    "username": "Leo",
+		    "password": "1234"
+		  },
+		  "contactInfoDto": {
+		    "telephoneNumber": "060222",
+		    "email": "krivi.mail@mail.com"
+		  }
 		}
-		public UserWithContactInfoDTO(UserDTO userDto, ContactInformationDTO contactInfoDto) {
-			super();
-			this.userDto = userDto;
-			this.contactInfoDto = contactInfoDto;
+     * @param userContactInfoDto
+     * @return
+     */
+	@PostMapping("/updateUser")
+	public ResponseEntity<String> updateUser(@RequestBody UserWithContactInfoDTO userContactInfoDto) {
+    	User user = new User();
+    	String username = userContactInfoDto.getUserDto().getUsername();
+    	try {
+    		if (!userRepo.existsByUsername(username)) {
+    			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Username doesn't exist!"), HttpStatus.BAD_REQUEST);
+    		}
+    		user = userService.findUserByUsername(username);
+    	} catch (HttpMessageNotReadableException | org.modelmapper.MappingException | NullPointerException | DataIntegrityViolationException e) {
+    		logger.error("Invalid JSON", e);
+        	return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid JSON"), HttpStatus.BAD_REQUEST);
+    	}
+		ContactInformation contactInfo = user.getContactInfo();
+		
+		ContactInformation updatedContactInfo = new ContactInformation();
+		updatedContactInfo.setEmail(userContactInfoDto.getContactInfoDto().getEmail());
+		updatedContactInfo.setTelephoneNumber(userContactInfoDto.getContactInfoDto().getTelephoneNumber());
+		
+		User updatedUser = new User();
+		updatedUser.setCreatedAt(user.getCreatedAt());
+		updatedUser.setDateOfBirth(userContactInfoDto.getUserDto().getDateOfBirth());
+		updatedUser.setEnabled(user.isEnabled());
+		updatedUser.setPassword(userContactInfoDto.getUserDto().getPassword());
+		updatedUser.setRoles(user.getRoles());
+		updatedUser.setContactInfo(updatedContactInfo);
+		updatedUser.setUsername(username);
+		
+		try {
+			contactInfoService.updateContactInformation(contactInfo.getId(), updatedContactInfo);
+			userDetailsService.updateUser(user.getId(), updatedUser, updatedContactInfo);
+		} catch (DataIntegrityViolationException e) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid JSON"), HttpStatus.BAD_REQUEST);
 		}
-		public UserDTO getUserDto() {
-			return userDto;
+		
+		return new ResponseEntity<String>(commons.JSONfyReturnMessage("User updated!"), HttpStatus.CREATED);
+	}
+	
+	@GetMapping("/getUser/{username}")
+	public ResponseEntity<User> getUser(@PathVariable String username) {
+		if(userRepo.existsByUsername(username)) {
+			User user = userService.findUserByUsername(username);
+			user.getLikedSports();
+			return new ResponseEntity<User>(user, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<User>(new User(), HttpStatus.NOT_ACCEPTABLE);
 		}
-		public void setUserDto(UserDTO userDto) {
-			this.userDto = userDto;
-		}
-		public ContactInformationDTO getContactInfoDto() {
-			return contactInfoDto;
-		}
-		public void setContactInfoDto(ContactInformationDTO contactInfoDto) {
-			this.contactInfoDto = contactInfoDto;
-		}
-    }
+	}
+
 }
