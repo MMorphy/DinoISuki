@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import hr.go2.play.entities.Location;
 import hr.go2.play.entities.Role;
 import hr.go2.play.entities.User;
 import hr.go2.play.services.AdminService;
 
+@Service
 public class AdminServiceImpl implements AdminService {
 
 	@Autowired
