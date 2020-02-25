@@ -6,9 +6,11 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import hr.go2.play.entities.Term;
 
+@Repository
 public interface TermRepository extends JpaRepository<Term, Long>{
 
 	Collection<Term> findByDate(Date date);

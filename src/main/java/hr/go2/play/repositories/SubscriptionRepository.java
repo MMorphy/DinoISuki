@@ -4,9 +4,11 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import hr.go2.play.entities.Subscription;
 
+@Repository
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long>{
 
 	Collection<Subscription> findByValidFrom (Date validFrom);

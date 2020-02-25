@@ -4,11 +4,13 @@ import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import hr.go2.play.entities.Location;
 import hr.go2.play.entities.User;
 import hr.go2.play.entities.WorkingHours;
 
+@Repository
 public interface LocationRepository extends JpaRepository<Location, Long>{
 
 	public Optional<Location> findByAddress(String address);
