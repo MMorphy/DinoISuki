@@ -182,3 +182,19 @@ Output:
         "videos": []
     }
 ]
+
+/api/user/uploadProfilePhoto
+Description: Upload, modify, delete profile photo
+Type: post
+Input: MultipartFile profilePhoto, String username
+	username as normal input param
+	profilePhoto as key-value in request body
+Output:
+	{"message":"Successfully uploaded - KND9n.png"}
+	
+/api/user/getProfilePhoto
+Description: Fetch profile photo
+Type: get
+Input: String username
+Output: photo (as: "application/octet-stream")
+
