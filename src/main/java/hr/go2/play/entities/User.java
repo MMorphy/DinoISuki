@@ -86,6 +86,9 @@ public class User {
 	@Column(nullable = false)
 	@Temporal(TemporalType.DATE)
 	private Date dateOfBirth;
+	
+	@Column(nullable = true)
+	private String profilePhoto;
 
 	public User() {
 
@@ -93,7 +96,7 @@ public class User {
 
 	public User(Long id, Collection<Role> roles, Collection<Team> teams, Date createdAt, boolean enabled,
 			Collection<Video> paidVideos, Collection<Term> reservedTerms, Collection<Sports> likedSports,
-			Collection<Subscription> subscriptions, ContactInformation contactInfo, String username, String password, Date dateOfBirth) {
+			Collection<Subscription> subscriptions, ContactInformation contactInfo, String username, String password, Date dateOfBirth, String profilePhoto) {
 		this.id = id;
 		this.roles = roles;
 		this.teams = teams;
@@ -107,6 +110,7 @@ public class User {
 		this.username = username;
 		this.password = password;
 		this.dateOfBirth = dateOfBirth;
+		this.profilePhoto = profilePhoto;
 	}
 
 	public Long getId() {
@@ -213,4 +217,12 @@ public class User {
 		this.contactInfo = contactInfo;
 	}
 
+	public String getProfilePhoto() {
+		return profilePhoto;
+	}
+
+	public void setProfilePhoto(String profilePhoto) {
+		this.profilePhoto = profilePhoto;
+	}
+	
 }

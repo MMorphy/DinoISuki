@@ -64,11 +64,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User findUserByUsername(String username) {
 		try {
-			User user = this.userRepo.findByUsername(username).get();
-			if(user != null) {
-				user.setPassword(null);
-			}
-			return user;
+			return this.userRepo.findByUsername(username).get();
 		} catch (NoSuchElementException ex) {
 			return null;
 		}
@@ -103,6 +99,7 @@ public class UserServiceImpl implements UserService {
 			userNew.setReservedTerms(user.getReservedTerms());
 			userNew.setRoles(user.getRoles());
 			userNew.setUsername(user.getUsername());
+			userNew.setProfilePhoto(user.getProfilePhoto());
 			return this.userRepo.save(userNew);
 		} else {
 			return this.userRepo.save(user);
