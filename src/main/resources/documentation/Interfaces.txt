@@ -198,3 +198,69 @@ Type: get
 Input: String username
 Output: photo (as: "application/octet-stream")
 
+/api/notifications/getNotifications
+Description: Fetch notifications
+Type: get
+Input: String srcUser, String destUser (both optional)
+Output: List<NotificationDTO>
+[
+    {
+        "id": 2,
+        "createdAt": "2019/12/31 23:00:00",
+        "destUser": null,
+        "srcUser": null,
+        "subject": null,
+        "message": "dsfds",
+        "notificationType": null
+    },
+    {
+        "id": 1,
+        "createdAt": "2020/01/02 00:00:00",
+        "destUser": null,
+        "srcUser": null,
+        "subject": "bbsubject",
+        "message": "nnmess",
+        "notificationType": "dfgsdf"
+    }
+]
+
+/api/user/addNotification
+Description: Add notification
+Type: post
+Input: NotificationDTO (u body-u)
+{
+	"id" : 1,
+	"createdAt": "2020/01/02 00:00:00",
+	"destUser": "test4",
+	"srcUser": "test4",
+	"subject": "add",
+	"message": "addtest",
+	"notificationType": "test"
+}
+Output: 
+{"message":"Notification added"}
+
+/api/user/addNotification
+Description: Add notification
+Type: post
+Input: NotificationDTO (u body-u)
+{
+	"id" : 1,
+	"createdAt": "2020/01/02 00:00:00",
+	"destUser": "test4",
+	"srcUser": "test4",
+	"subject": "update",
+	"message": "updatetest",
+	"notificationType": "test"
+}
+Output: 
+{"message":"Notification updated"}
+
+/api/user/deleteNotifications
+Description: Delete notifications
+Type: get
+Input: List<Long> notificationIdList
+Example: https://localhost:8443/api/notifications/deleteNotifications?notificationIdList=1,2
+Output:
+{"message":"Notifications deleted"}
+

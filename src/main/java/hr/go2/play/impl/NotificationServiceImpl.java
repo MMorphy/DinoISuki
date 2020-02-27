@@ -5,10 +5,11 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import hr.go2.play.entities.Location;
 import hr.go2.play.entities.Notification;
 import hr.go2.play.entities.NotificationStatus;
 import hr.go2.play.entities.User;
@@ -17,6 +18,8 @@ import hr.go2.play.services.NotificationService;
 
 @Service
 public class NotificationServiceImpl implements NotificationService {
+
+	Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private NotificationRepository notificationRepo;
@@ -62,7 +65,20 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Override
 	public List<Notification> findNotificationsBySourceUserAndDestUser(User srcUser, User destUser) {
-		return (List<Notification>) this.notificationRepo.findBySourceUserAndDestUser(srcUser, destUser);
+		List<Notification> notifications = null;
+		if (srcUser != null && destUser != null) {
+			notifications = (List<Notification>) this.notificationRepo.findBySourceUserAndDestUser(srcUser, destUser);
+		} else if (srcUser != null) {
+			logger.debug("Dest user not found. Searching by src user.");
+			notifications = (List<Notification>) this.notificationRepo.findBySourceUser(srcUser);
+		} else if (destUser != null) {
+			logger.debug("Source user not found. Searching by dest user.");
+			notifications = (List<Notification>) this.notificationRepo.findByDestUser(destUser);
+		} else {
+			logger.debug("Source or dest user not found. Returning all notifications.");
+			notifications = this.notificationRepo.findAll();
+		}
+		return notifications;
 	}
 
 	@Override
@@ -71,9 +87,18 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	@Override
+	public List<Notification> findNotificationsBySubject(String subject) {
+		return (List<Notification>) this.notificationRepo.findBySubject(subject);
+	}
+
+	@Override
 	public void deleteNotificationById(Long id) {
 		this.notificationRepo.deleteById(id);
-		
+	}
+
+	@Override
+	public void deleteMultipleNotificationById(List<Long> idList) {
+		this.notificationRepo.deleteMultipleNotificationById(idList);
 	}
 
 	@Override
@@ -82,14 +107,15 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	@Override
-	public Notification updateNotification(Long id, Notification notification) {
-		Optional<Notification> optNotification = this.notificationRepo.findById(id);
+	public Notification updateNotification(Notification notification) {
+		Optional<Notification> optNotification = this.notificationRepo.findById(notification.getId());
 		if (optNotification.isPresent()) {
 			Notification notif = optNotification.get();
 			notif.setDestUser(notification.getDestUser());
 			notif.setMessage(notification.getMessage());
 			notif.setSourceUser(notification.getSourceUser());
 			notif.setStatus(notification.getStatus());
+			notif.setSubject(notification.getSubject());
 			return this.notificationRepo.save(notif);
 		} else {
 			return this.notificationRepo.save(notification);
@@ -99,7 +125,7 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	public void deleteAllNotifications() {
 		this.notificationRepo.deleteAll();
-		
+
 	}
 
 }

@@ -30,29 +30,34 @@ public class Notification {
 	@CreatedDate
 	private Date createdAt;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "src_user_id")
-	User sourceUser;
+	private User sourceUser;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "dest_user_id")
-	User destUser;
+	private User destUser;
+
+	@Column()
+	private String subject;
 
 	@Column(nullable = false)
-	String message;
+	private String message;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "notification_status_id")
-	NotificationStatus status;
+	private NotificationStatus status;
 
 	public Notification() {
 	}
 
-	public Notification(Long id, User sourceUser, User destUser, String message, NotificationStatus status) {
+	public Notification(Long id, Date createdAt, User sourceUser, User destUser, String subject, String message, NotificationStatus status) {
 		super();
 		this.id = id;
+		this.createdAt = createdAt;
 		this.sourceUser = sourceUser;
 		this.destUser = destUser;
+		this.subject = subject;
 		this.message = message;
 		this.status = status;
 	}
@@ -97,5 +102,20 @@ public class Notification {
 		this.status = status;
 	}
 
-	
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
 }

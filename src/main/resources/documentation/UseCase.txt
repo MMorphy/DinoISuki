@@ -1,27 +1,43 @@
 *** Use cases ***
 
-Name								Description													Expected outcome
--------------------------------------------------------------------------------------------------------------------
-Log in								User successfully logs in									success
-Log in - wrong pw					Unsuccessfull log in due to wrong pw						fail
-Log in - Unknown un					Unsuccessfull log in due to unknown username				fail
-Create user							Create user with all data									success
-Create user - no photo				Create user with all data except photo						success
-Create user - no un					Create user without username								fail
-Create user - with existing un		Create user with existing username							fail
-Create user - no pw					Create user without password								fail
-Modify user							Modify user data											success
-Modify user	- no pw					Modify user data by setting pw to enpty						fail
-Delete user							Deletes selected user										success
-Delete user - user logged in		Tries to delete user that is currently logged in			fail?
-Subscribe - by Paypal				User subscribes using Paypal								success
-Subscribe - by credit card			User subscribes using credit card							success
-Subscribe - already subscribed		User tries to subscribe but it is already subscribed		fail
-Subscribe - rejected by Paypal		User tries to subscribe but it is rejected by Paypal		fail
-Subscribe - rejected by CC			User tries to subscribe but it is rejected by credit card	fail
-View videos - preview				User loads web page with videos								success
-View videos - no videos				User loads web page with no videos							success
-View videos - 100 videos			User loads web page with 100 videos paginated by 30			success
-View videos - play video			User plays one video										success
-View videos - play multiple video	User plays more than one video								fail?
-View videos - filtering?			...
+Name									Description															Expected outcome
+-------------------------------------------------------------------------------------------------------------------------------------
+Log in									User successfully logs in											success
+Log in - wrong pw						Unsuccessfull log in due to wrong pw								fail
+Log in - Unknown un						Unsuccessfull log in due to unknown username						fail
+Create user								Create user with all data											success
+Create user - no photo					Create user with all data except photo								success
+Create user - no un						Create user without username										fail
+Create user - with existing un			Create user with existing username									fail
+Create user - no pw						Create user without password										fail
+Modify user								Modify user data													success
+Modify user	- no pw						Modify user data by setting pw to enpty								fail
+Delete user								Deletes selected user												success
+Delete user - user logged in			Tries to delete user that is currently logged in					fail?
+Subscribe - by Paypal					User subscribes using Paypal										success
+Subscribe - by credit card				User subscribes using credit card									success
+Subscribe - already subscribed			User tries to subscribe but it is already subscribed				fail
+Subscribe - rejected by Paypal			User tries to subscribe but it is rejected by Paypal				fail
+Subscribe - rejected by CC				User tries to subscribe but it is rejected by credit card			fail
+View videos - preview					User loads web page with videos										success
+View videos - no videos					User loads web page with no videos									success
+View videos - 100 videos				User loads web page with 100 videos paginated by 30					success
+View videos - play video				User plays one video												success
+View videos - play multiple video		User plays more than one video										fail(?)
+View videos - filtering?				...		
+Profile pic - upload					Upload profile photo to user that does not have one					success
+Profile pic - replace					Upload profile photo to user that already has one					success
+Profile pic - remove					Delete profile photo to user that already has one					success
+Profile pic - upload big one			Upload profile photo that is bigger than 10MB						success
+Profile pic - replace with same			Upload the same profile photo to user that already has one			success
+Profile pic - replace same file name	Replace profile photo with different pic, but same file name		success
+Notifications - add						Add one notification												success
+Notifications - add with existing id	Add notification with id as one already stored						success
+Notifications - add	with no srcUser		Add notification with srcUser set to null							success
+Notifications - add	with invalid type	Add notification with non valid notificaion type (notif. status)	success
+Notifications - update					Update notification													success
+Notifications - update non existing		Update notification with id that doesn't exist						fail
+Notifications - delete					Delete one notification												success
+Notifications - delete multiple			Delete more than one notification									success
+Notifications - delete non existing		Delete notification(s) that do not exist							success(?)
+
