@@ -240,8 +240,8 @@ Input: NotificationDTO (u body-u)
 Output: 
 {"message":"Notification added"}
 
-/api/user/addNotification
-Description: Add notification
+/api/user/updateNotification
+Description: Update notification
 Type: post
 Input: NotificationDTO (u body-u)
 {
