@@ -1,5 +1,6 @@
 package hr.go2.play.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -13,10 +14,10 @@ import hr.go2.play.services.VideoService;
 
 @Service
 public class VideoServiceImpl implements VideoService {
-	
+
 	@Autowired
 	private VideoRepository videoRepo;
-	
+
 	public VideoServiceImpl(VideoRepository videoRepo) {
 		this.videoRepo = videoRepo;
 	}
@@ -65,10 +66,30 @@ public class VideoServiceImpl implements VideoService {
 		if (optVideo.isPresent()) {
 			Video videoNew = optVideo.get();
 			videoNew.setLocation(video.getLocation());
+			videoNew.setStartedAt(video.getStartedAt());
 			return this.videoRepo.save(videoNew);
 		} else {
 			return this.videoRepo.save(video);
 		}
+	}
+
+	@Override
+	public Video findVideoByTimestamp(Date timestamp) {
+		try {
+			return this.videoRepo.findByStartedAt(timestamp).get();
+		} catch (NoSuchElementException ex) {
+			return null;
+		}
+	}
+
+	@Override
+	public List<Video> findVideosOnDate(Date date) {
+		return (List<Video>) this.videoRepo.findByDate(date);
+	}
+
+	@Override
+	public void deleteVideo(Video video) {
+		this.videoRepo.delete(video);
 	}
 
 }

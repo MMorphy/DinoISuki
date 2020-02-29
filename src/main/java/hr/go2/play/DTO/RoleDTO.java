@@ -3,12 +3,15 @@ package hr.go2.play.DTO;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class RoleDTO {
 
 	private Long id;
 
 	private String name;
 
+	@JsonIgnore
 	private List<UserDTO> users;
 
 	private List<LocationDTO> locations;

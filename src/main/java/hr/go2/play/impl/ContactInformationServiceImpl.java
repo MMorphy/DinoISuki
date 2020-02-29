@@ -81,7 +81,6 @@ public class ContactInformationServiceImpl implements ContactInformationService{
 	@Override
 	public ContactInformation updateContactInformation(Long id, ContactInformation contactInformation) {
 		Optional<ContactInformation> optContInfo = this.contactInformationRepo.findById(id);
-		
 		if(optContInfo.isPresent()) {
 			ContactInformation contInfo = optContInfo.get();
 			contInfo.setEmail(contactInformation.getEmail());
@@ -90,6 +89,11 @@ public class ContactInformationServiceImpl implements ContactInformationService{
 		} else {
 			return this.contactInformationRepo.save(contactInformation);
 		}
+	}
+
+	@Override
+	public Boolean existsByEmail(String email) {
+		return this.contactInformationRepo.existsByEmail(email);
 	}
 
 }

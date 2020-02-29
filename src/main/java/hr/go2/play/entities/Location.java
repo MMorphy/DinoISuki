@@ -2,7 +2,6 @@ package hr.go2.play.entities;
 
 import java.util.Collection;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,10 +9,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Table(name = "locations")
@@ -23,11 +26,13 @@ public class Location {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-	@JoinColumn(name = "working_hours_id")
-	private WorkingHours hours;
+	@ManyToMany(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
+	@JoinTable(name = "location_working_hours", joinColumns = @JoinColumn(name = "location_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "working_hours_id", referencedColumnName = "id"))
+	private Collection<WorkingHours> hours;
 
-	@OneToMany(cascade = {CascadeType.ALL})
+	@OneToMany(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
 	@JoinColumn(name = "location_id")
 	private Collection<Field> fields;
 
@@ -37,22 +42,24 @@ public class Location {
 	@Column(nullable=false)
 	private String name;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-	@JoinColumn(name = "contact_user_id")
-	private User contactUser;
+	@OneToOne(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.JOIN)
+	@JoinColumn(name = "contact_info_id")
+	private ContactInformation contactInformation;
 
 	public Location() {
 
 	}
 
-	public Location(Long id, WorkingHours hours, Collection<Field> fields, String address, String name, User contactUser) {
+	public Location(Long id, Collection<WorkingHours> hours, Collection<Field> fields, String address, String name,
+			ContactInformation contactInformation) {
 		super();
 		this.id = id;
 		this.hours = hours;
 		this.fields = fields;
 		this.address = address;
 		this.name = name;
-		this.contactUser = contactUser;
+		this.contactInformation = contactInformation;
 	}
 
 	public Long getId() {
@@ -63,11 +70,11 @@ public class Location {
 		this.id = id;
 	}
 
-	public WorkingHours getHours() {
+	public Collection<WorkingHours> getHours() {
 		return hours;
 	}
 
-	public void setHours(WorkingHours hours) {
+	public void setHours(Collection<WorkingHours> hours) {
 		this.hours = hours;
 	}
 
@@ -95,12 +102,11 @@ public class Location {
 		this.name = name;
 	}
 
-	public User getContactUser() {
-		return contactUser;
+	public ContactInformation getContactInformation() {
+		return contactInformation;
 	}
 
-	public void setContactUser(User contactUser) {
-		this.contactUser = contactUser;
+	public void setContactInformation(ContactInformation contactInformation) {
+		this.contactInformation = contactInformation;
 	}
-
 }

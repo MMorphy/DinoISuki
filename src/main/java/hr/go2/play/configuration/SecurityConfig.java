@@ -15,7 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
-import hr.go2.play.impl.UserDetailsService;
+import hr.go2.play.impl.UserServiceImpl;
 import hr.go2.play.jwt.JwtConfigurer;
 import hr.go2.play.jwt.JwtTokenProvider;
 
@@ -26,13 +26,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	JwtTokenProvider jwtTokenProvider;
 
+	@Autowired
+	UserServiceImpl userService;
+
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-	    UserDetailsService userDetailsService = userDetails();
-	    auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+		auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder());
 
 	}
-	
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// Disable CSRF (cross site request forgery)
@@ -60,26 +62,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		BCryptPasswordEncoder bCyrptPasswordEncoder = new BCryptPasswordEncoder();
 		return bCyrptPasswordEncoder;
 	}
-	
+
 	@Bean
 	public PasswordEncoder bCryptPasswordEncoder() {
-	    return new BCryptPasswordEncoder();
+		return new BCryptPasswordEncoder();
 	}
 
 	@Bean
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
-	    return super.authenticationManagerBean();
+		return super.authenticationManagerBean();
 	}
 
 	@Bean
 	public AuthenticationEntryPoint unauthorizedEntryPoint() {
-	    return (request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
-	            "Unauthorized");
-	}
-
-	@Bean
-	public UserDetailsService userDetails() {
-	    return new UserDetailsService();
+		return (request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+				"Unauthorized");
 	}
 }

@@ -13,10 +13,10 @@ import hr.go2.play.services.SubscriptionTypeService;
 
 @Service
 public class SubscriptionTypeServiceImpl implements SubscriptionTypeService {
-	
+
 	@Autowired
 	private SubscriptionTypeRepository subTypeRepo;
-	
+
 	public SubscriptionTypeServiceImpl(SubscriptionTypeRepository subTypeRepo) {
 		this.subTypeRepo = subTypeRepo;
 	}
@@ -28,7 +28,7 @@ public class SubscriptionTypeServiceImpl implements SubscriptionTypeService {
 
 	@Override
 	public SubscriptionType findSubscriptionTypeById(Long id) {
-		try { 
+		try {
 			return this.subTypeRepo.findById(id).get();
 		} catch (NoSuchElementException ex) {
 			return null;
@@ -64,6 +64,15 @@ public class SubscriptionTypeServiceImpl implements SubscriptionTypeService {
 			return this.subTypeRepo.save(sub);
 		} else {
 			return this.subTypeRepo.save(subType);
+		}
+	}
+
+	@Override
+	public SubscriptionType findSubscriptionTypeByPrice(Float price) {
+		try {
+			return this.subTypeRepo.findByPrice(price).get();
+		} catch (NoSuchElementException ex) {
+			return null;
 		}
 	}
 

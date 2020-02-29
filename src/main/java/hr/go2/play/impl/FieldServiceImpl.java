@@ -12,17 +12,17 @@ import hr.go2.play.repositories.FieldRepository;
 import hr.go2.play.services.FieldService;
 
 @Service
-public class FieldServiceImpl implements FieldService{
-	
+public class FieldServiceImpl implements FieldService {
+
 	@Autowired
 	private FieldRepository fieldRepo;
-	
+
 	public FieldServiceImpl(FieldRepository fieldRepo) {
 		this.fieldRepo = fieldRepo;
 	}
 
 	@Override
-	public boolean existsFieldById (Long id) {
+	public boolean existsFieldById(Long id) {
 		return fieldRepo.existsById(id);
 	}
 
@@ -41,11 +41,6 @@ public class FieldServiceImpl implements FieldService{
 	}
 
 	@Override
-	public List<Field> findFieldBySportName(String name) {
-		return (List<Field>) this.fieldRepo.findBySport_Name(name);
-	}
-
-	@Override
 	public Field findFieldByCamerasName(String name) {
 		try {
 			return this.fieldRepo.findByCameras_Name(name).get();
@@ -55,18 +50,14 @@ public class FieldServiceImpl implements FieldService{
 	}
 
 	@Override
-	public List<Field> findFieldByTermsAvail(boolean availability) {
-		return (List<Field>) this.fieldRepo.findByTerms_Available(availability);
-	}
-
-	@Override
 	public void deleteFieldById(Long id) {
 		this.fieldRepo.deleteById(id);
 	}
 
 	@Override
 	public void deleteAllFields() {
-		this.fieldRepo.deleteAll();;
+		this.fieldRepo.deleteAll();
+		;
 	}
 
 	@Override
@@ -80,12 +71,9 @@ public class FieldServiceImpl implements FieldService{
 		if (optField.isPresent()) {
 			Field fieldNew = optField.get();
 			fieldNew.setCameras(field.getCameras());
-			fieldNew.setSport(field.getSport());
-			fieldNew.setTerms(field.getTerms());
 			return this.fieldRepo.save(fieldNew);
 		} else {
 			return this.fieldRepo.save(field);
 		}
 	}
-
 }

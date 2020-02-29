@@ -26,4 +26,6 @@ public interface ContactInformationService {
 
 	public abstract void deleteAllContactInformations();
 
+	public abstract Boolean existsByEmail(String email);
+
 }

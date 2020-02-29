@@ -10,11 +10,7 @@ public interface FieldService {
 	
 	public abstract Field findFieldById(Long id);
 	
-	public abstract List<Field> findFieldBySportName(String name);
-	
 	public abstract Field findFieldByCamerasName(String name);
-	
-	public abstract List<Field> findFieldByTermsAvail(boolean availability);
 	
 	public abstract void deleteFieldById(Long id);
 	

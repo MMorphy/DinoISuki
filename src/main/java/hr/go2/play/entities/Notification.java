@@ -2,7 +2,6 @@ package hr.go2.play.entities;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,6 +14,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.data.annotation.CreatedDate;
 
 @Entity
@@ -30,11 +31,13 @@ public class Notification {
 	@CreatedDate
 	private Date createdAt;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name = "src_user_id")
 	private User sourceUser;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name = "dest_user_id")
 	private User destUser;
 
@@ -44,14 +47,16 @@ public class Notification {
 	@Column(nullable = false)
 	private String message;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name = "notification_status_id")
 	private NotificationStatus status;
 
 	public Notification() {
 	}
 
-	public Notification(Long id, Date createdAt, User sourceUser, User destUser, String subject, String message, NotificationStatus status) {
+	public Notification(Long id, Date createdAt, User sourceUser, User destUser, String subject, String message,
+			NotificationStatus status) {
 		super();
 		this.id = id;
 		this.createdAt = createdAt;

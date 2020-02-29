@@ -7,8 +7,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import hr.go2.play.entities.ContactInformation;
 import hr.go2.play.entities.Location;
-import hr.go2.play.entities.User;
 import hr.go2.play.entities.WorkingHours;
 import hr.go2.play.repositories.LocationRepository;
 import hr.go2.play.services.LocationService;
@@ -56,26 +56,8 @@ public class LocationServiceImpl implements LocationService {
 	}
 
 	@Override
-	public Location findLocationByContactUser(User contactUser) {
-		try {
-			return this.locationRepo.findByContactUser(contactUser).get();
-		} catch (NoSuchElementException ex) {
-			return null;
-		}
-	}
-
-	@Override
 	public List<Location> findLocationByWorkingHours(WorkingHours wh) {
 		return (List<Location>) this.locationRepo.findByHours(wh);
-	}
-
-	@Override
-	public Location findLocationByFieldsSportName(String name) {
-		try {
-			return this.locationRepo.findByFields_Sport_Name(name).get();
-		} catch (NoSuchElementException ex) {
-			return null;
-		}
 	}
 
 	@Override
@@ -99,7 +81,7 @@ public class LocationServiceImpl implements LocationService {
 		if (optLocation.isPresent()) {
 			Location loc = optLocation.get();
 			loc.setAddress(location.getAddress());
-			loc.setContactUser(location.getContactUser());
+			loc.setContactInformation(location.getContactInformation());
 			loc.setFields(location.getFields());
 			loc.setHours(location.getHours());
 			loc.setName(location.getName());
@@ -118,4 +100,30 @@ public class LocationServiceImpl implements LocationService {
 		}
 	}
 
+	@Override
+	public Location findLocationByContactInfo(ContactInformation info) {
+		try {
+			return this.locationRepo.findByContactInformation(info).get();
+		} catch (NoSuchElementException ex) {
+			return null;
+		}
+	}
+
+	@Override
+	public Location findLocationByEmail(String email) {
+		try {
+			return this.locationRepo.findByContactInformation_Email(email).get();
+		} catch (NoSuchElementException ex) {
+			return null;
+		}
+	}
+
+	@Override
+	public Location findLocationByTelNumber(String number) {
+		try {
+			return this.locationRepo.findByContactInformation_TelephoneNumber(number).get();
+		} catch (NoSuchElementException ex) {
+			return null;
+		}
+	}
 }

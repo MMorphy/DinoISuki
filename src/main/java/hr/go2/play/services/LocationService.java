@@ -2,8 +2,8 @@ package hr.go2.play.services;
 
 import java.util.List;
 
+import hr.go2.play.entities.ContactInformation;
 import hr.go2.play.entities.Location;
-import hr.go2.play.entities.User;
 import hr.go2.play.entities.WorkingHours;
 
 public interface LocationService {
@@ -16,14 +16,16 @@ public interface LocationService {
 	
 	public abstract Location findLocationByAddressLike(String address);
 	
-	public abstract Location findLocationByContactUser(User contactUser);
+	public abstract Location findLocationByContactInfo(ContactInformation info);
+
+	public abstract Location findLocationByEmail (String email);
+
+	public abstract Location findLocationByTelNumber (String number);
 
 	public abstract Location findLocationByName(String name);
 
 	public abstract List<Location> findLocationByWorkingHours(WorkingHours wh);
 	
-	public abstract Location findLocationByFieldsSportName(String name);
-
 	public abstract void deleteLocationById(Long id);
 	
 	public abstract Location saveLocation(Location location);

@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="day_type")
+@Table(name="day_types")
 public class DayType {
 
 	@Id
@@ -18,8 +18,7 @@ public class DayType {
 	@Column(nullable = false)
 	private String type;
 
-	public DayType() {
-	}
+	public DayType() {	}
 
 	public DayType(Long id, String type) {
 		super();

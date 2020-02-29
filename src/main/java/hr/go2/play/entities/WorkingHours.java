@@ -1,8 +1,8 @@
 package hr.go2.play.entities;
 
+import java.util.Collection;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -35,15 +36,19 @@ public class WorkingHours {
 	@JoinColumn(name = "day_type_id")
 	private DayType dayType;
 
+	@ManyToMany(mappedBy = "hours")
+	private Collection<Location> locations;
+
 	public WorkingHours() {
 	}
 
-	public WorkingHours(Long id, Date fromTime, Date toTime, DayType dayType) {
+	public WorkingHours(Long id, Date fromTime, Date toTime, DayType dayType, Collection<Location> locations) {
 		super();
 		this.id = id;
 		this.fromTime = fromTime;
 		this.toTime = toTime;
 		this.dayType = dayType;
+		this.locations = locations;
 	}
 
 	public Long getId() {
@@ -76,6 +81,14 @@ public class WorkingHours {
 
 	public void setDayType(DayType dayType) {
 		this.dayType = dayType;
+	}
+
+	public Collection<Location> getLocations() {
+		return locations;
+	}
+
+	public void setLocations(Collection<Location> locations) {
+		this.locations = locations;
 	}
 
 }

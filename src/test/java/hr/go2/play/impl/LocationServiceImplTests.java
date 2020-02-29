@@ -18,7 +18,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import hr.go2.play.entities.Field;
 import hr.go2.play.entities.Location;
-import hr.go2.play.entities.Sports;
 import hr.go2.play.entities.User;
 import hr.go2.play.entities.WorkingHours;
 import hr.go2.play.repositories.LocationRepository;
@@ -33,27 +32,17 @@ public class LocationServiceImplTests {
 	private Location location = new Location();
 	private User user = new User();
 	private WorkingHours wh = new WorkingHours();
-	private Sports sport = new Sports();
 	private Field field = new Field();
 	private List<Field> fields = new ArrayList<>();
 
 	@Before
 	public void init() {
-		sport.setName("tenis");
-		field.setSport(sport);
 		fields.add(field);
-		
-		user.setCreatedAt(new Date());
-		user.setEnabled(true);
-		user.setUsername("userLoc");
-		user.setPassword("123");
-		user.setDateOfBirth(new Date());
-		
+	
 		wh.setFromTime(new Date());
 		wh.setToTime(new Date());
 		
 		location.setAddress("Zagreb, Krapinska 12");
-		location.setContactUser(user);
 		location.setHours(wh);
 		location.setFields(fields);
 		location.setName("Rudes");
@@ -77,27 +66,14 @@ public class LocationServiceImplTests {
 	
 	@Test
 	@Order(3)
-	public void findByContactUser() {
-		Location locationTest = locationService.findLocationByContactUser(user);
-		assertThat(locationTest.getId()).isEqualTo(location.getId());
-	}
-	
-	@Test
-	@Order(4)
 	public void findByHours() {
 		List<Location> locationTest = (List<Location>) locationService.findLocationByWorkingHours(wh);
 		assertThat(locationTest.get(0).getId()).isEqualTo(location.getId());
 	}
 	
+
 	@Test
-	@Order(5)
-	public void findByFields_Sport_Name() {
-		Location locationTest = locationService.findLocationByFieldsSportName(sport.getName());
-		assertThat(locationTest.getId()).isEqualTo(location.getId());
-	}
-	
-	@Test
-	@Order(6)
+	@Order(4)
 	public void updateContactInformation() {
 		location.setAddress("Sisak, Moslavacka 1");
 		
@@ -106,7 +82,7 @@ public class LocationServiceImplTests {
 	}
 	
 	@Test
-	@Order(7)
+	@Order(5)
 	public void findByName() {
 		Location locationTest = locationService.findLocationByName("Rudes");
 		assertThat(locationTest.getName()).isEqualTo(location.getName());

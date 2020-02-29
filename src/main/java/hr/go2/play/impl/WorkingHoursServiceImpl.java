@@ -8,16 +8,17 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import hr.go2.play.entities.DayType;
 import hr.go2.play.entities.WorkingHours;
 import hr.go2.play.repositories.WorkingHoursRepository;
 import hr.go2.play.services.WorkingHoursService;
 
 @Service
 public class WorkingHoursServiceImpl implements WorkingHoursService {
-	
+
 	@Autowired
 	private WorkingHoursRepository whRepo;
-	
+
 	public WorkingHoursServiceImpl(WorkingHoursRepository whRepo) {
 		this.whRepo = whRepo;
 	}
@@ -73,10 +74,21 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
 			WorkingHours workingHours = optWh.get();
 			workingHours.setFromTime(wh.getFromTime());
 			workingHours.setToTime(wh.getToTime());
+			workingHours.setDayType(wh.getDayType());
 			return this.whRepo.save(workingHours);
 		} else {
 			return this.whRepo.save(wh);
 		}
+	}
+
+	@Override
+	public List<WorkingHours> findWorkingHoursByDayType(DayType type) {
+		return (List<WorkingHours>) this.whRepo.findByDayType(type);
+	}
+
+	@Override
+	public List<WorkingHours> findWorkingHoursByDayTypeName(String name) {
+		return (List<WorkingHours>) this.whRepo.findByDayType_Type(name);
 	}
 
 }

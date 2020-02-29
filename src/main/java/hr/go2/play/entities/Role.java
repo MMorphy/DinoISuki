@@ -2,15 +2,13 @@ package hr.go2.play.entities;
 
 import java.util.Collection;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -27,24 +25,18 @@ public class Role {
 	private String name;
 
 	@JsonIgnore
-	@ManyToMany(mappedBy = "roles")
+	@ManyToMany(mappedBy = "roles", fetch=FetchType.EAGER)
 	private Collection<User> users;
-
-	@JsonIgnore
-	@OneToMany(cascade = { CascadeType.ALL })
-	@JoinColumn(name = "role_id", nullable = true)
-	private Collection<Location> locations;
 
 	public Role() {
 
 	}
 
-	public Role(Long id, String name, Collection<User> users, Collection<Location> locations) {
+	public Role(Long id, String name, Collection<User> users) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.users = users;
-		this.locations = locations;
 	}
 
 	public Long getId() {
@@ -74,17 +66,4 @@ public class Role {
 	public boolean addUser(User user) {
 		return this.users.add(user);
 	}
-
-	public Collection<Location> getLocations() {
-		return locations;
-	}
-
-	public void setLocations(Collection<Location> locations) {
-		this.locations = locations;
-	}
-
-	public boolean addLocation(Location location) {
-		return this.locations.add(location);
-	}
-
 }

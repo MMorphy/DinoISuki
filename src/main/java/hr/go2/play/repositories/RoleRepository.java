@@ -11,16 +11,10 @@ import hr.go2.play.entities.Role;
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long>{
 
-	Collection<Role> findByName(String name);
-
-	Optional<Role> findByLocations_Name (String name);
-
-	Optional<Role> findByLocations_Address (String address);
+	Optional<Role> findByName(String name);
 
 	Collection<Role> findByUsers_Username (String username);
 
-	Optional<Role> findByNameAndLocations_name(String name, String locationName);
-	
 	Boolean existsByName (String name);
 }
 

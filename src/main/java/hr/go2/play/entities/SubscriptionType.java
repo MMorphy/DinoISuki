@@ -7,8 +7,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
 @Entity
-@Table(name="subscription_types")
+@Table(name = "subscription_types")
 public class SubscriptionType {
 
 	@Id
@@ -18,14 +19,18 @@ public class SubscriptionType {
 	@Column(nullable = false)
 	private String name;
 
+	@Column(nullable = false)
+	private Float price;
+
 	public SubscriptionType() {
 
 	}
 
-	public SubscriptionType(Long id, String name) {
+	public SubscriptionType(Long id, String name, Float price) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.price = price;
 	}
 
 	public Long getId() {
@@ -44,4 +49,11 @@ public class SubscriptionType {
 		this.name = name;
 	}
 
+	public Float getPrice() {
+		return price;
+	}
+
+	public void setPrice(Float price) {
+		this.price = price;
+	}
 }

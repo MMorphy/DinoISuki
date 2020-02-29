@@ -11,6 +11,8 @@ public interface SubscriptionTypeService {
 	public abstract SubscriptionType findSubscriptionTypeById(Long id);
 	
 	public abstract List<SubscriptionType> findSubscriptionTypeByName(String name);
+
+	public abstract SubscriptionType findSubscriptionTypeByPrice(Float price);
 	
 	public abstract void deleteSubscriptionTypeById(Long id);
 	

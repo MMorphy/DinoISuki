@@ -15,15 +15,15 @@ public class ContactInformation {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	//TODO Dodaj validatore
 	@Column(name = "telephone_number", nullable = false)
 	private String telephoneNumber;
 
+	//TODO Dodaj validatore
 	@Column(name = "email", unique=true, nullable = false)
 	private String email;
 
-	public ContactInformation() {
-
-	}
+	public ContactInformation() {}
 
 	public ContactInformation(Long id, String telephoneNumber, String email) {
 		super();

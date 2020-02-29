@@ -14,8 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import hr.go2.play.entities.Role;
-import hr.go2.play.impl.UserDetailsService;
+import hr.go2.play.impl.UserServiceImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -32,7 +31,7 @@ public class JwtTokenProvider {
 	private long validityInMilliseconds = 3600000;
 	
 	@Autowired
-	private UserDetailsService userDetailsService;
+	private UserServiceImpl userService;
 	
 	@PostConstruct
 	protected void init() {
@@ -53,7 +52,7 @@ public class JwtTokenProvider {
 	}
 	
 	public Authentication getAuthentication(String token) {
-	    UserDetails userDetails = this.userDetailsService.loadUserByUsername(getUsername(token));
+	    UserDetails userDetails = this.userService.loadUserByUsername(getUsername(token));
 	    return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
 	}
 	

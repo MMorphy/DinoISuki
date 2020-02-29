@@ -1,9 +1,9 @@
 package hr.go2.play.entities;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,8 +24,6 @@ import org.hibernate.annotations.FetchMode;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Transactional
 @Entity
 @Table(name = "users")
@@ -36,13 +34,11 @@ public class User {
 	private Long id;
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+	@JoinTable(
+			name = "user_roles", 
+			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
+			inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Collection<Role> roles;
-
-	@JsonIgnore
-	@ManyToMany(cascade = {CascadeType.ALL})
-	@JoinTable(name = "user_teams", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id"))
-	private Collection<Team> teams;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_at", nullable = false, updatable = false)
@@ -50,33 +46,18 @@ public class User {
 	private Date createdAt;
 
 	@Column(nullable = false)
-	private boolean enabled;
+	private boolean enabled = true;
 
-	@JsonIgnore
-	@ManyToMany(cascade = { CascadeType.ALL })
-	@JoinTable(name = "user_videos", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "video_id", referencedColumnName = "id"))
-	private Collection<Video> paidVideos;
-
-	@JsonIgnore
-	@OneToMany(cascade = { CascadeType.ALL })
-	@JoinColumn(name = "user_id")
-	private Collection<Term> reservedTerms;
-	
-	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
-	@Fetch(value = FetchMode.SUBSELECT)
-	@JoinColumn(name = "user_id")
-	private Collection<Sports> likedSports;
-
-	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+	@OneToMany(fetch = FetchType.EAGER)
 	@Fetch(value = FetchMode.SUBSELECT)
 	@JoinColumn(name = "user_id")
 	private Collection<Subscription> subscriptions;
-	
-	@OneToOne(cascade = { CascadeType.ALL })
+
+	@OneToOne()
 	@Fetch(value = FetchMode.JOIN)
 	@JoinColumn(name = "contact_information_id")
 	private ContactInformation contactInfo;
-	
+
 	@Column(nullable = false, unique = true)
 	private String username;
 
@@ -86,25 +67,22 @@ public class User {
 	@Column(nullable = false)
 	@Temporal(TemporalType.DATE)
 	private Date dateOfBirth;
-	
+
 	@Column(nullable = true)
 	private String profilePhoto;
 
 	public User() {
-
+		this.subscriptions = new ArrayList<>();
+		this.roles = new ArrayList<>();
 	}
 
-	public User(Long id, Collection<Role> roles, Collection<Team> teams, Date createdAt, boolean enabled,
-			Collection<Video> paidVideos, Collection<Term> reservedTerms, Collection<Sports> likedSports,
-			Collection<Subscription> subscriptions, ContactInformation contactInfo, String username, String password, Date dateOfBirth, String profilePhoto) {
+	public User(Long id, Collection<Role> roles, Date createdAt, boolean enabled, Collection<Video> paidVideos,
+			Collection<Subscription> subscriptions, ContactInformation contactInfo, String username, String password,
+			Date dateOfBirth, String profilePhoto) {
 		this.id = id;
 		this.roles = roles;
-		this.teams = teams;
 		this.createdAt = createdAt;
 		this.enabled = enabled;
-		this.paidVideos = paidVideos;
-		this.reservedTerms = reservedTerms;
-		this.likedSports = likedSports;
 		this.subscriptions = subscriptions;
 		this.contactInfo = contactInfo;
 		this.username = username;
@@ -145,30 +123,6 @@ public class User {
 		this.enabled = enabled;
 	}
 
-	public Collection<Video> getPaidVideos() {
-		return paidVideos;
-	}
-
-	public void setPaidVideos(Collection<Video> paidVideos) {
-		this.paidVideos = paidVideos;
-	}
-
-	public Collection<Term> getReservedTerms() {
-		return reservedTerms;
-	}
-
-	public void setReservedTerms(Collection<Term> reservedTerms) {
-		this.reservedTerms = reservedTerms;
-	}
-
-	public Collection<Sports> getLikedSports() {
-		return likedSports;
-	}
-
-	public void setLikedSports(Collection<Sports> likedSpords) {
-		this.likedSports = likedSpords;
-	}
-
 	public String getUsername() {
 		return username;
 	}
@@ -191,14 +145,6 @@ public class User {
 
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
-	}
-
-	public Collection<Team> getTeams() {
-		return teams;
-	}
-
-	public void setTeams(Collection<Team> teams) {
-		this.teams = teams;
 	}
 
 	public Collection<Subscription> getSubscriptions() {
@@ -224,5 +170,11 @@ public class User {
 	public void setProfilePhoto(String profilePhoto) {
 		this.profilePhoto = profilePhoto;
 	}
-	
+
+	public boolean addRole(Role role) {
+		if (this.roles == null) {
+			this.roles = new ArrayList<>();
+		}
+		return this.roles.add(role);
+	}
 }

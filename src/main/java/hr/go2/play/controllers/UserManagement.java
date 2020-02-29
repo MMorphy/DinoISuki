@@ -45,12 +45,9 @@ import hr.go2.play.entities.ContactInformation;
 import hr.go2.play.entities.Role;
 import hr.go2.play.entities.User;
 import hr.go2.play.impl.ContactInformationServiceImpl;
-import hr.go2.play.impl.UserDetailsService;
+import hr.go2.play.impl.RoleServiceImpl;
 import hr.go2.play.impl.UserServiceImpl;
 import hr.go2.play.jwt.JwtTokenProvider;
-import hr.go2.play.repositories.ContactInformationRepository;
-import hr.go2.play.repositories.RoleRepository;
-import hr.go2.play.repositories.UserRepository;
 import hr.go2.play.util.Commons;
 
 @RestController
@@ -58,178 +55,132 @@ import hr.go2.play.util.Commons;
 @Secured("ROLE_USER")
 public class UserManagement {
 
-	@Value("${application.users.profile-photo-location}") String profilePhotoLocation;
+	@Value("${application.users.profile-photo-location}")
+	String profilePhotoLocation;
 
-	//Login
-	//Logout
-	//Register
+	// Login
+	// Logout
+	// Register
 	ModelMapper mapper = new ModelMapper();
 	Logger logger = LoggerFactory.getLogger(UserManagement.class);
 
 	@Autowired
-    AuthenticationManager authenticationManager;
+	AuthenticationManager authenticationManager;
 
-    @Autowired
-    JwtTokenProvider jwtTokenProvider;
+	@Autowired
+	JwtTokenProvider jwtTokenProvider;
 
-    @Autowired
-    UserRepository userRepo;
+	@Autowired
+	private UserServiceImpl userService;
 
-    @Autowired
-    ContactInformationRepository contactInfoRepo;
+	@Autowired
+	private ContactInformationServiceImpl contactInfoService;
 
-    @Autowired
-    RoleRepository roleRepo;
+	@Autowired
+	private Commons commons;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
-    private UserServiceImpl userService;
-
-    @Autowired
-    private ContactInformationServiceImpl contactInfoService;
-
-    @Autowired
-    private Commons commons;
-
-    /**
-     * Desc: User login
-     * {
-          "username":"test4",
-          "password":"test4"
-       }
-     * @param userDto
-     * @return
-     */
-    // in db for "test4" pw needs to be value: $2a$10$Z8d8RpMSb4sL7bengKNIBOHHVn/wYRgOfzS4vKnmeUtDAGEYxwre2
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserDTO userDto) {
-        try {
-        	if (!userRepo.existsByUsername(userDto.getUsername())) {
-        		logger.error("Invalid username");
-            	return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid username supplied"), HttpStatus.BAD_REQUEST);
-        	}
-        	User user = userService.findUserByUsername(userDto.getUsername());
-            String username = user.getUsername();
-            Set<String> roles = new HashSet<>();
-            for (Role role : user.getRoles()) {
+	/**
+	 * Desc: User login { "username":"test4", "password":"test4" }
+	 * 
+	 * @param userDto
+	 * @return
+	 */
+	// in db for "test4" pw needs to be value:
+	// $2a$10$Z8d8RpMSb4sL7bengKNIBOHHVn/wYRgOfzS4vKnmeUtDAGEYxwre2
+	@PostMapping("/login")
+	public ResponseEntity<String> login(@RequestBody UserDTO userDto) {
+		try {
+			if (!userService.existsUserByUsernmae(userDto.getUsername())) {
+				logger.error("Invalid username");
+				return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid username supplied"),
+						HttpStatus.BAD_REQUEST);
+			}
+			User user = userService.findUserByUsername(userDto.getUsername());
+			String username = user.getUsername();
+			Set<String> roles = new HashSet<>();
+			for (Role role : user.getRoles()) {
 				roles.add(role.getName());
 			}
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, userDto.getPassword()));
-            String token = jwtTokenProvider.createToken(username, roles);
-            List<Object> model = new ArrayList<>();
-            model.add("{\"username\":" +  "\"" + username + "\"}");
-            model.add("{\"token\":" + "\"" + token  + "\"}" );
-            return new ResponseEntity<String>(model.toString(), HttpStatus.CREATED);
-        } catch (AuthenticationException e) {
-        	logger.error("Invalid password supplied", e);
-        	return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid password supplied"), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    /**
-     * Desc: Create new user
-     * JSON body example:
-     * {
-		  "userDto": {
-		    "createdAt": "2019/11/19 00:00:00",
-		    "dateOfBirth": "1995/10/10",
-		    "username": "test4",
-		    "password": "test4"
-		  },
-		  "contactInfoDto": {
-		    "telephoneNumber": "0800 091 091",
-		    "email": "ivo.ivic@gmail.com"
-		  }
+			authenticationManager
+					.authenticate(new UsernamePasswordAuthenticationToken(username, userDto.getPassword()));
+			String token = jwtTokenProvider.createToken(username, roles);
+			List<Object> model = new ArrayList<>();
+			model.add("{\"username\":" + "\"" + username + "\"}");
+			model.add("{\"token\":" + "\"" + token + "\"}");
+			return new ResponseEntity<String>(model.toString(), HttpStatus.CREATED);
+		} catch (AuthenticationException e) {
+			logger.error("Invalid password supplied", e);
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid password supplied"),
+					HttpStatus.BAD_REQUEST);
 		}
-     * @param userDto
-     * @return
-     */
-    @PostMapping("/createUser")
-    public ResponseEntity<String> createUser(@RequestBody UserWithContactInfoDTO userContactDto) {
-    	User user = new User();
-    	try {
-    		user = mapper.map(userContactDto.getUserDto(), User.class);
-    	} catch (HttpMessageNotReadableException | org.modelmapper.MappingException | NullPointerException e) {
-    		logger.error("Invalid JSON", e);
-        	return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid JSON"), HttpStatus.BAD_REQUEST);
-    	}
-    	ContactInformation contactInfo = mapper.map(userContactDto.getContactInfoDto(), ContactInformation.class);
+	}
 
-    	if (contactInfoRepo.existsByEmail(contactInfo.getEmail())) {
-    		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Email address already registered " + contactInfo.getEmail()) , HttpStatus.BAD_REQUEST);
-    	}
-
-        if (userRepo.existsByUsername(user.getUsername())) {
-       	return new ResponseEntity<String>(commons.JSONfyReturnMessage("User with username " + user.getUsername() + " already exists!"), HttpStatus.BAD_REQUEST);
-        }
-
-        userDetailsService.saveUser(user, contactInfo);
-        return new ResponseEntity<String>(commons.JSONfyReturnMessage("User created successfully"), HttpStatus.CREATED);
-    }
-
-    /**
-     * Desc: Update existing user
-     * JSON body example:
-     * {
-		  "userDto": {
-		    "dateOfBirth": "1995/10/10",
-		    "username": "Leo",
-		    "password": "1234"
-		  },
-		  "contactInfoDto": {
-		    "telephoneNumber": "060222",
-		    "email": "krivi.mail@mail.com"
-		  }
-		}
-     * @param userContactInfoDto
-     * @return
-     */
-	@PostMapping("/updateUser")
-	public ResponseEntity<String> updateUser(@RequestBody UserWithContactInfoDTO userContactInfoDto) {
-    	User user = new User();
-    	String username = userContactInfoDto.getUserDto().getUsername();
-    	try {
-    		if (!userRepo.existsByUsername(username)) {
-    			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Username doesn't exist!"), HttpStatus.BAD_REQUEST);
-    		}
-    		user = userService.findUserByUsername(username);
-    	} catch (HttpMessageNotReadableException | org.modelmapper.MappingException | NullPointerException | DataIntegrityViolationException e) {
-    		logger.error("Invalid JSON", e);
-        	return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid JSON"), HttpStatus.BAD_REQUEST);
-    	}
-		ContactInformation contactInfo = user.getContactInfo();
-
-		ContactInformation updatedContactInfo = new ContactInformation();
-		updatedContactInfo.setEmail(userContactInfoDto.getContactInfoDto().getEmail());
-		updatedContactInfo.setTelephoneNumber(userContactInfoDto.getContactInfoDto().getTelephoneNumber());
-
-		User updatedUser = new User();
-		updatedUser.setCreatedAt(user.getCreatedAt());
-		updatedUser.setDateOfBirth(userContactInfoDto.getUserDto().getDateOfBirth());
-		updatedUser.setEnabled(user.isEnabled());
-		updatedUser.setPassword(userContactInfoDto.getUserDto().getPassword());
-		updatedUser.setRoles(user.getRoles());
-		updatedUser.setContactInfo(updatedContactInfo);
-		updatedUser.setUsername(username);
-
+	/**
+	 * Desc: Create new user JSON body example: { "userDto": { "createdAt":
+	 * "2019/11/19 00:00:00", "dateOfBirth": "1995/10/10", "username": "test4",
+	 * "password": "test4" }, "contactInfoDto": { "telephoneNumber": "0800 091 091",
+	 * "email": "ivo.ivic@gmail.com" } }
+	 * 
+	 * @param userDto
+	 * @return
+	 */
+	@PostMapping("/createUser")
+	public ResponseEntity<String> createUser(@RequestBody UserWithContactInfoDTO userContactDto) {
+		User user = new User();
 		try {
-			contactInfoService.updateContactInformation(contactInfo.getId(), updatedContactInfo);
-			userDetailsService.updateUser(user.getId(), updatedUser, updatedContactInfo);
-		} catch (DataIntegrityViolationException e) {
+			user = mapper.map(userContactDto.getUserDto(), User.class);
+		} catch (HttpMessageNotReadableException | org.modelmapper.MappingException | NullPointerException e) {
+			logger.error("Invalid JSON", e);
 			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid JSON"), HttpStatus.BAD_REQUEST);
 		}
+		ContactInformation contactInfo = mapper.map(userContactDto.getContactInfoDto(), ContactInformation.class);
 
+		if (contactInfoService.existsByEmail(contactInfo.getEmail())) {
+			return new ResponseEntity<String>(
+					commons.JSONfyReturnMessage("Email address already registered " + contactInfo.getEmail()),
+					HttpStatus.BAD_REQUEST);
+		}
+
+		if (userService.existsUserByUsernmae(user.getUsername())) {
+			return new ResponseEntity<String>(
+					commons.JSONfyReturnMessage("User with username " + user.getUsername() + " already exists!"),
+					HttpStatus.BAD_REQUEST);
+		}
+		userService.saveUserAndSaveRoleAndContactInfo(user, contactInfo);
+		return new ResponseEntity<String>(commons.JSONfyReturnMessage("User created successfully"), HttpStatus.CREATED);
+	}
+
+	/**
+	 * Desc: Update existing user JSON body example: { "userDto": { "dateOfBirth":
+	 * "1995/10/10", "username": "Leo", "password": "1234" }, "contactInfoDto": {
+	 * "telephoneNumber": "060222", "email": "krivi.mail@mail.com" } }
+	 * 
+	 * @param userContactInfoDto
+	 * @return
+	 */
+	@PostMapping("/updateUser")
+	public ResponseEntity<String> updateUser(@RequestBody UserWithContactInfoDTO userContactInfoDto) {
+		String username = userContactInfoDto.getUserDto().getUsername();
+		try {
+			if (!userService.existsUserByUsernmae(username)) {
+				return new ResponseEntity<String>(commons.JSONfyReturnMessage("Username doesn't exist!"),
+						HttpStatus.BAD_REQUEST);
+			}
+		} catch (HttpMessageNotReadableException | org.modelmapper.MappingException | NullPointerException
+				| DataIntegrityViolationException e) {
+			logger.error("Invalid JSON", e);
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid JSON"), HttpStatus.BAD_REQUEST);
+		}
+		User user = userService.findUserByUsername(username);
+		userService.updateUserAndContactInfo(user, userContactInfoDto);
 		return new ResponseEntity<String>(commons.JSONfyReturnMessage("User updated!"), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/getUser/{username}")
 	public ResponseEntity<User> getUser(@PathVariable String username) {
-		if(userRepo.existsByUsername(username)) {
+		if (userService.existsUserByUsernmae(username)) {
 			User user = userService.findUserByUsername(username);
-			user.getLikedSports();
-			if(user != null) {
+			if (user != null) {
 				user.setPassword(null);
 			}
 			return new ResponseEntity<User>(user, HttpStatus.OK);
@@ -240,16 +191,19 @@ public class UserManagement {
 
 	// profile photo - add
 	@PostMapping(value = "/uploadProfilePhoto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<?> uploadProfilePhoto(@RequestParam(name = "profilePhoto", required = false) MultipartFile profilePhoto, @RequestParam(name = "username") String username) {
+	public ResponseEntity<?> uploadProfilePhoto(
+			@RequestParam(name = "profilePhoto", required = false) MultipartFile profilePhoto,
+			@RequestParam(name = "username") String username) {
 		logger.debug("/api/user/uploadProfilePhoto Started");
 
 		if (username == null || username.isBlank()) {
-            return new ResponseEntity<String>(commons.JSONfyReturnMessage("No username provided"), HttpStatus.BAD_REQUEST);
-        }
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("No username provided"),
+					HttpStatus.BAD_REQUEST);
+		}
 
 		// does this user already have a profile photo?
 		User user = userService.findUserByUsername(username);
-		if(user != null && user.getProfilePhoto() != null) {
+		if (user != null && user.getProfilePhoto() != null) {
 			// delete the photo
 			try {
 				Files.delete(Paths.get(profilePhotoLocation + "/" + user.getProfilePhoto()));
@@ -257,36 +211,44 @@ public class UserManagement {
 				// carry on
 			} catch (IOException e) {
 				logger.error("Unable to delete previous profile photo", e);
-				return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to delete previous profile photo. " + e.getMessage()), HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<String>(
+						commons.JSONfyReturnMessage("Unable to delete previous profile photo. " + e.getMessage()),
+						HttpStatus.BAD_REQUEST);
 			}
 		} else {
-			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to find user"), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to find user"),
+					HttpStatus.BAD_REQUEST);
 		}
 
 		// if no profile photo provided, delete the existing one
-		if(profilePhoto == null || profilePhoto.isEmpty()) {
+		if (profilePhoto == null || profilePhoto.isEmpty()) {
 			// already deleted in previous step
-			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Profile photo successfuly removed"), HttpStatus.OK);
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Profile photo successfuly removed"),
+					HttpStatus.OK);
 		}
 
-        try {
-        	// store the file
-        	byte[] bytes = profilePhoto.getBytes();
-            Path path = Paths.get(profilePhotoLocation + "/" + username + "_" + profilePhoto.getOriginalFilename());
-            Files.write(path, bytes);
+		try {
+			// store the file
+			byte[] bytes = profilePhoto.getBytes();
+			Path path = Paths.get(profilePhotoLocation + "/" + username + "_" + profilePhoto.getOriginalFilename());
+			Files.write(path, bytes);
 
-            // store the data about the file info to database
-            user.setProfilePhoto(username + "_" + profilePhoto.getOriginalFilename());
-            userService.updateUser(user.getId(), user);
-        } catch (IOException e) {
-        	logger.error("Unable to save file", e);
-            return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to save file"), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-        	logger.error("Unable to store file", e);
-        	return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to store file. " + e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+			// store the data about the file info to database
+			user.setProfilePhoto(username + "_" + profilePhoto.getOriginalFilename());
+			userService.updateUser(user.getId(), user);
+		} catch (IOException e) {
+			logger.error("Unable to save file", e);
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to save file"),
+					HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
+			logger.error("Unable to store file", e);
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to store file. " + e.getMessage()),
+					HttpStatus.BAD_REQUEST);
+		}
 
-        return new ResponseEntity<String>(commons.JSONfyReturnMessage("Successfully uploaded - " + profilePhoto.getOriginalFilename()), HttpStatus.OK);
+		return new ResponseEntity<String>(
+				commons.JSONfyReturnMessage("Successfully uploaded - " + profilePhoto.getOriginalFilename()),
+				HttpStatus.OK);
 	}
 
 	// profile photo - fetch
@@ -296,30 +258,33 @@ public class UserManagement {
 		logger.debug("/api/user/getProfilePhoto Started");
 		// does this user have a profile photo?
 		User user = userService.findUserByUsername(username);
-		if(user != null) {
-			if(user.getProfilePhoto() != null) {
-			File profilePhoto = new File(profilePhotoLocation + "/" + user.getProfilePhoto());
-	        HttpHeaders headers = new HttpHeaders();
-	        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-	        headers.add("Pragma", "no-cache");
-	        headers.add("Expires", "0");
-	        headers.setContentLength(profilePhoto.length());
-	        headers.setContentType(MediaType.parseMediaType("application/octet-stream"));
+		if (user != null) {
+			if (user.getProfilePhoto() != null) {
+				File profilePhoto = new File(profilePhotoLocation + "/" + user.getProfilePhoto());
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+				headers.add("Pragma", "no-cache");
+				headers.add("Expires", "0");
+				headers.setContentLength(profilePhoto.length());
+				headers.setContentType(MediaType.parseMediaType("application/octet-stream"));
 
-			InputStreamResource resource = null;
-			try {
-				resource = new InputStreamResource(new FileInputStream(profilePhoto));
-			} catch (FileNotFoundException e) {
-				logger.error("Unable to find profile photo", e);
-				return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to find profile photo"), HttpStatus.BAD_REQUEST);
-			}
+				InputStreamResource resource = null;
+				try {
+					resource = new InputStreamResource(new FileInputStream(profilePhoto));
+				} catch (FileNotFoundException e) {
+					logger.error("Unable to find profile photo", e);
+					return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to find profile photo"),
+							HttpStatus.BAD_REQUEST);
+				}
 
-			return new ResponseEntity<Object>(resource, headers, HttpStatus.OK);
+				return new ResponseEntity<Object>(resource, headers, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<String>(commons.JSONfyReturnMessage("No profile photo found"), HttpStatus.NOT_FOUND);
+				return new ResponseEntity<String>(commons.JSONfyReturnMessage("No profile photo found"),
+						HttpStatus.NOT_FOUND);
 			}
 		} else {
-			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to find user"), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to find user"),
+					HttpStatus.BAD_REQUEST);
 		}
 	}
 

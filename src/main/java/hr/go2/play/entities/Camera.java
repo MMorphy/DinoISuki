@@ -2,7 +2,6 @@ package hr.go2.play.entities;
 
 import java.util.Collection;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "cameras")
@@ -26,15 +23,14 @@ public class Camera {
 	@Column(nullable = false)
 	private String name;
 
-	@OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+	@OneToMany(fetch = FetchType.EAGER)
 	@JoinColumn(name = "camera_id")
 	private Collection<Video> videos;
 
 	@Column(nullable = false)
 	private boolean available = true;
-	
-	public Camera() {
 
+	public Camera() {
 	}
 
 	public Camera(Long id, String name, Collection<Video> videos, boolean available) {
@@ -77,4 +73,11 @@ public class Camera {
 		this.available = available;
 	}
 
+	public boolean addVideo(Video video) {
+		return this.videos.add(video);
+	}
+
+	public boolean removeVideo(Video video) {
+		return this.videos.remove(video);
+	}
 }

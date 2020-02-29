@@ -2,14 +2,12 @@ package hr.go2.play.entities;
 
 import java.util.Collection;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -21,27 +19,15 @@ public class Field {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-	@JoinColumn(name = "sport_id")
-	private Sports sport;
-
-	@OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
-	@JoinColumn(name = "field_id")
-	private Collection<Term> terms;
-
-	@OneToMany(cascade = {CascadeType.ALL})
+	@OneToMany(fetch = FetchType.EAGER)
 	@JoinColumn(name = "field_id")
 	private Collection<Camera> cameras;
 
-	public Field() {
+	public Field() {}
 
-	}
-
-	public Field(Long id, Sports sport, Collection<Term> terms, Collection<Camera> cameras) {
+	public Field(Long id, Collection<Camera> cameras) {
 		super();
 		this.id = id;
-		this.sport = sport;
-		this.terms = terms;
 		this.cameras = cameras;
 	}
 
@@ -53,22 +39,6 @@ public class Field {
 		this.id = id;
 	}
 
-	public Sports getSport() {
-		return sport;
-	}
-
-	public void setSport(Sports sport) {
-		this.sport = sport;
-	}
-
-	public Collection<Term> getTerms() {
-		return terms;
-	}
-
-	public void setTerms(Collection<Term> terms) {
-		this.terms = terms;
-	}
-
 	public Collection<Camera> getCameras() {
 		return cameras;
 	}
@@ -76,5 +46,4 @@ public class Field {
 	public void setCameras(Collection<Camera> cameras) {
 		this.cameras = cameras;
 	}
-
 }

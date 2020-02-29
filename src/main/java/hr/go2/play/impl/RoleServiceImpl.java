@@ -36,23 +36,9 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public List<Role> findRoleByName(String name) {
-		return (List<Role>) this.roleRepo.findByName(name);
-	}
-
-	@Override
-	public Role findRoleByLocationsName(String name) {
+	public Role findRoleByName(String name) {
 		try {
-			return this.roleRepo.findByLocations_Name(name).get();
-		} catch (NoSuchElementException ex) {
-			return null;
-		}
-	}
-
-	@Override
-	public Role findRoleByLocationsAddress(String address) {
-		try {
-			return this.roleRepo.findByLocations_Address(address).get();
+			return this.roleRepo.findByName(name).get();
 		} catch (NoSuchElementException ex) {
 			return null;
 		}
@@ -61,15 +47,6 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	public List<Role> findRoleByUsersUsername(String username) {
 		return (List<Role>) this.roleRepo.findByUsers_Username(username);
-	}
-
-	@Override
-	public Role findRoleByNameAndLocationsName(String name, String locationName) {
-		try {
-			return this.roleRepo.findByNameAndLocations_name(name, locationName).get();
-		} catch (NoSuchElementException ex) {
-			return null;
-		}
 	}
 
 	@Override
@@ -93,7 +70,6 @@ public class RoleServiceImpl implements RoleService {
 		Optional<Role> optRole = this.roleRepo.findById(id);
 		if (optRole.isPresent()) {
 			Role rol = optRole.get();
-			rol.setLocations(role.getLocations());
 			rol.setName(role.getName());
 			rol.setUsers(role.getUsers());
 			return this.roleRepo.save(rol);

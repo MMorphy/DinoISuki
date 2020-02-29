@@ -31,7 +31,7 @@ import hr.go2.play.repositories.CameraRepository;
 import hr.go2.play.util.Commons;
 
 @RestController
-@RequestMapping(path = "/admin", produces = "application/json", method = {RequestMethod.GET, RequestMethod.PUT})
+@RequestMapping(path = "/api/admin", produces = "application/json", method = {RequestMethod.GET, RequestMethod.PUT})
 public class AdminRest {
 
     Logger logger = LoggerFactory.getLogger(getClass());
@@ -40,9 +40,6 @@ public class AdminRest {
 	
 	@Autowired
 	private CameraServiceImpl camService;
-	
-	@Autowired
-	private CameraRepository camRepo;
 	
 	@Autowired
 	private UserServiceImpl userService;
@@ -66,14 +63,11 @@ public class AdminRest {
 	private Commons commons;
 	
 
-	//Dodavanje novih rola userima
 	//CRUD kamera
 	//CRUD Lokacija
-	//CRUD terena (field)
 	//CRUD working hours-a
 	//CRUD subscription
 	//CRUD subscription type
-	//Vezanje usera na lokaciju (contact info za lokaciju
 
 	/**
 	 *
@@ -91,15 +85,15 @@ public class AdminRest {
 }
 	 * @return
 	 */
-	@PostMapping("/create/camera")
+	@PostMapping("/addCamera")
 	public ResponseEntity<String> createCamera (@RequestBody CameraDTO camDto) {
 		Camera cam = mapper.map(camDto, Camera.class);
+		cam.setVideos(null);
 		camService.saveCamera(cam);
-		
 		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Camera created!"), HttpStatus.CREATED);
 	}
 
-	@GetMapping("/get/cameras")
+	@GetMapping("/getCameras")
 	public ResponseEntity<?> getAllCameras () {
 		List<Camera> cameras = (List<Camera>) camService.findAllCameras();
         List<CameraDTO> camDTOList = cameras.stream().map(camera -> mapper.map(camera, CameraDTO.class)).collect(Collectors.toList());
@@ -122,11 +116,10 @@ public class AdminRest {
     }
 	 * @return
 	 */
-	@PostMapping("/update/camera")
+	@PostMapping("/updateCamera")
 	public ResponseEntity<String> updateCamera (@RequestBody CameraDTO camDto) {
 		Camera cam = mapper.map(camDto, Camera.class);
 		camService.updateCamera(cam.getId(), cam);
-		
 		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Camera updated!"), HttpStatus.CREATED);
 	}
 	
@@ -137,16 +130,16 @@ public class AdminRest {
 	 * 4
 	 * @return
 	 */
-	@PostMapping("/delete/camera")
-	public ResponseEntity<String> deleteCamera (@RequestBody String id) {
-		if (!camRepo.existsById(Long.parseLong(id))) {
+	@PostMapping("/deleteCamera")
+	public ResponseEntity<String> deleteCamera (@RequestBody Long id) {
+		if (!camService.existsById(id)) {
 			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Camera doesn't exist!"), HttpStatus.BAD_REQUEST);
 		}
-		camService.deleteCameraById(Long.parseLong(id));
+		camService.deleteCameraById(id);
 		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Camera deleted!"), HttpStatus.CREATED);
 	}
 
-	@PostMapping("/create/location")
+	@PostMapping("/createLocation")
 	public ResponseEntity<String> createLocation (@RequestBody LocationDTO locationDto) {
 		Location loc = mapper.map(locationDto, Location.class);
 		locationService.saveLocation(loc);
