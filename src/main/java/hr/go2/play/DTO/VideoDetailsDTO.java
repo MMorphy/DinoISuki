@@ -8,7 +8,6 @@ public class VideoDetailsDTO {
 
 	private Long id;
 
-	@JsonFormat(pattern = "hh:mm dd/MM/yyyy")
 	private Date startedTimestamp;
 
 	private String locationName;
