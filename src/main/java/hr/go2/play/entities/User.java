@@ -35,8 +35,8 @@ public class User {
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
-			name = "user_roles", 
-			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
+			name = "user_roles",
+			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Collection<Role> roles;
 
@@ -56,7 +56,7 @@ public class User {
 	@OneToOne()
 	@Fetch(value = FetchMode.JOIN)
 	@JoinColumn(name = "contact_information_id")
-	private ContactInformation contactInfo;
+	private ContactInformation contactInformation;
 
 	@Column(nullable = false, unique = true)
 	private String username;
@@ -77,14 +77,14 @@ public class User {
 	}
 
 	public User(Long id, Collection<Role> roles, Date createdAt, boolean enabled, Collection<Video> paidVideos,
-			Collection<Subscription> subscriptions, ContactInformation contactInfo, String username, String password,
+			Collection<Subscription> subscriptions, ContactInformation contactInformation, String username, String password,
 			Date dateOfBirth, String profilePhoto) {
 		this.id = id;
 		this.roles = roles;
 		this.createdAt = createdAt;
 		this.enabled = enabled;
 		this.subscriptions = subscriptions;
-		this.contactInfo = contactInfo;
+		this.contactInformation = contactInformation;
 		this.username = username;
 		this.password = password;
 		this.dateOfBirth = dateOfBirth;
@@ -155,12 +155,12 @@ public class User {
 		this.subscriptions = subscriptions;
 	}
 
-	public ContactInformation getContactInfo() {
-		return contactInfo;
+	public ContactInformation getContactInformation() {
+		return contactInformation;
 	}
 
-	public void setContactInfo(ContactInformation contactInfo) {
-		this.contactInfo = contactInfo;
+	public void setContactInformation(ContactInformation contactInformation) {
+		this.contactInformation = contactInformation;
 	}
 
 	public String getProfilePhoto() {

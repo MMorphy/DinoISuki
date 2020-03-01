@@ -9,9 +9,12 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -40,16 +43,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import hr.go2.play.DTO.ContactInformationDTO;
 import hr.go2.play.DTO.PasswordDTO;
 import hr.go2.play.DTO.UserDTO;
+import hr.go2.play.entities.ContactInformation;
 import hr.go2.play.entities.Role;
 import hr.go2.play.entities.User;
-import hr.go2.play.impl.UserDetailsService;
 import hr.go2.play.impl.UserServiceImpl;
 import hr.go2.play.jwt.JwtTokenProvider;
 import hr.go2.play.repositories.ContactInformationRepository;
 import hr.go2.play.repositories.RoleRepository;
 import hr.go2.play.repositories.UserRepository;
+import hr.go2.play.services.ContactInformationService;
 import hr.go2.play.util.Commons;
 
 @RestController
@@ -82,9 +87,6 @@ public class UserManagement {
     RoleRepository roleRepo;
 
     @Autowired
-	private UserDetailsService userDetailsService;
-
-    @Autowired
     private UserServiceImpl userService;
 
     @Autowired
@@ -92,6 +94,9 @@ public class UserManagement {
 
 	@Autowired
 	private PasswordEncoder bCryptPasswordEncoder;
+
+	@Autowired
+	private ContactInformationService contactInformationService;
 
     /**
      * Desc: User login
@@ -151,16 +156,18 @@ public class UserManagement {
     		logger.error("Invalid JSON", e);
         	return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid JSON"), HttpStatus.BAD_REQUEST);
     	}
-
 		if (userService.findUserByUsername(userDto.getUsername()) != null) {
 			return new ResponseEntity<String>(commons.JSONfyReturnMessage("User with username " + user.getUsername() + " already exists!"), HttpStatus.BAD_REQUEST);
 		}
-
 		if (userDto.getPassword() == null || userDto.getPassword().isEmpty()) {
 			return new ResponseEntity<String>(commons.JSONfyReturnMessage("No password information provided!"), HttpStatus.BAD_REQUEST);
         }
+		String checkUserDetails = checkUserDetails(userDto);
+		if (checkUserDetails != null) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage(checkUserDetails), HttpStatus.BAD_REQUEST);
+		}
 
-		userDetailsService.saveUser(user);
+		userService.saveUser(user);
         return new ResponseEntity<String>(commons.JSONfyReturnMessage("User created successfully"), HttpStatus.CREATED);
     }
 
@@ -184,17 +191,32 @@ public class UserManagement {
 			if (user == null) {
 				return new ResponseEntity<String>(commons.JSONfyReturnMessage("User doesn't exist!"), HttpStatus.BAD_REQUEST);
     		}
+			String checkUserDetails = checkUserDetails(userDto);
+			if (checkUserDetails != null) {
+				return new ResponseEntity<String>(commons.JSONfyReturnMessage(checkUserDetails), HttpStatus.BAD_REQUEST);
+			}
 			User updatedUser = mapper.map(userDto, User.class);
 			updatedUser.setPassword(user.getPassword());
 			updatedUser.setId(user.getId());
 
-			userDetailsService.updateUser(updatedUser);
+			userService.updateUser(updatedUser);
 
 			return new ResponseEntity<String>(commons.JSONfyReturnMessage("User updated!"), HttpStatus.CREATED);
     	} catch (HttpMessageNotReadableException | org.modelmapper.MappingException | NullPointerException | DataIntegrityViolationException e) {
     		logger.error("Invalid JSON", e);
         	return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid JSON"), HttpStatus.BAD_REQUEST);
     	}
+	}
+
+	private String checkUserDetails(UserDTO userDTO) {
+		Date now = new Date();
+		if (userDTO.getCreatedAt() == null || userDTO.getCreatedAt().after(now)) {
+			return "Invalid value for createdAt";
+		}
+		if (userDTO.getDateOfBirth() == null || userDTO.getDateOfBirth().after(now)) {
+			return "Invalid value for dateOfBirth";
+		}
+		return null;
 	}
 
 	/**
@@ -217,7 +239,7 @@ public class UserManagement {
 			if (user == null) {
 				return new ResponseEntity<String>(commons.JSONfyReturnMessage("User doesn't exist!"), HttpStatus.BAD_REQUEST);
 			}
-			userDetailsService.deleteUser(user);
+			userService.deleteUserById(user.getId());
 			return new ResponseEntity<String>(commons.JSONfyReturnMessage("User deleted!"), HttpStatus.CREATED);
 		} catch (HttpMessageNotReadableException | org.modelmapper.MappingException | NullPointerException | DataIntegrityViolationException e) {
 			logger.error("Invalid JSON", e);
@@ -265,12 +287,113 @@ public class UserManagement {
 				return new ResponseEntity<String>(commons.JSONfyReturnMessage("Incorrect old password!"), HttpStatus.BAD_REQUEST);
 			}
 			user.setPassword(bCryptPasswordEncoder.encode(passwordDTO.getNewPassword()));
-			userDetailsService.updateUser(user);
+			userService.updateUser(user);
 			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Password updated!"), HttpStatus.CREATED);
 		} catch (HttpMessageNotReadableException | org.modelmapper.MappingException | NullPointerException | DataIntegrityViolationException e) {
 			logger.error("Invalid JSON", e);
 			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid JSON"), HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	/**
+	 * Desc: Create new contact info
+	 * JSON body example:
+	 * {
+			"username": "test1",
+			"telephoneNumber": "0800 091 092",
+			"email": "my.email2 @email.com"
+		}
+	 * @param ContactInformationDTO
+	 * @return
+	 */
+	@PostMapping("/saveContactInfo")
+	public ResponseEntity<String> saveContactInfo(@RequestBody ContactInformationDTO contactInformationDTO) {
+		// removing whitespaces
+		contactInformationDTO.setTelephoneNumber(contactInformationDTO.getTelephoneNumber().replaceAll("\\s+", ""));
+		contactInformationDTO.setEmail(contactInformationDTO.getEmail().replaceAll("\\s+", ""));
+		String checkContactInformation = checkContactInformation(contactInformationDTO);
+		if (checkContactInformation != null) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage(checkContactInformation), HttpStatus.BAD_REQUEST);
+		}
+		User user = userService.findUserByUsername(contactInformationDTO.getUsername());
+		if (user == null) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to find user"), HttpStatus.BAD_REQUEST);
+		}
+
+		ContactInformation contactInformationExisting = contactInformationService.findContactInformationByEmail(contactInformationDTO.getEmail());
+		if (contactInformationExisting != null) {
+			// does this existing contactInformation belong to this user or someone else?
+			User userExisting = userService.findByContactInformation(contactInformationExisting);
+			if (!userExisting.getUsername().equals(contactInformationDTO.getUsername())) {
+				return new ResponseEntity<String>(commons.JSONfyReturnMessage("Email already registered to another user"), HttpStatus.BAD_REQUEST);
+			}
+		}
+
+		ContactInformation contactInformation = new ContactInformation();
+		try {
+			contactInformation = mapper.map(contactInformationDTO, ContactInformation.class);
+		} catch (HttpMessageNotReadableException | org.modelmapper.MappingException | NullPointerException e) {
+			logger.error("Invalid JSON", e);
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid JSON"), HttpStatus.BAD_REQUEST);
+		}
+		if (user.getContactInformation() != null) {
+			contactInformation.setId(user.getContactInformation().getId());
+		}
+		contactInformation = contactInformationService.saveContactInformation(contactInformation);
+		user.setContactInformation(contactInformation);
+		userService.updateUser(user);
+
+		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Contact Information saved successfully"), HttpStatus.CREATED);
+	}
+
+	private String checkContactInformation(ContactInformationDTO contactInformationDTO) {
+		if (contactInformationDTO.getUsername() == null || contactInformationDTO.getUsername().isEmpty()) {
+			return "No username provided";
+		}
+		if (contactInformationDTO.getEmail() == null || contactInformationDTO.getEmail().isEmpty()) {
+			return "No email provided";
+		} else {
+			Pattern pattern = Pattern.compile("(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])");
+			Matcher matcher = pattern.matcher(contactInformationDTO.getEmail());
+			if (!matcher.matches()) {
+				return "Not a valid email provided";
+			}
+		}
+		if (contactInformationDTO.getTelephoneNumber() != null && !contactInformationDTO.getTelephoneNumber().isEmpty()) {
+			Pattern pattern = Pattern.compile("^\\s*(?:\\+?(\\d{1,3}))?[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*(\\d{4})(?: *x(\\d+))?\\s*$");
+			Matcher matcher = pattern.matcher(contactInformationDTO.getTelephoneNumber());
+			if (!matcher.matches()) {
+				return "Not a valid telephone number provided";
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Desc: Delete existing contact info (telephoneNumber and email are ignored)
+	 * JSON body example:
+	 * {
+			"username": "test1",
+			"telephoneNumber": "0800 091 092",
+			"email": "my.email2 @email.com"
+		}
+	 * @param ContactInformationDTO
+	 * @return
+	 */
+	@PostMapping("/deleteContactInfo")
+	public ResponseEntity<String> deleteContactInfo(@RequestBody ContactInformationDTO contactInformationDTO) {
+		User user = userService.findUserByUsername(contactInformationDTO.getUsername());
+		if (user == null) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to find user"), HttpStatus.BAD_REQUEST);
+		}
+		if (user.getContactInformation() != null) {
+			Long contactInformationId = user.getContactInformation().getId();
+			user.setContactInformation(null);
+			userService.updateUser(user);
+			contactInformationService.deleteContactInformationById(contactInformationId);
+		}
+
+		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Contact Information deleted successfully"), HttpStatus.CREATED);
 	}
 
 	// profile photo - add
@@ -281,6 +404,11 @@ public class UserManagement {
 		if (username == null || username.isEmpty()) {
             return new ResponseEntity<String>(commons.JSONfyReturnMessage("No username provided"), HttpStatus.BAD_REQUEST);
         }
+
+		if (profilePhoto.getSize() > 8388608) {
+			logger.debug("Profile foto file size:" + profilePhoto.getSize());
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Profile photo file too large"), HttpStatus.BAD_REQUEST);
+		}
 
 		// does this user already have a profile photo?
 		User user = userService.findUserByUsername(username);
@@ -314,7 +442,7 @@ public class UserManagement {
 
 			// store the data about the file info to database
 			user.setProfilePhoto(username + "_" + profilePhoto.getOriginalFilename());
-			userService.updateUser(user.getId(), user);
+			userService.updateUser(user);
 		} catch (IOException e) {
 			logger.error("Unable to save file", e);
 			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to save file"), HttpStatus.BAD_REQUEST);
@@ -327,7 +455,7 @@ public class UserManagement {
 	}
 
 	// profile photo - fetch
-	@GetMapping(value = "/getProfilePhoto")
+	@GetMapping(value = "/getProfilePhoto", produces = MediaType.IMAGE_PNG_VALUE)
 	@ResponseBody
 	public ResponseEntity<?> getProfilePhoto(@RequestParam(name = "username") String username) {
 		logger.debug("/api/user/getProfilePhoto Started");
@@ -341,7 +469,6 @@ public class UserManagement {
 	        headers.add("Pragma", "no-cache");
 	        headers.add("Expires", "0");
 	        headers.setContentLength(profilePhoto.length());
-				headers.setContentType(MediaType.IMAGE_PNG);
 
 			InputStreamResource resource = null;
 			try {

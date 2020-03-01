@@ -1,7 +1,7 @@
 package hr.go2.play.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -13,11 +13,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import hr.go2.play.DTO.ContactInformationDTO;
 import hr.go2.play.DTO.UserWithContactInfoDTO;
 import hr.go2.play.entities.ContactInformation;
 import hr.go2.play.entities.Role;
 import hr.go2.play.entities.User;
+import hr.go2.play.repositories.RoleRepository;
 import hr.go2.play.repositories.UserRepository;
 import hr.go2.play.services.UserService;
 import hr.go2.play.util.Commons;
@@ -36,6 +36,9 @@ public class UserServiceImpl implements UserService, org.springframework.securit
 
 	@Autowired
 	private ContactInformationServiceImpl contactService;
+
+	@Autowired
+	private RoleRepository roleRepo;
 
 	@Override
 	public boolean existsUserById(Long id) {
@@ -77,7 +80,7 @@ public class UserServiceImpl implements UserService, org.springframework.securit
 
 	@Override
 	public void deleteUserById(Long id) {
-		this.contactService.deleteContactInformationById(this.findUserById(id).getContactInfo().getId());
+		this.contactService.deleteContactInformationById(this.findUserById(id).getContactInformation().getId());
 		this.userRepo.deleteById(id);
 	}
 
@@ -89,17 +92,27 @@ public class UserServiceImpl implements UserService, org.springframework.securit
 
 	@Override
 	public User saveUser(User user) {
-		String password = user.getPassword();
-		if (!commons.isPasswordEncripted(password)) {
-			user.setPassword(commons.encodePassword(password));
+		if (!commons.isPasswordEncripted(user.getPassword())) {
+			user.setPassword(commons.encodePassword(user.getPassword()));
 		}
-		this.userRepo.save(user);
+		user.setEnabled(user.isEnabled());
+		Optional<Role> userRole = roleRepo.findByName("role_user");
+		Collection<Role> roles = new ArrayList<Role>();
+		if (!userRole.isPresent()) {
+			Role role = new Role(null, "role_user", null);
+			roleRepo.save(role);
+			roles.add(role);
+		} else {
+			roles.add(userRole.get());
+		}
+		user.setRoles(roles);
+		userRepo.save(user);
 		return user;
 	}
 
 	// Saves user (with "ROLE_USER" role) and saves the new ContactInformation
 	public User saveUserAndSaveRoleAndContactInfo(User user, ContactInformation userCI) {
-		user.setContactInfo(userCI);
+		user.setContactInformation(userCI);
 		Role userRole = roleService.findRoleByName("ROLE_USER");
 		user.addRole(userRole);
 		userRole.addUser(user);
@@ -125,12 +138,16 @@ public class UserServiceImpl implements UserService, org.springframework.securit
 			userNew.setRoles(user.getRoles());
 			userNew.setUsername(user.getUsername());
 			userNew.setProfilePhoto(user.getProfilePhoto());
-			contactService.updateContactInformation(userNew.getContactInfo().getId(), user.getContactInfo());
-			userNew.setContactInfo(user.getContactInfo());
+			contactService.updateContactInformation(userNew.getContactInformation().getId(), user.getContactInformation());
+			userNew.setContactInformation(user.getContactInformation());
 			return this.userRepo.save(userNew);
 		} else {
 			return this.userRepo.save(user);
 		}
+	}
+
+	public User updateUser(User user) {
+		return this.userRepo.save(user);
 	}
 
 	public User editProfile(String username, User user) {
@@ -143,8 +160,8 @@ public class UserServiceImpl implements UserService, org.springframework.securit
 			} else {
 				userNew.setPassword(commons.encodePassword(user.getPassword()));
 			}
-			contactService.updateContactInformation(userNew.getContactInfo().getId(), user.getContactInfo());
-			userNew.setContactInfo(user.getContactInfo());
+			contactService.updateContactInformation(userNew.getContactInformation().getId(), user.getContactInformation());
+			userNew.setContactInformation(user.getContactInformation());
 			return this.userRepo.save(userNew);
 		} else {
 			return this.userRepo.save(user);
@@ -153,13 +170,13 @@ public class UserServiceImpl implements UserService, org.springframework.securit
 
 	// Updates user and contact information
 	public User updateUserAndContactInfo(User oldUser, UserWithContactInfoDTO newUserWithContactInfoDTO) {
-		ContactInformation oldCI = oldUser.getContactInfo();
+		ContactInformation oldCI = oldUser.getContactInformation();
 		// Update CI
 		oldCI.setEmail(newUserWithContactInfoDTO.getContactInfoDto().getEmail());
 		oldCI.setTelephoneNumber(newUserWithContactInfoDTO.getContactInfoDto().getTelephoneNumber());
 		// Update User
 		oldUser.setDateOfBirth(newUserWithContactInfoDTO.getUserDto().getDateOfBirth());
-		oldUser.setContactInfo(oldCI);
+		oldUser.setContactInformation(oldCI);
 		this.editProfile(oldUser.getUsername(), oldUser);
 		return null;
 	}
@@ -199,5 +216,10 @@ public class UserServiceImpl implements UserService, org.springframework.securit
 	private UserDetails buildUserForAuthentication(User user, List<GrantedAuthority> authorities) {
 		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
 				authorities);
+	}
+
+	@Override
+	public User findByContactInformation(ContactInformation contactInformation) {
+		return userRepo.findByContactInformation(contactInformation).get();
 	}
 }

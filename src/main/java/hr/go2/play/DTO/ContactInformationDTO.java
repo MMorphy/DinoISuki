@@ -2,7 +2,7 @@ package hr.go2.play.DTO;
 
 public class ContactInformationDTO {
 
-	private Long id;
+	private String username;
 
 	private String telephoneNumber;
 
@@ -11,21 +11,18 @@ public class ContactInformationDTO {
 	public ContactInformationDTO() {
 	}
 
-	
-	public ContactInformationDTO(Long id, String telephoneNumber, String email) {
-		super();
-		this.id = id;
+	public ContactInformationDTO(String username, String telephoneNumber, String email) {
+		this.username = username;
 		this.telephoneNumber = telephoneNumber;
 		this.email = email;
 	}
 
-
-	public Long getId() {
-		return id;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getTelephoneNumber() {
