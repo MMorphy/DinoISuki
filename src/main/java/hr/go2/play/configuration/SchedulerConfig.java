@@ -13,9 +13,10 @@ import hr.go2.play.jobs.VideoFinderJob;
 
 @Configuration
 public class SchedulerConfig {
-	
-	@Value("${application.job.video-finder.interval}") int intervalInSeconds;
-	
+
+	@Value("${application.job.video-finder.interval}")
+	int intervalInSeconds;
+
 	@Bean
 	public JobDetail videoFinderJobDetail() {
 		return JobBuilder.newJob(VideoFinderJob.class).withIdentity("videoFinder").storeDurably().build();
@@ -23,7 +24,10 @@ public class SchedulerConfig {
 
 	@Bean
 	public Trigger videoFinderJobTrigger() {
-		SimpleScheduleBuilder videoFinderScheduleBuilder = SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(intervalInSeconds).repeatForever();
-		return TriggerBuilder.newTrigger().forJob(videoFinderJobDetail()).withIdentity("videoFinder").withSchedule(videoFinderScheduleBuilder).build();
+		SimpleScheduleBuilder videoFinderScheduleBuilder = SimpleScheduleBuilder.simpleSchedule()
+				.withIntervalInSeconds(intervalInSeconds).repeatForever();
+		return TriggerBuilder.newTrigger().forJob(videoFinderJobDetail()).withIdentity("videoFinder")
+				.withSchedule(videoFinderScheduleBuilder).build();
 	}
+
 }

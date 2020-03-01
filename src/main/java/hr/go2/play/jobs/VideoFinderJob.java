@@ -27,6 +27,7 @@ public class VideoFinderJob extends QuartzJobBean {
 	
 	@Value("${application.job.video-finder.search-folder-location}") String searchFolderLocation;
 	@Value("${application.job.video-finder.found-folder-location}") String foundFolderLocation;
+	@Value("${application.job.video-finder.error-folder-location}") String errorFolderLocation;
 	
 	@Autowired
 	private VideoRepository videoRepository;
@@ -49,7 +50,7 @@ public class VideoFinderJob extends QuartzJobBean {
 			
 			// move the files to new location
 			int movedVideoCounter = 0;
-			if(checkFoundFolder()) {
+			if(checkFolders()) {
 				for(String videoLocation : listOfFiles) {
 					File videoFile = new File(videoLocation);
 		    		if(videoFile.renameTo(new File(foundFolderLocation + "\\" + videoFile.getName()))) {
@@ -71,16 +72,27 @@ public class VideoFinderJob extends QuartzJobBean {
 		}
 	}
 	
-	private boolean checkFoundFolder() {
+	private boolean checkFolders() {
 		boolean created = true;
-		File foundFolder = new File(foundFolderLocation);
-		if(!foundFolder.exists() || !foundFolder.isDirectory()) { 
+		File folder = new File(foundFolderLocation);
+		if(!folder.exists() || !folder.isDirectory()) { 
 		    // creating "found" folder
 			try{
-				foundFolder.mkdir();
+				folder.mkdir();
 			} 
 		    catch(SecurityException e){
 		    	logger.error("VideoFinderJob: Unable to create found folder. ", e);
+		    	created = false;
+		    }
+		}
+		folder = new File(errorFolderLocation); 
+		if(!folder.exists() || !folder.isDirectory()) { 
+		    // creating "found" folder
+			try{
+				folder.mkdir();
+			} 
+		    catch(SecurityException e){
+		    	logger.error("VideoFinderJob: Unable to create error folder. ", e);
 		    	created = false;
 		    }
 		}

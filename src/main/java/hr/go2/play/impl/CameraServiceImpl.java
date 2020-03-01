@@ -89,7 +89,6 @@ public class CameraServiceImpl implements CameraService {
 		return this.cameraRepo.save(camera);
 	}
 
-	//TODO detach video
 	@Override
 	public Camera updateCamera(Long id, Camera camera) {
 		Optional<Camera> optCamera = this.cameraRepo.findById(id);

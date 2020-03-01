@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import hr.go2.play.DTO.VideoDetailsDTO;
 import hr.go2.play.entities.ContactInformation;
 import hr.go2.play.entities.Location;
 import hr.go2.play.entities.WorkingHours;
@@ -125,5 +126,10 @@ public class LocationServiceImpl implements LocationService {
 		} catch (NoSuchElementException ex) {
 			return null;
 		}
+	}
+
+	@Override
+	public List<VideoDetailsDTO> findAllVideoDetails() {
+		return (List<VideoDetailsDTO>) this.locationRepo.findAllVideoDetails();
 	}
 }

@@ -4,23 +4,23 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class VideoDTO {
+public class VideoDetailsDTO {
 
 	private Long id;
 
-	private String location;
-
-	@JsonFormat(pattern = "mm:hh dd/MM/yyyy")
+	@JsonFormat(pattern = "hh:mm dd/MM/yyyy")
 	private Date startedTimestamp;
 
-	public VideoDTO() {
+	private String locationName;
+
+	public VideoDetailsDTO() {
 	}
 
-	public VideoDTO(Long id, String location, Date startedTimestamp) {
+	public VideoDetailsDTO(Long id, Date startedTimestamp, String locationName) {
 		super();
 		this.id = id;
-		this.location = location;
 		this.startedTimestamp = startedTimestamp;
+		this.locationName = locationName;
 	}
 
 	public Long getId() {
@@ -31,19 +31,19 @@ public class VideoDTO {
 		this.id = id;
 	}
 
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
 	public Date getStartedTimestamp() {
 		return startedTimestamp;
 	}
 
 	public void setStartedTimestamp(Date startedTimestamp) {
 		this.startedTimestamp = startedTimestamp;
+	}
+
+	public String getLocationName() {
+		return locationName;
+	}
+
+	public void setLocationName(String locationName) {
+		this.locationName = locationName;
 	}
 }

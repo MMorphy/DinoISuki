@@ -73,16 +73,18 @@ public class AdminRest {
 	 *
 	 * @param camDto
 	 * JSON body example:
+	 * 
 	 * { 
-   "id":"",
-   "name":"camName",
-   "videos":[ 
-      { 
-         "id":null,
-         "location":""
-      }
-   ]
-}
+     * "id":"",
+     * "name":"camName",
+     * "videos":
+     * 	[ 
+     *     { 
+     *        "id":null,
+     *        "location":""
+     *     }
+     *  ]
+     *}
 	 * @return
 	 */
 	@PostMapping("/addCamera")

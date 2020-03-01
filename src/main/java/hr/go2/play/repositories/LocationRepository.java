@@ -1,4 +1,4 @@
-package hr.go2.play.repositories;
+ package hr.go2.play.repositories;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import hr.go2.play.DTO.VideoDetailsDTO;
 import hr.go2.play.entities.ContactInformation;
 import hr.go2.play.entities.Location;
-import hr.go2.play.entities.Video;
 import hr.go2.play.entities.WorkingHours;
 
 @Repository
@@ -29,11 +29,10 @@ public interface LocationRepository extends JpaRepository<Location, Long>{
 
 	public Optional<Location> findByContactInformation_TelephoneNumber(String num);
 
-	//TODO dovrsi ovo i DTO
-	@Query("SELECT v "
+	@Query("SELECT new hr.go2.play.DTO.VideoDetailsDTO(v.id, v.startedAt, l.name) "
 		+ "FROM Location l "
 		+ "JOIN l.fields f "
 		+ "JOIN f.cameras c "
 		+ "JOIN c.videos v")
-	public Collection<Video> findAllVideos();
+	public Collection<VideoDetailsDTO> findAllVideoDetails();
 }

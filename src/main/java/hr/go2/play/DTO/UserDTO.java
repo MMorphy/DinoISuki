@@ -33,7 +33,7 @@ public class UserDTO {
 		this.password = password;
 	}
 
-	public UserDTO(Long id, List<RoleDTO> roles, String createdAt, String enabled, List<VideoDTO> paidVideos,
+	public UserDTO(Long id, List<RoleDTO> roles, String createdAt, String enabled,
 			String username, String password, String dateOfBirth) {
 		super();
 		this.id = id;

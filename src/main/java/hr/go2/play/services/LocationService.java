@@ -2,6 +2,7 @@ package hr.go2.play.services;
 
 import java.util.List;
 
+import hr.go2.play.DTO.VideoDetailsDTO;
 import hr.go2.play.entities.ContactInformation;
 import hr.go2.play.entities.Location;
 import hr.go2.play.entities.WorkingHours;
@@ -33,5 +34,7 @@ public interface LocationService {
 	public abstract Location updateLocation(Long id, Location location);
 
 	public abstract void deleteAllLocations();
+
+	public abstract List<VideoDetailsDTO> findAllVideoDetails();
 
 }
