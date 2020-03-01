@@ -27,7 +27,6 @@ import hr.go2.play.impl.SubscriptionServiceImpl;
 import hr.go2.play.impl.SubscriptionTypeServiceImpl;
 import hr.go2.play.impl.UserServiceImpl;
 import hr.go2.play.impl.WorkingHoursServiceImpl;
-import hr.go2.play.repositories.CameraRepository;
 import hr.go2.play.util.Commons;
 
 @RestController

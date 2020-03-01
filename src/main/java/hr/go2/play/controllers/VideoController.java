@@ -15,7 +15,6 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
@@ -23,7 +22,6 @@ import hr.go2.play.DTO.VideoDetailsDTO;
 import hr.go2.play.entities.Video;
 import hr.go2.play.impl.LocationServiceImpl;
 import hr.go2.play.impl.VideoServiceImpl;
-import hr.go2.play.services.LocationService;
 
 @RestController
 @RequestMapping("/api/video")

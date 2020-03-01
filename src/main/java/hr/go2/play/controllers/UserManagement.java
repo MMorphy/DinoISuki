@@ -45,7 +45,6 @@ import hr.go2.play.entities.ContactInformation;
 import hr.go2.play.entities.Role;
 import hr.go2.play.entities.User;
 import hr.go2.play.impl.ContactInformationServiceImpl;
-import hr.go2.play.impl.RoleServiceImpl;
 import hr.go2.play.impl.UserServiceImpl;
 import hr.go2.play.jwt.JwtTokenProvider;
 import hr.go2.play.util.Commons;
