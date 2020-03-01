@@ -1,87 +1,41 @@
 package hr.go2.play.DTO;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+@JsonDeserialize(using = UserDTOCustomDeserializer.class)
 public class UserDTO {
 
-	private Long id;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+	private Date createdAt;
 
-	private List<RoleDTO> roles;
-
-	@JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
-	private String createdAt;
-
-	private String enabled;
+	private Boolean enabled;
 
 	private String username;
 
 	private String password;
 
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private String dateOfBirth;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private Date dateOfBirth;
 
 	public UserDTO() {
 	}
 
-	public UserDTO(String username, String password) {
-		this.username = username;
-		this.password = password;
-	}
-
-	public UserDTO(Long id, List<RoleDTO> roles, String createdAt, String enabled,
-			String username, String password, String dateOfBirth) {
-		super();
-		this.id = id;
-		this.roles = roles;
-		this.createdAt = createdAt;
-		this.enabled = enabled;
-		this.username = username;
-		this.password = password;
-		this.dateOfBirth = dateOfBirth;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public List<RoleDTO> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(List<RoleDTO> roles) {
-		this.roles = roles;
-	}
-
 	public Date getCreatedAt() {
-		Date createdAt = null;
-		try {
-			// 2019/10/24 13:13:30.183
-			SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			createdAt = format.parse(this.createdAt);
-		} catch (ParseException ex) {
-			ex.printStackTrace();
-		}
 		return createdAt;
 	}
 
-	public void setCreatedAt(String createdAt) {
+	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
 
-	public boolean getEnabled() {
-		return Boolean.parseBoolean(enabled);
+	public Boolean getEnabled() {
+		return enabled;
 	}
 
-	public void setEnabled(String enabled) {
+	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
 	}
 
@@ -102,17 +56,16 @@ public class UserDTO {
 	}
 
 	public Date getDateOfBirth() {
-		Date dateOfBirth = null;
-		try {
-			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-			dateOfBirth = format.parse(this.dateOfBirth);
-		} catch (ParseException ex) {
-			ex.printStackTrace();
-		}
 		return dateOfBirth;
 	}
 
-	public void setDateOfBirth(String dateOfBirth) {
+	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
+
+	@Override
+	public String toString() {
+		return "UserDTO: createdAt: " + createdAt != null ? createdAt.toString() : null + " enabled:" + enabled + " username:" + username + " dateOfBirth:" + dateOfBirth != null ? dateOfBirth.toString() : null;
+	}
+
 }
