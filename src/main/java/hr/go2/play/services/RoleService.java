@@ -22,4 +22,5 @@ public interface RoleService {
 
 	public abstract void deleteAllRoles();
 
+	public abstract Boolean existsRoleByName(String name);
 }

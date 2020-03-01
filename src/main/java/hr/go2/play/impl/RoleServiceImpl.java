@@ -78,4 +78,9 @@ public class RoleServiceImpl implements RoleService {
 		}
 	}
 
+	@Override
+	public Boolean existsRoleByName(String name) {
+		return this.roleRepo.existsByName(name);
+	}
+
 }
