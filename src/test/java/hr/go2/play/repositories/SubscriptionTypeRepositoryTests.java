@@ -3,7 +3,6 @@ package hr.go2.play.repositories;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.annotation.Order;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import hr.go2.play.entities.Sports;
 import hr.go2.play.entities.SubscriptionType;
 
 @RunWith(SpringRunner.class)
