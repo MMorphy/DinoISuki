@@ -255,7 +255,7 @@ public class UserManagement {
 			UserDTO userDTO = mapper.map(user, UserDTO.class);
 			return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<String>("Unable to find user", HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to find user"), HttpStatus.NOT_ACCEPTABLE);
 		}
 	}
 
@@ -394,6 +394,19 @@ public class UserManagement {
 		}
 
 		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Contact Information deleted successfully"), HttpStatus.CREATED);
+	}
+
+	@GetMapping("/getContactInfo/{username}")
+	public ResponseEntity<?> getContactInfo(@PathVariable String username) {
+		User user = userService.findUserByUsername(username);
+		if (user != null) {
+			ContactInformation contactInformation = user.getContactInformation();
+			ContactInformationDTO contactInformationDTO = mapper.map(contactInformation, ContactInformationDTO.class);
+			contactInformationDTO.setUsername(username);
+			return new ResponseEntity<ContactInformationDTO>(contactInformationDTO, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to find user"), HttpStatus.NOT_ACCEPTABLE);
+		}
 	}
 
 	// profile photo - add

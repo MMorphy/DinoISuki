@@ -99,6 +99,17 @@ Input: ContactInformationDTO
 Output:
 {"message": "Contact Information deleted successfully"}
 
+/api/myUser/getContactInfo/{username}
+Description: Get user's contact details
+Type: get
+Input: @PathVariable String username
+Output:
+{
+    "username": "test5",
+    "telephoneNumber": "0985551234",
+    "email": "my.email1@email.com"
+}
+
 /admin/create/camera
 Description: Create new camera
 Type: post
