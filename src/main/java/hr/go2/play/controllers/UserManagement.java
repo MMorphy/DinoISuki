@@ -401,9 +401,13 @@ public class UserManagement {
 		User user = userService.findUserByUsername(username);
 		if (user != null) {
 			ContactInformation contactInformation = user.getContactInformation();
-			ContactInformationDTO contactInformationDTO = mapper.map(contactInformation, ContactInformationDTO.class);
-			contactInformationDTO.setUsername(username);
-			return new ResponseEntity<ContactInformationDTO>(contactInformationDTO, HttpStatus.OK);
+			if (contactInformation != null) {
+				ContactInformationDTO contactInformationDTO = mapper.map(contactInformation, ContactInformationDTO.class);
+				contactInformationDTO.setUsername(username);
+				return new ResponseEntity<ContactInformationDTO>(contactInformationDTO, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<String>(commons.JSONfyReturnMessage("No contact information found"), HttpStatus.OK);
+			}
 		} else {
 			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to find user"), HttpStatus.NOT_ACCEPTABLE);
 		}
