@@ -17,6 +17,7 @@ public class Commons {
 
 	private static final String HR_DATE_FORMAT = "dd/MM/YYYY";
 	private static final String PSQL_DATE_FORMAT = "yyyy-MM-dd";
+	private static final String VIDEO_DATE_FORMAT = "yyyyMMdd_hhmm";
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Commons.class);
 
@@ -44,6 +45,8 @@ public class Commons {
 			format = HR_DATE_FORMAT;
 		} else if (format.equals("PSQL")){
 			format = PSQL_DATE_FORMAT;
+		} else if (format.equals("VIDEO")) {
+			format = VIDEO_DATE_FORMAT;
 		}
 		SimpleDateFormat formatter = new SimpleDateFormat(format);
 		try {
