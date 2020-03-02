@@ -17,7 +17,7 @@ public class UserDTO {
 
 	private String password;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "CET")
 	private Date dateOfBirth;
 
 	public UserDTO() {

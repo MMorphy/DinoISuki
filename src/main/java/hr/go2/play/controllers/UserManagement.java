@@ -111,7 +111,7 @@ public class UserManagement {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody UserDTO userDto) {
         try {
-			logger.debug(userDto.toString());
+			logger.debug("/api/user/login Started");
 			User user = userService.findUserByUsername(userDto.getUsername());
 			if (user == null) {
         		logger.error("Invalid username");
