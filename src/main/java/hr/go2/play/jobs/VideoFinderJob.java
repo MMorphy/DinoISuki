@@ -48,7 +48,7 @@ public class VideoFinderJob extends QuartzJobBean {
 		try (Stream<Path> walk = Files.walk(Paths.get(searchFolderLocation), 1)) {
 			// When moving to unix, need to change the lastIndex of \\ to /
 			// Current format is <NAMEOFCAM(3 alpha + 1 number)>_yyyyMMdd_hhmm.mp4
-			listOfFiles = walk.map(x -> x.toString()).filter(file -> file.substring(file.lastIndexOf("\\") + 1).matches(
+			listOfFiles = walk.map(x -> x.toString()).filter(file -> file.substring(file.lastIndexOf(File.separator) + 1).matches(
 					"^([A-Z]{3}[0-9]{1})_([2][0][2-3][0-9][0][0-9]|[1][0-2])([0][0-9]|[1][0-9]|[2][0-9]|[3][0-1])_[0-2][0-9][0-5][0-9].mp4"))
 					.collect(Collectors.toList());
 
@@ -66,13 +66,13 @@ public class VideoFinderJob extends QuartzJobBean {
 					String cameraName = videoFile.getName().substring(0, 4);
 					Camera cam = cameraService.findCameraByName(cameraName);
 					if (cam == null) {
-						videoFile.renameTo(new File(errorFolderLocation + "\\" + videoFile.getName()));
+						videoFile.renameTo(new File(errorFolderLocation + File.separator + videoFile.getName()));
 						logger.warn("Found video with no camera!");
 					} else {
-						if (videoFile.renameTo(new File(foundFolderLocation + "\\" + videoFile.getName()))) {
+						if (videoFile.renameTo(new File(foundFolderLocation + File.separator + videoFile.getName()))) {
 							// persist the video locations
 							Video video = new Video();
-							video.setLocation(foundFolderLocation + "\\" + videoFile.getName());
+							video.setLocation(foundFolderLocation + File.separator + videoFile.getName());
 							video.setStartedAt(commons.formatDateFromString(videoFile.getName().substring(5, 18), "VIDEO"));
 							cameraService.addVideo(cam, video);
 							movedVideoCounter++;
