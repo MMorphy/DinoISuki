@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import hr.go2.play.entities.Subscription;
 import hr.go2.play.repositories.SubscriptionRepository;
@@ -14,10 +15,10 @@ import hr.go2.play.services.SubscriptionService;
 
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
-	
+
 	@Autowired
 	private SubscriptionRepository subRepo;
-	
+
 	public SubscriptionServiceImpl(SubscriptionRepository subRepo) {
 		this.subRepo = subRepo;
 	}
@@ -79,6 +80,17 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		} else {
 			return this.subRepo.save(subscription);
 		}
+	}
+
+	@Override
+	@Transactional
+	public void updateValidityByTime(Date date) {
+		subRepo.updateValidityByTime(date);
+	}
+
+	@Override
+	public int numberOfInvalidatingSubscriptions(Date date) {
+		return subRepo.numberOfInvalidatingSubscriptions(date);
 	}
 
 }

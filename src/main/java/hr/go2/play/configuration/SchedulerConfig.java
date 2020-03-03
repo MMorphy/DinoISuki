@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import hr.go2.play.jobs.InvalidateSubscriptionJob;
 import hr.go2.play.jobs.VideoFinderJob;
 
 @Configuration
@@ -28,6 +29,20 @@ public class SchedulerConfig {
 				.withIntervalInSeconds(intervalInSeconds).repeatForever();
 		return TriggerBuilder.newTrigger().forJob(videoFinderJobDetail()).withIdentity("videoFinder")
 				.withSchedule(videoFinderScheduleBuilder).build();
+	}
+
+	@Value("${application.job.invalidate-subscription.interval}")
+	int invalidateSubscriptionJob_intervalInSeconds;
+
+	@Bean
+	public JobDetail invalidateSubscriptionJobDetail() {
+		return JobBuilder.newJob(InvalidateSubscriptionJob.class).withIdentity("invalidateSubscription").storeDurably().build();
+	}
+
+	@Bean
+	public Trigger invalidateSubscriptionJobTrigger() {
+		SimpleScheduleBuilder invalidateSubscriptionScheduleBuilder = SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(invalidateSubscriptionJob_intervalInSeconds).repeatForever();
+		return TriggerBuilder.newTrigger().forJob(invalidateSubscriptionJobDetail()).withIdentity("invalidateSubscription").withSchedule(invalidateSubscriptionScheduleBuilder).build();
 	}
 
 }
