@@ -10,7 +10,7 @@ public class VideoDTO {
 
 	private String location;
 
-	@JsonFormat(pattern = "mm:hh dd/MM/yyyy")
+	@JsonFormat(pattern = "mm:hh dd/MM/yyyy", timezone = "CET")
 	private Date startedTimestamp;
 
 	public VideoDTO() {

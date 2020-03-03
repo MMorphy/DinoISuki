@@ -154,7 +154,7 @@ public class NotificationRest {
 	 */
 	@Transactional
 	@GetMapping("/deleteNotifications")
-	public ResponseEntity<?> getNotifications(@RequestParam(name = "notificationIdList") List<Long> notificationIdList) {
+	public ResponseEntity<?> deleteNotifications(@RequestParam(name = "notificationIdList") List<Long> notificationIdList) {
 		logger.debug("/api/notifications/deleteNotifications Started");
 		notificationService.deleteMultipleNotificationById(notificationIdList);
 		logger.debug("/api/notifications/deleteNotifications Finished");

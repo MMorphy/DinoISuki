@@ -302,3 +302,49 @@ Example: https://localhost:8443/api/notifications/deleteNotifications?notificati
 Output:
 {"message":"Notifications deleted"}
 
+/api/transactions/getTransactionDetails
+Description: Fetch transaction details
+Type: get
+Input: String username or String transactionId
+Example: https://localhost:8443/api/transactions/getTransactionDetails?username=test6&transactionId=12345
+Output:
+[
+    {
+        "id": 6,
+        "username": "abcd",
+        "transactionId": "12349",
+        "timestamp": "2020-03-03T20:14:24.923Z",
+        "transactionStatus": "FAILED"
+    },
+    {
+        "id": 7,
+        "username": "abcd",
+        "transactionId": "12349-1583262890936",
+        "timestamp": "2020-03-03T20:14:50.936Z",
+        "transactionStatus": "FAILED"
+    }
+]
+
+/api/transactions/saveTransactionDetails
+Description: Add transaction details
+Type: post
+Input: TransactionDetailsDTO
+{
+	"id" : 44,
+	"username": "test5",
+	"transactionId": "#zui#",
+	"timestamp": "2020-02-01T00:00:00.000Z",
+	"transactionStatus": "SUCCESSFUL"
+}
+Example: https://localhost:8443/api/transactions/saveTransactionDetails
+Output:
+{"message":"Transaction details added"}
+
+/api/transactions/deleteTransactionDetails
+Description: Delete transaction details 
+Type: get
+Input: Long id
+Example: https://localhost:8443/api/transactions/deleteTransactionDetails?id=1
+Output:
+{"message":"Transaction details deleted"}
+
