@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import hr.go2.play.DTO.UserWithContactInfoDTO;
 import hr.go2.play.entities.ContactInformation;
 import hr.go2.play.entities.Role;
+import hr.go2.play.entities.Subscription;
 import hr.go2.play.entities.User;
 import hr.go2.play.repositories.RoleRepository;
 import hr.go2.play.repositories.UserRepository;
@@ -221,5 +222,10 @@ public class UserServiceImpl implements UserService, org.springframework.securit
 	@Override
 	public User findByContactInformation(ContactInformation contactInformation) {
 		return userRepo.findByContactInformation(contactInformation).get();
+	}
+
+	@Override
+	public List<Subscription> findByIdAndValidSubscription(Long userId, boolean valid) {
+		return (List<Subscription>) userRepo.findByIdAndValidSubscription(userId, valid);
 	}
 }

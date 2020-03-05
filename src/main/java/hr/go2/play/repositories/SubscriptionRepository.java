@@ -25,4 +25,5 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
 
 	@Query("SELECT COUNT(s.id) FROM Subscription s WHERE s.validTo < DATE(?1) AND s.valid = TRUE")
 	int numberOfInvalidatingSubscriptions(Date date);
+
 }

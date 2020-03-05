@@ -1,28 +1,36 @@
 package hr.go2.play.DTO;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class SubscriptionDTO {
 
 	private Long id;
 
-	private String valid;
+	private boolean valid;
 
-	private String validFrom;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "CET")
+	private Date validFrom;
 
-	private String validTo;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "CET")
+	private Date validTo;
 
-	private SubscriptionTypeDTO subscriptionType;
+	private String subscriptionTypeName;
+
+	private String username;
 
 	public SubscriptionDTO() {
 	}
 
-	public SubscriptionDTO(Long id, String valid, String validFrom, String validTo,
-			SubscriptionTypeDTO subscriptionType) {
+	public SubscriptionDTO(Long id, boolean valid, Date validFrom, Date validTo, String subscriptionTypeName, String username) {
 		super();
 		this.id = id;
 		this.valid = valid;
 		this.validFrom = validFrom;
 		this.validTo = validTo;
-		this.subscriptionType = subscriptionType;
+		this.subscriptionTypeName = subscriptionTypeName;
+		this.username = username;
 	}
 
 	public Long getId() {
@@ -33,35 +41,44 @@ public class SubscriptionDTO {
 		this.id = id;
 	}
 
-	public String getValid() {
+	public boolean getValid() {
 		return valid;
 	}
 
-	public void setValid(String valid) {
+	public void setValid(boolean valid) {
 		this.valid = valid;
 	}
 
-	public String getValidFrom() {
+	public Date getValidFrom() {
 		return validFrom;
 	}
 
-	public void setValidFrom(String validFrom) {
+	public void setValidFrom(Date validFrom) {
 		this.validFrom = validFrom;
 	}
 
-	public String getValidTo() {
+	public Date getValidTo() {
 		return validTo;
 	}
 
-	public void setValidTo(String validTo) {
+	public void setValidTo(Date validTo) {
 		this.validTo = validTo;
 	}
 
-	public SubscriptionTypeDTO getSubscriptionType() {
-		return subscriptionType;
+	public String getSubscriptionTypeName() {
+		return subscriptionTypeName;
 	}
 
-	public void setSubscriptionType(SubscriptionTypeDTO subscriptionType) {
-		this.subscriptionType = subscriptionType;
+	public void setSubscriptionTypeName(String subscriptionTypeName) {
+		this.subscriptionTypeName = subscriptionTypeName;
 	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 }

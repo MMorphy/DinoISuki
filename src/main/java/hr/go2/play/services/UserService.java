@@ -3,6 +3,7 @@ package hr.go2.play.services;
 import java.util.List;
 
 import hr.go2.play.entities.ContactInformation;
+import hr.go2.play.entities.Subscription;
 import hr.go2.play.entities.User;
 
 public interface UserService {
@@ -32,5 +33,7 @@ public interface UserService {
 	public abstract boolean existsUserByUsernmae(String username);
 
 	public abstract User findByContactInformation(ContactInformation contactInformation);
+
+	public abstract List<Subscription> findByIdAndValidSubscription(Long userId, boolean valid);
 
 }
