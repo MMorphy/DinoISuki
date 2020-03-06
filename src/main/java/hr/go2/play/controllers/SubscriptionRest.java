@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import hr.go2.play.DTO.SubscriptionDTO;
@@ -68,8 +69,8 @@ public class SubscriptionRest {
 	}
 
 	/*
-	 * Description: Save subscription 
-	 * Input params: SubscriptionDTO ( id is ignored ) 
+	 * Description: Save subscription
+	 * Input params: SubscriptionDTO ( id is ignored )
 	 * {
 			"valid": true,
 			"validFrom": "2020-03-01T00:00:00.000Z",
@@ -151,6 +152,95 @@ public class SubscriptionRest {
 		userService.saveUser(user);
 		logger.debug("/api/subscriptions/saveSubscription Finished");
 		return new ResponseEntity<>(commons.JSONfyReturnMessage("Subscription saved"), HttpStatus.OK);
+	}
+
+	/*
+	 * Description: Fetch all active subscriptions for given user
+	 * Call example: https://localhost:8443/api/subscriptions/getActiveSubscription?username=test6
+	 *
+	 */
+	@GetMapping("/getActiveSubscription")
+	public ResponseEntity<?> getActiveSubscription(@RequestParam(name = "username") String username) {
+		logger.debug("/api/subscriptions/getActiveSubscription Started");
+		if (username == null || username.isEmpty()) {
+			return new ResponseEntity<>(commons.JSONfyReturnMessage("No username provided"), HttpStatus.BAD_REQUEST);
+		}
+		User user = userService.findUserByUsername(username);
+		if (user == null) {
+			return new ResponseEntity<>(commons.JSONfyReturnMessage("No user with username '" + username + "' found"), HttpStatus.BAD_REQUEST);
+		}
+
+		List<Subscription> activeSubscriptions = userService.findByIdAndValidSubscription(user.getId(), Boolean.TRUE);
+
+		List<SubscriptionDTO> subscriptionsDTOList = activeSubscriptions.stream().map(subscription -> new SubscriptionDTO(subscription.getId(), subscription.isValid(), subscription.getValidFrom(), subscription.getValidTo(), subscription.getSubscriptionType().getName(), username)).collect(Collectors.toList());
+
+		logger.debug("/api/subscriptions/getActiveSubscription Finished");
+		return new ResponseEntity<>(subscriptionsDTOList, HttpStatus.OK);
+	}
+
+	/*
+	 * Description: Fetch all active subscriptions for given user
+	 * Call example: https://localhost:8443/api/subscriptions/getInactiveSubscription?username=test6
+	 *
+	 */
+	@GetMapping("/getInactiveSubscription")
+	public ResponseEntity<?> getInactiveSubscription(@RequestParam(name = "username") String username) {
+		logger.debug("/api/subscriptions/getInactiveSubscription Started");
+		if (username == null || username.isEmpty()) {
+			return new ResponseEntity<>(commons.JSONfyReturnMessage("No username provided"), HttpStatus.BAD_REQUEST);
+		}
+		User user = userService.findUserByUsername(username);
+		if (user == null) {
+			return new ResponseEntity<>(commons.JSONfyReturnMessage("No user with username '" + username + "' found"), HttpStatus.BAD_REQUEST);
+		}
+
+		List<Subscription> inactiveSubscriptions = userService.findByIdAndValidSubscription(user.getId(), Boolean.FALSE);
+
+		List<SubscriptionDTO> insubscriptionsDTOList = inactiveSubscriptions.stream().map(subscription -> new SubscriptionDTO(subscription.getId(), subscription.isValid(), subscription.getValidFrom(), subscription.getValidTo(), subscription.getSubscriptionType().getName(), username)).collect(Collectors.toList());
+
+		logger.debug("/api/subscriptions/getInactiveSubscription Finished");
+		return new ResponseEntity<>(insubscriptionsDTOList, HttpStatus.OK);
+	}
+
+	/*
+	 * Description: Delete all active subscriptions for given user or single one by id
+	 * Call example: https://localhost:8443/api/subscriptions/deleteSubscription?username=test6
+	 *
+	 */
+	@GetMapping("/deleteSubscription")
+	public ResponseEntity<?> deleteSubscription(@RequestParam(name = "username") String username, @RequestParam(name = "subscriptionId", required = false) Long subscriptionId) {
+		logger.debug("/api/subscriptions/deleteSubscription Started");
+
+		if (username == null || username.isEmpty()) {
+			return new ResponseEntity<>(commons.JSONfyReturnMessage("No username provided"), HttpStatus.BAD_REQUEST);
+		}
+		User user = userService.findUserByUsername(username);
+		if (user == null) {
+			return new ResponseEntity<>(commons.JSONfyReturnMessage("No user with username '" + username + "' found"), HttpStatus.BAD_REQUEST);
+		}
+
+		List<Subscription> subscriptionList = new ArrayList<Subscription>();
+		if (subscriptionId != null) {
+			Subscription subscription = subscriptionService.findSubscriptionById(subscriptionId);
+			if (subscription == null) {
+				return new ResponseEntity<>(commons.JSONfyReturnMessage("Provided subscription does not exist"), HttpStatus.BAD_REQUEST);
+			}
+			if (!user.getSubscriptions().contains(subscription)) {
+				return new ResponseEntity<>(commons.JSONfyReturnMessage("Provided subscription does not belong to provided user"), HttpStatus.BAD_REQUEST);
+			}
+			subscriptionList.add(subscription);
+		} else {
+			subscriptionList = userService.findByIdAndValidSubscription(user.getId(), Boolean.TRUE);
+		}
+
+		user.getSubscriptions().removeAll(subscriptionList);
+		userService.saveUser(user);
+		for (Subscription subscription : subscriptionList) {
+			subscriptionService.deleteSubscriptionById(subscription.getId());
+		}
+
+		logger.debug("/api/subscriptions/deleteSubscription Finished");
+		return new ResponseEntity<>(commons.JSONfyReturnMessage("Subscription(s) deleted"), HttpStatus.OK);
 	}
 
 }

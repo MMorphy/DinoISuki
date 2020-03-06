@@ -56,4 +56,50 @@ public class SubscriptionType {
 	public void setPrice(Float price) {
 		this.price = price;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		SubscriptionType subscriptionType = (SubscriptionType) obj;
+		if (this.id == null) {
+			if (subscriptionType.id != null) {
+				return false;
+			}
+		} else if (this.id != subscriptionType.id) {
+			return false;
+		}
+		if (this.name == null) {
+			if (subscriptionType.name != null) {
+				return false;
+			}
+		} else if (!this.name.equals(subscriptionType.name)) {
+			return false;
+		}
+		if (this.price == null) {
+			if (subscriptionType.price != null) {
+				return false;
+			}
+		} else if (this.price.compareTo(subscriptionType.price) != 0) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 11;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((price == null) ? 0 : price.hashCode());
+		return result;
+	}
 }

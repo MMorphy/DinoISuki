@@ -348,3 +348,68 @@ Example: https://localhost:8443/api/transactions/deleteTransactionDetails?id=1
 Output:
 {"message":"Transaction details deleted"}
 
+/api/subscriptions/getSubscriptionTypes
+Description: Fetch all subscription types 
+Type: get
+Input: 
+Example: https://localhost:8443/api/subscriptions/getSubscriptionTypes
+Output:
+
+/api/subscriptions/saveSubscription
+Description: Save subscription
+Type: post
+Input: SubscriptionDTO
+{
+	"valid": true,
+	"validFrom": "2020-03-01T00:00:00.000Z",
+	"validTo": "2020-03-10T00:00:00.000Z",
+	"subscriptionTypeName": "DAILY",
+	"username": "test6"
+}
+Example: https://localhost:8443/api/subscriptions/saveSubscription
+Output:
+{"message":"Subscription saved"}
+
+/api/subscriptions/getActiveSubscription
+Description: Fetch all active subscriptions for given user 
+Type: get
+Input: String username
+Example: https://localhost:8443/api/subscriptions/getActiveSubscription?username=test6
+Output:
+[
+    {
+        "id": 11,
+        "valid": true,
+        "validFrom": "2020-03-01T00:00:00.000Z",
+        "validTo": "2020-03-10T00:00:00.000Z",
+        "subscriptionTypeName": "DAILY",
+        "username": "test6"
+    }
+]
+
+/api/subscriptions/getInactiveSubscription
+Description: Fetch all inactive subscriptions for given user 
+Type: get
+Input: String username
+Example: https://localhost:8443/api/subscriptions/getInactiveSubscription?username=test6
+Output:
+[
+    {
+        "id": 19,
+        "valid": false,
+        "validFrom": "2020-03-28T00:00:00.000Z",
+        "validTo": "2020-03-29T00:00:00.000Z",
+        "subscriptionTypeName": "DAILY",
+        "username": "test6"
+    }
+]
+
+/api/subscriptions/deleteSubscription
+Description: Delete all active subscriptions for given user or single one by id
+Type: get
+Input: String username and/or Long subscriptionId
+Example: https://localhost:8443/api/subscriptions/deleteSubscription?username=test6
+Output:
+{"message":"Subscription(s) deleted"}
+
+

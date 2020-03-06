@@ -89,4 +89,61 @@ public class Subscription {
 		this.subscriptionType = subscriptionType;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Subscription subscription = (Subscription) obj;
+		if (this.id == null) {
+			if (subscription.id != null) {
+				return false;
+			}
+		} else if (this.id != subscription.id) {
+			return false;
+		}
+		if (this.valid != subscription.valid) {
+			return false;
+		}
+		if (this.validFrom == null) {
+			if (subscription.validFrom != null) {
+				return false;
+			}
+		} else if (!this.validFrom.equals(subscription.validFrom)) {
+			return false;
+		}
+		if (this.validTo == null) {
+			if (subscription.validTo != null) {
+				return false;
+			}
+		} else if (!this.validTo.equals(subscription.validTo)) {
+			return false;
+		}
+		if (this.subscriptionType == null) {
+			if (subscription.subscriptionType != null) {
+				return false;
+			}
+		} else if (!this.subscriptionType.equals(subscription.subscriptionType)) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 11;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((validFrom == null) ? 0 : validFrom.hashCode());
+		result = prime * result + ((validTo == null) ? 0 : validTo.hashCode());
+		result = prime * result + ((subscriptionType == null) ? 0 : subscriptionType.hashCode());
+		return result;
+	}
+
 }
