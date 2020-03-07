@@ -1,5 +1,6 @@
 package hr.go2.play.impl;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -131,5 +132,15 @@ public class LocationServiceImpl implements LocationService {
 	@Override
 	public List<VideoDetailsDTO> findAllVideoDetails() {
 		return (List<VideoDetailsDTO>) this.locationRepo.findAllVideoDetails();
+	}
+
+	@Override
+	public Optional<Location> findLocationByCameraName(String cameraName) {
+		return this.locationRepo.findLocationByCameraName(cameraName);
+	}
+
+	@Override
+	public Collection<WorkingHours> findWorkingHoursByLocationId(Long locationId) {
+		return this.locationRepo.findWorkingHoursByLocationId(locationId);
 	}
 }

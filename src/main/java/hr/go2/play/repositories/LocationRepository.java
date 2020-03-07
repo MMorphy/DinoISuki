@@ -35,4 +35,10 @@ public interface LocationRepository extends JpaRepository<Location, Long>{
 		+ "JOIN f.cameras c "
 		+ "JOIN c.videos v")
 	public Collection<VideoDetailsDTO> findAllVideoDetails();
+
+	@Query("SELECT l FROM Location l JOIN l.fields f JOIN f.cameras c WHERE c.name = ?1")
+	public Optional<Location> findLocationByCameraName(String cameraName);
+
+	@Query("SELECT h FROM Location l JOIN l.hours h WHERE l.id = ?1")
+	public Collection<WorkingHours> findWorkingHoursByLocationId(Long locationId);
 }

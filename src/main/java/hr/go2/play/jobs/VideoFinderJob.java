@@ -5,8 +5,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,9 +26,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+import de.jollyday.Holiday;
+import de.jollyday.HolidayCalendar;
+import de.jollyday.HolidayManager;
 import hr.go2.play.entities.Camera;
+import hr.go2.play.entities.Location;
 import hr.go2.play.entities.Video;
+import hr.go2.play.entities.WorkingHours;
 import hr.go2.play.impl.CameraServiceImpl;
+import hr.go2.play.services.LocationService;
 import hr.go2.play.util.Commons;
 
 public class VideoFinderJob extends QuartzJobBean {
@@ -33,15 +47,20 @@ public class VideoFinderJob extends QuartzJobBean {
 	String foundFolderLocation;
 	@Value("${application.job.video-finder.error-folder-location}")
 	String errorFolderLocation;
+	@Value("${application.job.video-finder.archive-folder-location}")
+	String archiveFolderLocation;
 
 	@Autowired
 	private Commons commons;
 	@Autowired
 	private CameraServiceImpl cameraService;
+	@Autowired
+	private LocationService locationService;
 
 	@Override
 	protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
 		logger.debug("VideoFinderJob: Started");
+
 		// search for *.mp4 files
 		List<String> listOfFiles = new ArrayList<String>();
 
@@ -68,6 +87,10 @@ public class VideoFinderJob extends QuartzJobBean {
 					if (cam == null) {
 						videoFile.renameTo(new File(errorFolderLocation + File.separator + videoFile.getName()));
 						logger.warn("Found video with no camera!");
+					} else if (isOutsideWorkingHours(cam.getName(), videoFile.getName())) {
+						// outside working hours - preparing for backup
+						logger.debug("Video: " + videoFile.getName() + " is outside working hours");
+						videoFile.renameTo(new File(archiveFolderLocation + File.separator + videoFile.getName()));
 					} else {
 						if (videoFile.renameTo(new File(foundFolderLocation + File.separator + videoFile.getName()))) {
 							// persist the video locations
@@ -105,7 +128,7 @@ public class VideoFinderJob extends QuartzJobBean {
 		}
 		folder = new File(errorFolderLocation);
 		if (!folder.exists() || !folder.isDirectory()) {
-			// creating "found" folder
+			// creating "error" folder
 			try {
 				folder.mkdir();
 			} catch (SecurityException e) {
@@ -113,6 +136,110 @@ public class VideoFinderJob extends QuartzJobBean {
 				created = false;
 			}
 		}
+		folder = new File(archiveFolderLocation);
+		if (!folder.exists() || !folder.isDirectory()) {
+			// creating "archive" folder
+			try {
+				folder.mkdir();
+			} catch (SecurityException e) {
+				logger.error("VideoFinderJob: Unable to create archive folder. ", e);
+				created = false;
+			}
+		}
 		return created;
+	}
+
+	private boolean isOutsideWorkingHours(String cameraName, String videoFileName) {
+		Optional<Location> locationOpt = locationService.findLocationByCameraName(cameraName);
+		if (locationOpt.isPresent()) {
+			Location location = locationOpt.get();
+			List<WorkingHours> workingHoursList = (List<WorkingHours>) locationService.findWorkingHoursByLocationId(location.getId());
+			if (workingHoursList == null || !workingHoursList.isEmpty()) {
+				// extract date from video name (<NAMEOFCAM(3 alpha + 1 number)>_yyyyMMdd_hhmm.mp4)
+				String dateFromVideo = videoFileName.substring(5, videoFileName.length());
+				SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd_hhmm");
+				try {
+					Date videoDate = format.parse(dateFromVideo);
+					WorkingHours workingHours = getWorkingHoursOnDate(workingHoursList, videoDate);
+					// logger.debug("workingHours:" + workingHours.getFromTime() + " - " + workingHours.getToTime() + " video time: " + videoDate);
+					if (timeToInt(workingHours.getFromTime()) > timeToInt(videoDate) || timeToInt(workingHours.getToTime()) < timeToInt(videoDate)) {
+						return true;
+					}
+				} catch (ParseException e) {
+					logger.warn("Unable to parse date from video: " + videoFileName + " # " + e.getMessage());
+				}
+			} else {
+				logger.warn("No working hours found for location: " + location.getName());
+			}
+		} else {
+			logger.warn("Unable to find location for camera: " + cameraName + " on video file:" + videoFileName);
+		}
+
+		return false;
+	}
+
+	private int timeToInt(Date inputDate) {
+		if (inputDate == null) {
+			return 0;
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
+		String dateString = sdf.format(inputDate);
+		int result = Integer.parseInt(dateString.substring(0, 2)) * 60 + Integer.parseInt(dateString.substring(2, dateString.length()));
+		return result;
+	}
+
+	private WorkingHours getWorkingHoursOnDate(List<WorkingHours> workingHoursList, Date videoDate) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String dateString = sdf.format(videoDate);
+		// is there a special case with this exact date?
+		for (WorkingHours workingHours : workingHoursList) {
+			if (workingHours.getDayType() != null && workingHours.getDayType().getType().contains(dateString)) {
+				return workingHours;
+			}
+		}
+		if (isOnHoliday(videoDate)) {
+			// it's a holiday!!!
+			for (WorkingHours workingHours : workingHoursList) {
+				if (workingHours.getDayType() != null && workingHours.getDayType().getType().equals("HOLIDAY")) {
+					return workingHours;
+				}
+			}
+			for (WorkingHours workingHours : workingHoursList) {
+				if (workingHours.getDayType() != null && workingHours.getDayType().getType().equals("WEEKEND")) {
+					return workingHours;
+				}
+			}
+		} else {
+			// not a holiday
+			LocalDate date = videoDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			if (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY) {
+				for (WorkingHours workingHours : workingHoursList) {
+					if (workingHours.getDayType() != null && workingHours.getDayType().getType().equals("WEEKEND")) {
+						return workingHours;
+					}
+				}
+			} else {
+				// regular day
+				for (WorkingHours workingHours : workingHoursList) {
+					if (workingHours.getDayType() != null && workingHours.getDayType().getType().equals("WORKDAY")) {
+						return workingHours;
+					}
+				}
+			}
+		}
+		// not found anything matching holiday, returning the first one
+		return workingHoursList.get(0);
+	}
+
+	private boolean isOnHoliday(Date videoDate) {
+		LocalDate date = videoDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		HolidayManager m = HolidayManager.getInstance(HolidayCalendar.CROATIA);
+		Set<Holiday> holidays = m.getHolidays(date.getYear(), (String) null);
+		for (Holiday holiday : holidays) {
+			if (date.isEqual(LocalDate.parse(holiday.getDate().toString()))) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
