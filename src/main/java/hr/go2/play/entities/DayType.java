@@ -7,6 +7,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
+/*
+ * Possible entities will be:
+ * 		WORKDAY
+ * 		HOLYDAY
+ * 		WEEKEND_SATURDAY
+ * 		WEEKEND_SUNDAY
+ * 
+ * If there are no working hours for a day type it means it is closed
+ */
 @Entity
 @Table(name="day_types")
 public class DayType {

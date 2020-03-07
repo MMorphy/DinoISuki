@@ -145,9 +145,17 @@ public class DevRest {
 		whs.add(wh);
 
 		wh = new WorkingHours();
+		wh.setFromTime(new Date(1970, 1, 1, 12, 0, 0));
+		wh.setToTime(new Date(1970, 1, 1, 20, 0, 0));
+		wh.setDayType(generateDayType("WEEKEND_SATURDAY"));
+		wh.setLocations(locs);
+		whService.saveWorkingHours(wh);
+		whs.add(wh);
+
+		wh = new WorkingHours();
 		wh.setFromTime(new Date(1970, 1, 1, 16, 0, 0));
 		wh.setToTime(new Date(1970, 1, 1, 20, 0, 0));
-		wh.setDayType(generateDayType("SUNDAY"));
+		wh.setDayType(generateDayType("WEEKEND_SUNDAY"));
 		wh.setLocations(locs);
 		whService.saveWorkingHours(wh);
 		whs.add(wh);
