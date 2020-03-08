@@ -518,6 +518,28 @@ public class UserManagement {
 
 				return new ResponseEntity<Object>(resource, headers, HttpStatus.OK);
 			} else {
+				ClassLoader classLoader = new UserManagement().getClass().getClassLoader();
+
+				File defaultProfilePhoto = new File(classLoader.getResource("default/default_profile_photo.jpg").getFile());
+
+				if (defaultProfilePhoto.exists()) {
+					HttpHeaders headers = new HttpHeaders();
+					headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+					headers.add("Pragma", "no-cache");
+					headers.add("Expires", "0");
+					headers.setContentLength(defaultProfilePhoto.length());
+
+					InputStreamResource resource = null;
+					try {
+						resource = new InputStreamResource(new FileInputStream(defaultProfilePhoto));
+					} catch (FileNotFoundException e) {
+						logger.error("Unable to find profile photo", e);
+						return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to find profile photo"), HttpStatus.BAD_REQUEST);
+					}
+
+					return new ResponseEntity<Object>(resource, headers, HttpStatus.OK);
+				}
+
 				return new ResponseEntity<String>(commons.JSONfyReturnMessage("No profile photo found"), HttpStatus.NOT_FOUND);
 			}
 		} else {
