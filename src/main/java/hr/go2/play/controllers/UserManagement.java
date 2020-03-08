@@ -519,9 +519,7 @@ public class UserManagement {
 				return new ResponseEntity<Object>(resource, headers, HttpStatus.OK);
 			} else {
 				ClassLoader classLoader = new UserManagement().getClass().getClassLoader();
-
 				File defaultProfilePhoto = new File(classLoader.getResource("default/default_profile_photo.jpg").getFile());
-
 				if (defaultProfilePhoto.exists()) {
 					HttpHeaders headers = new HttpHeaders();
 					headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -536,7 +534,6 @@ public class UserManagement {
 						logger.error("Unable to find profile photo", e);
 						return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to find profile photo"), HttpStatus.BAD_REQUEST);
 					}
-
 					return new ResponseEntity<Object>(resource, headers, HttpStatus.OK);
 				}
 

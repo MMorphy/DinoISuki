@@ -66,7 +66,7 @@ public class VideoFinderJob extends QuartzJobBean {
 
 		try (Stream<Path> walk = Files.walk(Paths.get(searchFolderLocation), 1)) {
 			// When moving to unix, need to change the lastIndex of \\ to /
-			// Current format is <NAMEOFCAM(3 alpha + 1 number)>_yyyyMMdd_hhmm.mp4
+			// Current format is <NAMEOFCAM(3 alpha + 1 number)>_yyyyMMdd_HHmm.mp4
 			listOfFiles = walk.map(x -> x.toString()).filter(file -> file.substring(file.lastIndexOf(File.separator) + 1).matches(
 					"^([A-Z]{3}[0-9]{1})_([2][0][2-3][0-9][0][0-9]|[1][0-2])([0][0-9]|[1][0-9]|[2][0-9]|[3][0-1])_[0-2][0-9][0-5][0-9].mp4"))
 					.collect(Collectors.toList());
@@ -155,16 +155,30 @@ public class VideoFinderJob extends QuartzJobBean {
 			Location location = locationOpt.get();
 			List<WorkingHours> workingHoursList = (List<WorkingHours>) locationService.findWorkingHoursByLocationId(location.getId());
 			if (workingHoursList == null || !workingHoursList.isEmpty()) {
-				// extract date from video name (<NAMEOFCAM(3 alpha + 1 number)>_yyyyMMdd_hhmm.mp4)
+				// extract date from video name (<NAMEOFCAM(3 alpha + 1 number)>_yyyyMMdd_HHmm.mp4)
 				String dateFromVideo = videoFileName.substring(5, videoFileName.length());
-				SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd_hhmm");
+				SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd_HHmm");
 				try {
 					Date videoDate = format.parse(dateFromVideo);
 					WorkingHours workingHours = getWorkingHoursOnDate(workingHoursList, videoDate);
-					// logger.debug("workingHours:" + workingHours.getFromTime() + " - " + workingHours.getToTime() + " video time: " + videoDate);
-					if (timeToInt(workingHours.getFromTime()) > timeToInt(videoDate) || timeToInt(workingHours.getToTime()) < timeToInt(videoDate)) {
+					if (workingHours == null) {
+						// no working hours - not working on this day
 						return true;
 					}
+					int fromTimeInt = timeToInt(workingHours.getFromTime());
+					int toTimeInt = timeToInt(workingHours.getToTime());
+					int videoTimeInt = timeToInt(videoDate);
+					if (toTimeInt < fromTimeInt) {
+						// time until location is working is after midnight (or someone made a horrible mistake)
+						if (videoTimeInt > toTimeInt && videoTimeInt < fromTimeInt) {
+							return true;
+						}
+					}
+					// logger.debug("workingHours:" + fromTimeInt + " - " + toTimeInt + " video time: " + videoTimeInt);
+					if (videoTimeInt < fromTimeInt || toTimeInt < videoTimeInt) {
+						return true;
+					}
+					return false;
 				} catch (ParseException e) {
 					logger.warn("Unable to parse date from video: " + videoFileName + " # " + e.getMessage());
 				}
@@ -174,8 +188,7 @@ public class VideoFinderJob extends QuartzJobBean {
 		} else {
 			logger.warn("Unable to find location for camera: " + cameraName + " on video file:" + videoFileName);
 		}
-
-		return false;
+		return true;
 	}
 
 	private int timeToInt(Date inputDate) {
@@ -199,36 +212,50 @@ public class VideoFinderJob extends QuartzJobBean {
 		}
 		if (isOnHoliday(videoDate)) {
 			// it's a holiday!!!
-			for (WorkingHours workingHours : workingHoursList) {
-				if (workingHours.getDayType() != null && workingHours.getDayType().getType().equals("HOLIDAY")) {
-					return workingHours;
-				}
-			}
-			for (WorkingHours workingHours : workingHoursList) {
-				if (workingHours.getDayType() != null && workingHours.getDayType().getType().equals("WEEKEND")) {
-					return workingHours;
-				}
+			WorkingHours workingHours = searchWorkingHoursForDayType(workingHoursList, "HOLIDAY");
+			if (workingHours != null) {
+				return workingHours;
 			}
 		} else {
 			// not a holiday
 			LocalDate date = videoDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			if (date.getDayOfWeek() == DayOfWeek.SATURDAY) {
+				WorkingHours workingHours = searchWorkingHoursForDayType(workingHoursList, "WEEKEND_SATURDAY");
+				if (workingHours != null) {
+					return workingHours;
+				}
+			}
+			if (date.getDayOfWeek() == DayOfWeek.SUNDAY) {
+				WorkingHours workingHours = searchWorkingHoursForDayType(workingHoursList, "WEEKEND_SUNDAY");
+				if (workingHours != null) {
+					return workingHours;
+				}
+			}
 			if (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY) {
-				for (WorkingHours workingHours : workingHoursList) {
-					if (workingHours.getDayType() != null && workingHours.getDayType().getType().equals("WEEKEND")) {
-						return workingHours;
-					}
+				WorkingHours workingHours = searchWorkingHoursForDayType(workingHoursList, "WEEKEND");
+				if (workingHours != null) {
+					return workingHours;
 				}
-			} else {
-				// regular day
-				for (WorkingHours workingHours : workingHoursList) {
-					if (workingHours.getDayType() != null && workingHours.getDayType().getType().equals("WORKDAY")) {
-						return workingHours;
-					}
-				}
+			}
+			// regular day
+			WorkingHours workingHours = searchWorkingHoursForDayType(workingHoursList, "WORKDAY");
+			if (workingHours != null) {
+				return workingHours;
 			}
 		}
 		// not found anything matching holiday, returning the first one
-		return workingHoursList.get(0);
+		logger.warn("Not found working hours for date:" + videoDate);
+		return null;
+	}
+
+	private WorkingHours searchWorkingHoursForDayType(List<WorkingHours> workingHoursList, String dayType) {
+		for (WorkingHours workingHours : workingHoursList) {
+			if (workingHours.getDayType() != null && workingHours.getDayType().getType().equals(dayType)) {
+				return workingHours;
+			}
+		}
+		// not found
+		return null;
 	}
 
 	private boolean isOnHoliday(Date videoDate) {
