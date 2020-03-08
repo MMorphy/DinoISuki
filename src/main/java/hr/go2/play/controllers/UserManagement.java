@@ -308,17 +308,36 @@ public class UserManagement {
 	 */
 	@PostMapping("/saveContactInfo")
 	public ResponseEntity<String> saveContactInfo(@RequestBody ContactInformationDTO contactInformationDTO) {
-		// removing whitespaces
-		contactInformationDTO.setTelephoneNumber(contactInformationDTO.getTelephoneNumber().replaceAll("\\s+", ""));
-		contactInformationDTO.setEmail(contactInformationDTO.getEmail().replaceAll("\\s+", ""));
-		String checkContactInformation = checkContactInformation(contactInformationDTO);
-		if (checkContactInformation != null) {
-			return new ResponseEntity<String>(commons.JSONfyReturnMessage(checkContactInformation), HttpStatus.BAD_REQUEST);
+		if (contactInformationDTO == null) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("No info provided"), HttpStatus.BAD_REQUEST);
 		}
+		// removing whitespaces
+		if (contactInformationDTO.getTelephoneNumber() != null) {
+			contactInformationDTO.setTelephoneNumber(contactInformationDTO.getTelephoneNumber().replaceAll("\\s+", ""));
+		}
+		if (contactInformationDTO.getEmail() != null) {
+			contactInformationDTO.setEmail(contactInformationDTO.getEmail().replaceAll("\\s+", ""));
+		}
+
 		User user = userService.findUserByUsername(contactInformationDTO.getUsername());
 		if (user == null) {
 			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to find user"), HttpStatus.BAD_REQUEST);
 		}
+		if (user.getContactInformation() != null) {
+			// fill in the missing info with existing data
+			if (contactInformationDTO.getEmail() == null || contactInformationDTO.getEmail().isEmpty()) {
+				contactInformationDTO.setEmail(user.getContactInformation().getEmail());
+			}
+			if (contactInformationDTO.getTelephoneNumber() == null || contactInformationDTO.getTelephoneNumber().isEmpty()) {
+				contactInformationDTO.setTelephoneNumber(user.getContactInformation().getTelephoneNumber());
+			}
+		}
+
+		String checkContactInformation = checkContactInformation(contactInformationDTO);
+		if (checkContactInformation != null) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage(checkContactInformation), HttpStatus.BAD_REQUEST);
+		}
+
 
 		ContactInformation contactInformationExisting = contactInformationService.findContactInformationByEmail(contactInformationDTO.getEmail());
 		if (contactInformationExisting != null) {
@@ -350,6 +369,8 @@ public class UserManagement {
 		if (contactInformationDTO.getUsername() == null || contactInformationDTO.getUsername().isEmpty()) {
 			return "No username provided";
 		}
+		// fetch existing contact info
+
 		if (contactInformationDTO.getEmail() == null || contactInformationDTO.getEmail().isEmpty()) {
 			return "No email provided";
 		} else {
@@ -480,22 +501,22 @@ public class UserManagement {
 		User user = userService.findUserByUsername(username);
 		if(user != null) {
 			if(user.getProfilePhoto() != null) {
-			File profilePhoto = new File(profilePhotoLocation + "/" + user.getProfilePhoto());
-	        HttpHeaders headers = new HttpHeaders();
-	        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-	        headers.add("Pragma", "no-cache");
-	        headers.add("Expires", "0");
-	        headers.setContentLength(profilePhoto.length());
+				File profilePhoto = new File(profilePhotoLocation + "/" + user.getProfilePhoto());
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+				headers.add("Pragma", "no-cache");
+				headers.add("Expires", "0");
+				headers.setContentLength(profilePhoto.length());
 
-			InputStreamResource resource = null;
-			try {
-				resource = new InputStreamResource(new FileInputStream(profilePhoto));
-			} catch (FileNotFoundException e) {
-				logger.error("Unable to find profile photo", e);
-				return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to find profile photo"), HttpStatus.BAD_REQUEST);
-			}
+				InputStreamResource resource = null;
+				try {
+					resource = new InputStreamResource(new FileInputStream(profilePhoto));
+				} catch (FileNotFoundException e) {
+					logger.error("Unable to find profile photo", e);
+					return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to find profile photo"), HttpStatus.BAD_REQUEST);
+				}
 
-			return new ResponseEntity<Object>(resource, headers, HttpStatus.OK);
+				return new ResponseEntity<Object>(resource, headers, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<String>(commons.JSONfyReturnMessage("No profile photo found"), HttpStatus.NOT_FOUND);
 			}

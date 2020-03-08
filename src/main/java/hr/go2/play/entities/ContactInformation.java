@@ -16,7 +16,7 @@ public class ContactInformation {
 	private Long id;
 
 	//TODO Dodaj validatore
-	@Column(name = "telephone_number", nullable = false)
+	@Column(name = "telephone_number")
 	private String telephoneNumber;
 
 	//TODO Dodaj validatore
