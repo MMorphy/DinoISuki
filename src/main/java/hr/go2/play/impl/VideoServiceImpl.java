@@ -92,4 +92,9 @@ public class VideoServiceImpl implements VideoService {
 		this.videoRepo.delete(video);
 	}
 
+	@Override
+	public List<Video> findVideosOlderThanDate(Date date) {
+		return (List<Video>) this.videoRepo.findVideosOlderThanDate(date);
+	}
+
 }

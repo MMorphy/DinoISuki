@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import hr.go2.play.jobs.InvalidateSubscriptionJob;
+import hr.go2.play.jobs.MoveToArchiveJob;
 import hr.go2.play.jobs.VideoFinderJob;
 
 @Configuration
@@ -43,6 +44,20 @@ public class SchedulerConfig {
 	public Trigger invalidateSubscriptionJobTrigger() {
 		SimpleScheduleBuilder invalidateSubscriptionScheduleBuilder = SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(invalidateSubscriptionJob_intervalInSeconds).repeatForever();
 		return TriggerBuilder.newTrigger().forJob(invalidateSubscriptionJobDetail()).withIdentity("invalidateSubscription").withSchedule(invalidateSubscriptionScheduleBuilder).build();
+	}
+
+	@Value("${application.job.move-to-archive.interval}")
+	int moveToArchiveJob_intervalInSeconds;
+
+	@Bean
+	public JobDetail moveToArchiveJobDetail() {
+		return JobBuilder.newJob(MoveToArchiveJob.class).withIdentity("moveToArchive").storeDurably().build();
+	}
+
+	@Bean
+	public Trigger moveToArchiveJobTrigger() {
+		SimpleScheduleBuilder moveToArchiveScheduleBuilder = SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(moveToArchiveJob_intervalInSeconds).repeatForever();
+		return TriggerBuilder.newTrigger().forJob(moveToArchiveJobDetail()).withIdentity("moveToArchive").withSchedule(moveToArchiveScheduleBuilder).build();
 	}
 
 }
