@@ -221,7 +221,12 @@ public class UserServiceImpl implements UserService, org.springframework.securit
 
 	@Override
 	public User findByContactInformation(ContactInformation contactInformation) {
-		return userRepo.findByContactInformation(contactInformation).get();
+		Optional<User> optionalUser = userRepo.findByContactInformation(contactInformation);
+		if (optionalUser.isPresent()) {
+			return userRepo.findByContactInformation(contactInformation).get();
+		} else {
+			return null;
+		}
 	}
 
 	@Override

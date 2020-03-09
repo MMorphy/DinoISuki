@@ -343,7 +343,7 @@ public class UserManagement {
 		if (contactInformationExisting != null) {
 			// does this existing contactInformation belong to this user or someone else?
 			User userExisting = userService.findByContactInformation(contactInformationExisting);
-			if (!userExisting.getUsername().equals(contactInformationDTO.getUsername())) {
+			if (userExisting != null && !userExisting.getUsername().equals(contactInformationDTO.getUsername())) {
 				return new ResponseEntity<String>(commons.JSONfyReturnMessage("Email already registered to another user"), HttpStatus.BAD_REQUEST);
 			}
 		}
