@@ -198,6 +198,10 @@ public class UserManagement {
 			User updatedUser = mapper.map(userDto, User.class);
 			updatedUser.setPassword(user.getPassword());
 			updatedUser.setId(user.getId());
+			updatedUser.setContactInformation(user.getContactInformation());
+			updatedUser.setSubscriptions(user.getSubscriptions());
+			updatedUser.setRoles(user.getRoles());
+			updatedUser.setProfilePhoto(user.getProfilePhoto());
 
 			userService.updateUser(updatedUser);
 
@@ -337,7 +341,6 @@ public class UserManagement {
 		if (checkContactInformation != null) {
 			return new ResponseEntity<String>(commons.JSONfyReturnMessage(checkContactInformation), HttpStatus.BAD_REQUEST);
 		}
-
 
 		ContactInformation contactInformationExisting = contactInformationService.findContactInformationByEmail(contactInformationDTO.getEmail());
 		if (contactInformationExisting != null) {
