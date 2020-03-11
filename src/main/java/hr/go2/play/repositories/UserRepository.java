@@ -28,4 +28,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Query("SELECT s FROM User u JOIN u.subscriptions s WHERE u.id = ?1 AND s.valid = ?2")
 	Collection<Subscription> findByIdAndValidSubscription(Long userId, boolean valid);
+
+	@Query("SELECT COUNT(u.id) FROM User u WHERE u.enabled = TRUE")
+	int countActiveUsers();
 }

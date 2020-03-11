@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import hr.go2.play.entities.Subscription;
+import hr.go2.play.entities.SubscriptionStatistics;
 import hr.go2.play.repositories.SubscriptionRepository;
 import hr.go2.play.services.SubscriptionService;
 
@@ -91,6 +92,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	@Override
 	public int numberOfInvalidatingSubscriptions(Date date) {
 		return subRepo.numberOfInvalidatingSubscriptions(date);
+	}
+
+	@Override
+	public List<SubscriptionStatistics> getSubscriptionStatistics() {
+		return (List<SubscriptionStatistics>) subRepo.getSubscriptionStatistics();
 	}
 
 }

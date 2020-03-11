@@ -412,4 +412,58 @@ Example: https://localhost:8443/api/subscriptions/deleteSubscription?username=te
 Output:
 {"message":"Subscription(s) deleted"}
 
+/api/admin/getAdminStatistics
+Description: Fetch application statistics interesting for admin user
+Type: get
+Input: none
+Example: https://localhost:8443/api/admin/getAdminStatistics
+Output:
+{
+    "numberOfUsers": 10,
+    "numberOfLocations": 1,
+    "numberOfFields": 1,
+    "numberOfCameras": 1,
+    "numberOfActiveVideos": 13,
+    "subscriptionStatistics": [
+        {
+            "yyyymm": "2020-01",
+            "subscriptionType": "DAILY",
+            "sumPerType": "60"
+        },
+        {
+            "yyyymm": "2020-01",
+            "subscriptionType": "YEARLY",
+            "sumPerType": "3600"
+        },
+        {
+            "yyyymm": "2020-02",
+            "subscriptionType": "DAILY",
+            "sumPerType": "10"
+        },
+        {
+            "yyyymm": "2020-02",
+            "subscriptionType": "YEARLY",
+            "sumPerType": "1200"
+        },
+        {
+            "yyyymm": "2020-03",
+            "subscriptionType": "DAILY",
+            "sumPerType": "100"
+        },
+        {
+            "yyyymm": "2020-04",
+            "subscriptionType": "MONTHLY",
+            "sumPerType": "240"
+        }
+    ],
+    "diskSpaceInfo": [
+        {
+            "partition": "C:\\",
+            "available": "107 GB",
+            "used": "130 GB",
+            "total": "238 GB"
+        }
+    ]
+}
+
 

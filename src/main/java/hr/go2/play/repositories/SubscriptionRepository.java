@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import hr.go2.play.entities.Subscription;
+import hr.go2.play.entities.SubscriptionStatistics;
 
 @Repository
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long>{
@@ -25,5 +26,8 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
 
 	@Query("SELECT COUNT(s.id) FROM Subscription s WHERE s.validTo < DATE(?1) AND s.valid = TRUE")
 	int numberOfInvalidatingSubscriptions(Date date);
+
+	@Query("SELECT new hr.go2.play.entities.SubscriptionStatistics(SUBSTRING(CAST(s.validFrom as text), 1, 7) as yyyymm, t.name as subscriptionType, CAST(SUM(t.price) as text) as sumPerType) " + "FROM Subscription s JOIN s.subscriptionType t GROUP BY 1, 2 ORDER BY 1, 2")
+	Collection<SubscriptionStatistics> getSubscriptionStatistics();
 
 }

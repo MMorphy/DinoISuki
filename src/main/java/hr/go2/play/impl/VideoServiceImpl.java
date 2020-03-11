@@ -97,4 +97,9 @@ public class VideoServiceImpl implements VideoService {
 		return (List<Video>) this.videoRepo.findVideosOlderThanDate(date);
 	}
 
+	@Override
+	public int countActiveVideos() {
+		return this.videoRepo.countActiveVideos();
+	}
+
 }

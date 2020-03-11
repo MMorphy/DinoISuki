@@ -233,4 +233,9 @@ public class UserServiceImpl implements UserService, org.springframework.securit
 	public List<Subscription> findByIdAndValidSubscription(Long userId, boolean valid) {
 		return (List<Subscription>) userRepo.findByIdAndValidSubscription(userId, valid);
 	}
+
+	@Override
+	public int countActiveUsers() {
+		return userRepo.countActiveUsers();
+	}
 }

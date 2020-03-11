@@ -30,4 +30,6 @@ public interface VideoService {
 
 	public abstract List<Video> findVideosOlderThanDate(Date date);
 
+	public abstract int countActiveVideos();
+
 }

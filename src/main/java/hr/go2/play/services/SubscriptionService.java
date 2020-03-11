@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import hr.go2.play.entities.Subscription;
+import hr.go2.play.entities.SubscriptionStatistics;
 
 public interface SubscriptionService {
 
@@ -28,5 +29,7 @@ public interface SubscriptionService {
 	public abstract void updateValidityByTime(Date date);
 
 	public abstract int numberOfInvalidatingSubscriptions(Date date);
+
+	public abstract List<SubscriptionStatistics> getSubscriptionStatistics();
 
 }

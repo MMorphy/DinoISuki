@@ -36,4 +36,6 @@ public interface UserService {
 
 	public abstract List<Subscription> findByIdAndValidSubscription(Long userId, boolean valid);
 
+	public abstract int countActiveUsers();
+
 }
