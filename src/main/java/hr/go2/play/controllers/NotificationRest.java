@@ -74,6 +74,23 @@ public class NotificationRest {
 	}
 
 	/*
+	 * Description: Fetch notifications Filtering options: by parts of subject or message 
+	 * Call example:
+	 * https://localhost:8443/api/notifications/searchBySubjectOrMessage?message=dd
+	 *
+	 */
+	@GetMapping("/searchBySubjectOrMessage")
+	public ResponseEntity<?> searchBySubjectOrMessage(@RequestParam(name = "subject", required = false) String subject, @RequestParam(name = "message", required = false) String message) {
+		logger.debug("/api/notifications/searchBySubjectOrMessage Started");
+
+		List<Notification> notifications = notificationService.searchBySubjectOrMessage(subject, message);
+		logger.debug("/api/notifications/getNotifications Found " + notifications.size() + " notifications");
+		List<NotificationDTO> notificationsDTOList = notifications.stream().map(notification -> new NotificationDTO(notification.getId(), notification.getCreatedAt(), notification.getDestUser() != null ? notification.getDestUser().getUsername() : null, notification.getSourceUser() != null ? notification.getSourceUser().getUsername() : null, notification.getSubject(), notification.getMessage(), notification.getStatus() != null ? notification.getStatus().getType() : null)).collect(Collectors.toList());
+		logger.debug("/api/notifications/searchBySubjectOrMessage Finished");
+		return new ResponseEntity<>(notificationsDTOList, HttpStatus.OK);
+	}
+
+	/*
 	 * Description: Add notification
 	 * Input params: NotificationDTO ( id is ignored )
 	 * {

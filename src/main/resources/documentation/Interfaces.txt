@@ -466,4 +466,21 @@ Output:
     ]
 }
 
+/api/notifications/searchBySubjectOrMessage
+Description: Fetch notifications Filtering options: by parts of subject or message 
+Type: get
+Input: String subject and/or String message
+Example: https://localhost:8443/api/notifications/searchBySubjectOrMessage?message=dd
+Output:
+[
+    {
+        "id": 2,
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "destUser": "test4",
+        "srcUser": "test4",
+        "subject": "eeeee",
+        "message": "dddd",
+        "notificationType": "UNREAD"
+    }
+]
 

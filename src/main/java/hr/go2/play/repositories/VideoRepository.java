@@ -26,6 +26,6 @@ public interface VideoRepository extends JpaRepository<Video, Long>{
 	@Query("SELECT v " + "FROM Video v " + "WHERE DATE(v.startedAt) < DATE(?1) AND v.archived = FALSE")
 	Collection<Video> findVideosOlderThanDate(Date date);
 
-	@Query("SELECT COUNT(v.id) FROM Video v WHERE NOT (v.location LIKE '*%')") // skipping those whose location start with "*archived*"
+	@Query("SELECT COUNT(v.id) FROM Video v WHERE v.archived = FALSE") // skipping archived videos
 	int countActiveVideos();
 }

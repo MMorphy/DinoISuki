@@ -39,4 +39,6 @@ public interface NotificationService {
 
 	public abstract void deleteAllNotifications();
 
+	public abstract List<Notification> searchBySubjectOrMessage(String subject, String message);
+
 }

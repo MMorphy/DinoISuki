@@ -211,4 +211,7 @@ public class AdminRest {
 
 		return new ResponseEntity<>(adminStatisticsDTO, HttpStatus.OK);
 	}
+
+	/*** Admin actions ***/
+
 }

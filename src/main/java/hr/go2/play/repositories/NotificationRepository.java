@@ -36,4 +36,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 	@Query(value = "DELETE FROM Notification notification WHERE notification.id IN :idList")
 	void deleteMultipleNotificationById(List<Long> idList);
 
+	@Query(value = "SELECT n FROM Notification n WHERE (n.subject IS NOT NULL AND n.subject LIKE ?1) OR (n.message IS NOT NULL AND n.message LIKE ?2)")
+	Collection<Notification> searchBySubjectOrMessage(String subject, String message);
+
 }

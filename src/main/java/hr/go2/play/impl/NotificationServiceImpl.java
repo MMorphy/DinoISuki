@@ -128,4 +128,9 @@ public class NotificationServiceImpl implements NotificationService {
 
 	}
 
+	@Override
+	public List<Notification> searchBySubjectOrMessage(String subject, String message) {
+		return (List<Notification>) this.notificationRepo.searchBySubjectOrMessage("%" + subject + "%", "%" + message + "%");
+	}
+
 }
