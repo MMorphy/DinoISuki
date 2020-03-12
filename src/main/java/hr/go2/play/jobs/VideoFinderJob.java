@@ -97,6 +97,7 @@ public class VideoFinderJob extends QuartzJobBean {
 							Video video = new Video();
 							video.setLocation(foundFolderLocation + File.separator + videoFile.getName());
 							video.setStartedAt(commons.formatDateFromString(videoFile.getName().substring(5, 18), "VIDEO"));
+							video.setArchived(false);
 							cameraService.addVideo(cam, video);
 							movedVideoCounter++;
 						} else {

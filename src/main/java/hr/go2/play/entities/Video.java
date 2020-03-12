@@ -25,14 +25,16 @@ public class Video {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date startedAt;
 
+	private boolean archived;
+
 	public Video() {
 	}
 
-	public Video(Long id, String location, Date startedAt) {
-		super();
+	public Video(Long id, String location, Date startedAt, boolean archived) {
 		this.id = id;
 		this.location = location;
 		this.startedAt = startedAt;
+		this.archived = archived;
 	}
 
 	public Long getId() {
@@ -57,6 +59,14 @@ public class Video {
 
 	public void setStartedAt(Date startedAt) {
 		this.startedAt = startedAt;
+	}
+
+	public boolean isArchived() {
+		return archived;
+	}
+
+	public void setArchived(boolean archived) {
+		this.archived = archived;
 	}
 
 }

@@ -67,6 +67,7 @@ public class VideoServiceImpl implements VideoService {
 			Video videoNew = optVideo.get();
 			videoNew.setLocation(video.getLocation());
 			videoNew.setStartedAt(video.getStartedAt());
+			videoNew.setArchived(video.isArchived());
 			return this.videoRepo.save(videoNew);
 		} else {
 			return this.videoRepo.save(video);

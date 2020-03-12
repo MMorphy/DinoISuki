@@ -33,7 +33,7 @@ public interface LocationRepository extends JpaRepository<Location, Long>{
 		+ "FROM Location l "
 		+ "JOIN l.fields f "
 		+ "JOIN f.cameras c "
-		+ "JOIN c.videos v")
+			+ "JOIN c.videos v WHERE v.archived = FALSE")
 	public Collection<VideoDetailsDTO> findAllVideoDetails();
 
 	@Query("SELECT l FROM Location l JOIN l.fields f JOIN f.cameras c WHERE c.name = ?1")

@@ -62,39 +62,39 @@ public class MoveToArchiveJob extends QuartzJobBean {
 		oldVideos.addAll(getArchivedVideoToBackup()); // adding also videos from archive
 
 		int counter = 0;
-		@SuppressWarnings("resource")
-		SSHClient client = new SSHClient();
-		client.addHostKeyVerifier(new PromiscuousVerifier());
-		try {
-			client.connect(remoteIp);
-			client.authPassword(remoteUsername, remotePassword);
+		if (!oldVideos.isEmpty()) {
+			@SuppressWarnings("resource")
+			SSHClient client = new SSHClient();
+			client.addHostKeyVerifier(new PromiscuousVerifier());
+			try {
+				client.connect(remoteIp);
+				client.authPassword(remoteUsername, remotePassword);
 
-			SFTPClient sftpClient = client.newSFTPClient();
+				SFTPClient sftpClient = client.newSFTPClient();
 
-			for (Video oldVideo : oldVideos) {
-				String videoLocation = oldVideo.getLocation();
-				if (!videoLocation.startsWith("*")) { // moved with previous batch
+				for (Video oldVideo : oldVideos) {
+					String videoLocation = oldVideo.getLocation();
 					String fileName = videoLocation.substring(videoLocation.lastIndexOf(File.separator) + 1, videoLocation.length());
 					File videoFile = new File(videoLocation);
 					if (videoFile.exists()) {
 						sftpClient.put(videoLocation, remoteArchiveFolder + File.separator + fileName);
 						videoFile.delete();
-						oldVideo.setLocation("*archived*" + fileName); // for now, change if necessary
 						counter++;
 					} else {
 						oldVideo.setLocation("*not-found*" + fileName);
 					}
-					if (oldVideo.getId() != -1) {
+					oldVideo.setArchived(true);
+					if (oldVideo.getId() != -1) { // skipping videos prepared for archive (out of working hours)
 						videoService.saveVideo(oldVideo);
 					}
 				}
+				sftpClient.close();
+				client.disconnect();
+			} catch (IOException e) {
+				logger.error("Unable to connect to: " + remoteIp + " # " + e.getMessage());
+			} catch (Exception e) {
+				logger.error("Unable to connect to: " + remoteIp + " # " + e.getMessage());
 			}
-			sftpClient.close();
-			client.disconnect();
-		} catch (IOException e) {
-			logger.error("Unable to connect to: " + remoteIp + " # " + e.getMessage());
-		} catch (Exception e) {
-			logger.error("Unable to connect to: " + remoteIp + " # " + e.getMessage());
 		}
 		logger.debug("MoveToArchiveJob: Finished Moved " + counter + " video files.");
 	}
@@ -128,7 +128,7 @@ public class MoveToArchiveJob extends QuartzJobBean {
 			logger.error("Unable to fetch archive files # " + e.getMessage());
 			e.printStackTrace();
 		}
-		logger.error("Found archive files :" + listOfVideos.size());
+		logger.error("Found archive files: " + listOfVideos.size());
 		return listOfVideos;
 	}
 }
