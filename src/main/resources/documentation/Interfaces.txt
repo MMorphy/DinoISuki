@@ -508,3 +508,18 @@ Example: https://localhost:8443/api/user/revokeUserRole
 Output:
 {"message":"User roles updated!"}
 
+/api/admin/addApplicationProperty
+Description: add/update application property
+Type: put
+Input: ApplicationPropertiesDTO
+{
+	"username": "test3",
+	"key": "myKey1",
+	"value": "myValue3"
+}
+Example: https://localhost:8443/api/admin/addApplicationProperty
+Output:
+{
+    "message": "Application property added/updated!"
+}
+

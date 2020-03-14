@@ -6,7 +6,9 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -24,14 +26,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import hr.go2.play.DTO.AdminStatisticsDTO;
+import hr.go2.play.DTO.ApplicationPropertiesDTO;
 import hr.go2.play.DTO.CameraDTO;
 import hr.go2.play.DTO.DiskSpaceInfo;
 import hr.go2.play.DTO.LocationDTO;
+import hr.go2.play.entities.ApplicationProperties;
 import hr.go2.play.entities.Camera;
 import hr.go2.play.entities.Field;
 import hr.go2.play.entities.Location;
 import hr.go2.play.entities.SubscriptionStatistics;
+import hr.go2.play.entities.User;
 import hr.go2.play.impl.CameraServiceImpl;
+import hr.go2.play.services.ApplicationPropertiesService;
 import hr.go2.play.services.CameraService;
 import hr.go2.play.services.FieldService;
 import hr.go2.play.services.LocationService;
@@ -71,6 +77,9 @@ public class AdminRest {
 
 	@Autowired
 	private Commons commons;
+
+	@Autowired
+	private ApplicationPropertiesService applicationPropertiesService;
 
 
 	//CRUD kamera
@@ -213,5 +222,42 @@ public class AdminRest {
 	}
 
 	/*** Admin actions ***/
+	/**
+	 * Desc: add/update application property
+	 * JSON body example:
+	 * {
+			"username": "test3",
+			"key": "myKey1",
+			"value": "myValue3"
+		}
+	 * @param ApplicationPropertiesDTO
+	 * @return
+	 */
+	@PostMapping("/addApplicationProperty")
+	public ResponseEntity<String> addApplicationProperty(@RequestBody ApplicationPropertiesDTO applicationPropertiesDTO) {
+		if (applicationPropertiesDTO == null || applicationPropertiesDTO.getUsername() == null || applicationPropertiesDTO.getUsername().isEmpty()) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Username not provided"), HttpStatus.BAD_REQUEST);
+		}
+		if (applicationPropertiesDTO.getKey() == null || applicationPropertiesDTO.getKey().isEmpty()) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Key not provided"), HttpStatus.BAD_REQUEST);
+		}
+		User user = userService.findUserByUsername(applicationPropertiesDTO.getUsername());
+		if (user == null) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("User doesn't exist!"), HttpStatus.BAD_REQUEST);
+		}
+		Optional<ApplicationProperties> applicationPropertiesOptional = applicationPropertiesService.findByKey(applicationPropertiesDTO.getKey());
+		ApplicationProperties applicationProperties = new ApplicationProperties();
+		if (applicationPropertiesOptional.isPresent()) {
+			applicationProperties.setId(applicationPropertiesOptional.get().getId());
+		}
+		applicationProperties.setKey(applicationPropertiesDTO.getKey());
+		applicationProperties.setValue(applicationPropertiesDTO.getValue());
+		applicationProperties.setUserId(user);
+		applicationProperties.setUpdatedAt(new Date());
+
+		applicationPropertiesService.saveApplicationProperty(applicationProperties);
+
+		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Application property added/updated!"), HttpStatus.OK);
+	}
 
 }
