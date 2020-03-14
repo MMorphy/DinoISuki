@@ -242,7 +242,6 @@ public class SubscriptionRest {
 		logger.debug("/api/subscriptions/deleteSubscription Finished");
 		return new ResponseEntity<>(commons.JSONfyReturnMessage("Subscription(s) deleted"), HttpStatus.OK);
 	}
-
 }
 
 class SubscriptionValidityDates {

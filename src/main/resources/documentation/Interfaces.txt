@@ -484,3 +484,27 @@ Output:
     }
 ]
 
+/api/user/addUserRole
+Description: Add new user role 
+Type: put
+Input: UserRoleDTO
+{
+	"username": "test3",
+	"role": "role_user"
+}
+Example: https://localhost:8443/api/user/addUserRole
+Output:
+{"message":"User roles updated!"}
+
+/api/user/revokeUserRole
+Description: Revoke new user role 
+Type: put
+Input: UserRoleDTO
+{
+	"username": "test3",
+	"role": "role_user"
+}
+Example: https://localhost:8443/api/user/revokeUserRole
+Output:
+{"message":"User roles updated!"}
+

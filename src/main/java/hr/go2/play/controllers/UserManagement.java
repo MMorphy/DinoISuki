@@ -46,6 +46,7 @@ import org.springframework.web.multipart.MultipartFile;
 import hr.go2.play.DTO.ContactInformationDTO;
 import hr.go2.play.DTO.PasswordDTO;
 import hr.go2.play.DTO.UserDTO;
+import hr.go2.play.DTO.UserRoleDTO;
 import hr.go2.play.entities.ContactInformation;
 import hr.go2.play.entities.Role;
 import hr.go2.play.entities.User;
@@ -55,6 +56,7 @@ import hr.go2.play.repositories.ContactInformationRepository;
 import hr.go2.play.repositories.RoleRepository;
 import hr.go2.play.repositories.UserRepository;
 import hr.go2.play.services.ContactInformationService;
+import hr.go2.play.services.RoleService;
 import hr.go2.play.util.Commons;
 
 @RestController
@@ -97,6 +99,9 @@ public class UserManagement {
 
 	@Autowired
 	private ContactInformationService contactInformationService;
+
+	@Autowired
+	private RoleService roleService;
 
     /**
      * Desc: User login
@@ -545,6 +550,78 @@ public class UserManagement {
 		} else {
 			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to find user"), HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	/**
+	 * Desc: Update user roles
+	 * JSON body example:
+	 * {
+			"username": "test2",
+			"role": "role_user"
+		}
+	 * @param UserRoleDTO
+	 * @return
+	 */
+	@PostMapping("/addUserRole")
+	public ResponseEntity<String> addUserRole(@RequestBody UserRoleDTO userRoleDTO) {
+		if (userRoleDTO == null || userRoleDTO.getUsername() == null || userRoleDTO.getUsername().isEmpty()) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Username not provided"), HttpStatus.BAD_REQUEST);
+		}
+		if (userRoleDTO.getRole() == null || userRoleDTO.getRole().isEmpty()) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("User role not provided"), HttpStatus.BAD_REQUEST);
+		}
+		User user = userService.findUserByUsername(userRoleDTO.getUsername());
+		if (user == null) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("User doesn't exist!"), HttpStatus.BAD_REQUEST);
+		}
+		Role role = roleService.findRoleByName(userRoleDTO.getRole());
+		if (role == null) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid role provided"), HttpStatus.BAD_REQUEST);
+		}
+
+		if (user.getRoles().contains(role)) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("User already has provided role"), HttpStatus.OK);
+		}
+
+		user.getRoles().add(role);
+		userService.updateUser(user);
+		return new ResponseEntity<String>(commons.JSONfyReturnMessage("User roles updated!"), HttpStatus.OK);
+	}
+
+	/**
+	 * Desc: Revoke user role
+	 * JSON body example:
+	 * {
+			"username": "test2",
+			"role": "role_user"
+		}
+	 * @param UserRoleDTO
+	 * @return
+	 */
+	@PostMapping("/revokeUserRole")
+	public ResponseEntity<String> revokeUserRole(@RequestBody UserRoleDTO userRoleDTO) {
+		if (userRoleDTO == null || userRoleDTO.getUsername() == null || userRoleDTO.getUsername().isEmpty()) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Username not provided"), HttpStatus.BAD_REQUEST);
+		}
+		if (userRoleDTO.getRole() == null || userRoleDTO.getRole().isEmpty()) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("User role not provided"), HttpStatus.BAD_REQUEST);
+		}
+		User user = userService.findUserByUsername(userRoleDTO.getUsername());
+		if (user == null) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("User doesn't exist!"), HttpStatus.BAD_REQUEST);
+		}
+		Role role = roleService.findRoleByName(userRoleDTO.getRole());
+		if (role == null) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid role provided"), HttpStatus.BAD_REQUEST);
+		}
+
+		if (!user.getRoles().contains(role)) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("User does not have provided role"), HttpStatus.OK);
+		}
+
+		user.getRoles().remove(role);
+		userService.updateUser(user);
+		return new ResponseEntity<String>(commons.JSONfyReturnMessage("User roles updated!"), HttpStatus.OK);
 	}
 
 }
