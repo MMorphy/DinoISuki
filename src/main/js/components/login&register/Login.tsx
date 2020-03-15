@@ -21,10 +21,10 @@ export default class Login extends React.Component<LoginProps, {}>  {
             <div>
                 <Form className="login-form-width">
                     <FormGroup controlId="formHorizontalEmail">
-                        <Col sm={{span: 11}}>
+                        <Col>
                             <FormLabel><h5 className="font-color font-size">Username</h5></FormLabel>
                         </Col>
-                        <Col sm={{span: 11}}>
+                        <Col>
                             <FormControl defaultValue={localStorage.getItem('username') ? localStorage.getItem('username') as string : ""}
                                          type="username"
                                          placeholder="Username"
@@ -33,19 +33,19 @@ export default class Login extends React.Component<LoginProps, {}>  {
                     </FormGroup>
 
                     <FormGroup controlId="formHorizontalPassword">
-                        <Col sm={{span: 11}}>
+                        <Col>
                             <FormLabel><h5 className="font-color font-size">Password</h5></FormLabel>
                         </Col>
-                        <Col sm={{span: 12}} className="login-password-input-form">
+                        <Col className="login-password-input-form">
                             <FormControl defaultValue={localStorage.getItem('password') ? localStorage.getItem('password') as string : ""}
                                          type={appStore.isLoginPasswordVisible ? "text" : "password"}
                                          placeholder="Password"
-                                         onChange={(e: any) => userStore.updateUserLoginDto(e.target.value, "password")}/>
+                                         onChange={(e: any) => userStore.updateUserLoginDto(e.target.value, "password")}
+                                         className="login-password-input-form-border"/>
                             <Button id="pass-status" className="fa fa-eye show-password-button" aria-hidden="true" onClick={() => appStore.showLoginPassword()}/>
                         </Col>
                     </FormGroup>
-                    <Col sm={{span: 11}}>
-
+                    <Col>
                     {
                         appStore.unsuccessfulLogin
                             ? <ErrorMessage errorMessage={"You haven't successfully logged in! Try again."} loginButton={false}/>
@@ -53,7 +53,7 @@ export default class Login extends React.Component<LoginProps, {}>  {
                     }
                     </Col>
                     <FormGroup>
-                        <Col sm={{span: 11}} className="login-registration-button-center">
+                        <Col className="login-registration-button-center">
                             <Button type="submit" className="login-registration-button-color" onClick={(e: any) => this.login(e)}><b>Sign in</b></Button>
                         </Col>
                         <p className="register-text-padding font-color">Not registered yet? <Link to="/register"><b>Register</b></Link> now</p>

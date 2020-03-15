@@ -20,50 +20,50 @@ export default class Registration extends React.Component<RegistrationProps, {}>
             <div>
                 <Form className="register-form-width">
                     <FormGroup controlId="username">
-                        <Col sm={{span: 11}}>
+                        <Col>
                             <FormLabel><h5 className="font-color font-size">Username</h5></FormLabel>
                         </Col>
-                        <Col sm={{span: 11}}>
+                        <Col>
                             <FormControl type="username" placeholder="Username" onChange={(e: any) => userStore.updateUserRegistrationDto(e.target.value, "username")}/>
                         </Col>
                     </FormGroup>
 
                     <FormGroup controlId="password">
-                        <Col sm={{span: 11}}>
+                        <Col>
                             <FormLabel><h5 className="font-color font-size">Password</h5></FormLabel>
                         </Col>
-                        <Col sm={{span: 11}}>
+                        <Col>
                             <FormControl type="password" placeholder="Password" onChange={(e: any) => userStore.changePasswordForRegistration(e.target.value)}/>
                         </Col>
                     </FormGroup>
 
                     <FormGroup controlId="confirmedPassword">
-                        <Col sm={{span: 11}}>
+                        <Col>
                             <FormLabel><h5 className="font-color font-size">Confirm Password</h5></FormLabel>
                         </Col>
-                        <Col sm={{span: 11}}>
+                        <Col>
                             <FormControl type="password" placeholder="Password" onChange={(e: any) => userStore.changeConfirmedPasswordForRegistration(e.target.value)}/>
                         </Col>
                     </FormGroup>
 
                     <FormGroup controlId="email">
-                        <Col sm={{span: 11}}>
+                        <Col>
                             <FormLabel><h5 className="font-color font-size">Email</h5></FormLabel>
                         </Col>
-                        <Col sm={{span: 11}}>
+                        <Col>
                             <FormControl type="email" placeholder="Email" onChange={(e: any) => userStore.updateContactInformationRegistrationDto(e.target.value, 'email')}/>
                         </Col>
                     </FormGroup>
 
                     <FormGroup controlId="dateOfBirth">
-                        <Col sm={{span: 11}}>
+                        <Col>
                             <FormLabel><h5 className="font-color font-size">Date of Birth</h5></FormLabel>
                         </Col>
-                        <Col sm={{span: 11}}>
+                        <Col>
                             <FormControl type="date" placeholder="Date of Birth" max="2020-12-31" onChange={(e: any) => userStore.updateUserRegistrationDto(e.target.value, "dateOfBirth")}/>
                         </Col>
                     </FormGroup>
-                    <Col sm={{span: 11}}>
+                    <Col>
                     {
                         appStore.showDifferentPassAtRegistrationErrorMessage
                             ? <ErrorMessage errorMessage="Passwords don't match!" loginButton={false}/>
@@ -81,7 +81,7 @@ export default class Registration extends React.Component<RegistrationProps, {}>
                     }
                     </Col>
                     <FormGroup>
-                        <Col sm={{span: 11}} className="login-registration-button-center">
+                        <Col className="login-registration-button-center">
                             <Button type="submit" className="login-registration-button-color" onClick={(e: any) => this.submitRegistration(e)}><b>Register</b></Button>
                         </Col>
                     </FormGroup>

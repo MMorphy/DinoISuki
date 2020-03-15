@@ -12,9 +12,14 @@ import ChangePasswordModal from "./ChangePasswordModal";
 import UserDTO from "../../model/UserDTO";
 import {action} from "mobx";
 import ContactInformationDTO from "../../model/ContactInformationDTO";
+import {History, LocationState} from "history";
+
+interface MyProfileProps {
+    history: History<LocationState>;
+}
 
 @observer
-export default class MyProfile extends React.Component<{}, {}> {
+export default class MyProfile extends React.Component<MyProfileProps, {}> {
     render() {
         document.title = "MyProfile";
 
@@ -36,6 +41,8 @@ export default class MyProfile extends React.Component<{}, {}> {
         if (sessionStorage.getItem('username')) {
             userStore.fetchUserProfile();
             userStore.fetchUserProfilePhoto();
+        } else {
+            this.props.history.push("/login");
         }
     }
 

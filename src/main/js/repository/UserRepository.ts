@@ -19,6 +19,10 @@ class UserRepository {
             });
     }
 
+    deleteUser(userDto: UserDTO) {
+        axios.post("/api/user/deleteUser", userDto);
+    }
+
     fetchUserContactInfo(username: string, token: string): Promise<AxiosResponse> {
         return axios.get(`/api/user/getContactInfo/${username}`,
             {

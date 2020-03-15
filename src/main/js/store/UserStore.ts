@@ -81,6 +81,7 @@ class UserStore {
                         appStore.showDifferentPassAtRegistrationErrorMessage =  false;
                     }))
                     .catch(action(() => {
+                        userRepository.deleteUser(this.userRegistrationDto); //if whole registration is not successful, delete userDto
                         appStore.unsuccessfulRegistration = true;
                         appStore.successfulRegistration = false;
                     }))

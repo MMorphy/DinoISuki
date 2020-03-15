@@ -15,11 +15,11 @@ export default class ChangePasswordModal extends React.Component<{}, {}>{
                     <Modal.Title className='font-color'>Change password</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <FormGroup controlId="password">
-                        <Col sm={{span: 12}}>
+                    <FormGroup controlId="password" className="edit-modal-input-form-size">
+                        <Col>
                             <FormLabel><h5 className="font-color font-size">Old password</h5></FormLabel>
                         </Col>
-                        <Col sm={{span: 12}}>
+                        <Col>
                             <FormControl type="password" placeholder="Password" onChange={(e: any) => {userStore.changeOldPasswordForUpdate(e.target.value)}}/>
                         </Col>
                     </FormGroup>
@@ -28,20 +28,20 @@ export default class ChangePasswordModal extends React.Component<{}, {}>{
                             ? <ErrorMessage errorMessage="Wrong password!" loginButton={false}/>
                             : <div></div>
                     }
-                    <FormGroup controlId="password">
-                        <Col sm={{span: 12}}>
+                    <FormGroup controlId="password" className="edit-modal-input-form-size">
+                        <Col>
                             <FormLabel><h5 className="font-color font-size">New password</h5></FormLabel>
                         </Col>
-                        <Col sm={{span: 12}}>
+                        <Col>
                             <FormControl type="password" placeholder="Password" onChange={(e: any) => {userStore.changeNewPasswordForUpdate(e.target.value)}}/>
                         </Col>
                     </FormGroup>
 
-                    <FormGroup controlId="password">
-                        <Col sm={{span: 12}}>
+                    <FormGroup controlId="password" className="edit-modal-input-form-size">
+                        <Col>
                             <FormLabel><h5 className="font-color font-size">Confirm new password</h5></FormLabel>
                         </Col>
-                        <Col sm={{span: 12}}>
+                        <Col>
                             <FormControl type="password" placeholder="Password" onChange={(e: any) => {userStore.changeConfirmedPasswordForUpdate(e.target.value)}}/>
                         </Col>
                     </FormGroup>

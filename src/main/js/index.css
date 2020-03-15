@@ -80,16 +80,25 @@
 }
 
 .show-password-button {
-    background-color: black;
-    border-color: black;
+    background-color: white;
+    color: black;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border: 0;
 }
 
 .login-password-input-form {
     display: inline-flex;
 }
 
+.login-password-input-form-border {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    border-right: 0;
+}
+
 .register-form-width {
-    width: 600px;
+    width: 500px;
     margin: 250px auto auto;
 }
 
@@ -304,7 +313,7 @@ h3 {
 }
 
 .modal-padding {
-    padding-top: 70px;
+    padding-top: 100px;
 }
 
 /**ABOUT GO2PLAY*/
@@ -446,6 +455,11 @@ h3 {
     font-size: 10px;
     margin-bottom: 0;
     margin-left: 40px;
+}
+
+.edit-modal-input-form-size {
+    width: 50%;
+    margin-left: 25%;
 }
 
 
