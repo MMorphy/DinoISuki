@@ -30,7 +30,7 @@ public class SportsPageObject extends BasePageObject{
         //TODO
         return false;
     }
-    public void openSidebar(){
+    public void openSidebarSports(){
         click(mainDropDown);
         isDisplayed(homeBtn); //home should always be in the dropdown
     }

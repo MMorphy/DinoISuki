@@ -1,51 +1,23 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Dino i Suki</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.3/angular-ui-router.min.js"></script>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="myCSS.css">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
-    <!--Base module and routing-->
-    <script src="./infrastructure/app.module.js"></script>
-    <script src="./infrastructure/app.routing.js"></script>
-    <script src="./infrastructure/app.component.js"></script>
-
-    <!--Infrastructure and services-->
-    <script src="./infrastructure/nav-bar.component.js"></script>
-
-    <script src="./service/user.service.js"></script>
-    <script src="./service/admin.service.js"></script>
-    <script src="./service/home.service.js"></script>
-    <script src="./service/reservation.service.js"></script>
-    <script src="./service/video.service.js"></script>
-
-    <!--Page components-->
-    <script src="./pages/page-home.component.js"></script>
-
-    <script src="./pages/page-register.component.js"></script>
-    <script src="./pages/page-locations.component.js"></script>
-    <script src="./pages/page-login.component.js"></script>
-    <script src="./pages/page-payment.component.js"></script>
-    <script src="./pages/page-sports.component.js"></script>
-    <script src="./pages/page-videos.component.js"></script>
-
-    <script src="./pages/admin/page-global-admin.component.js"></script>
-    <script src="./pages/admin/page-local-admin.component.js"></script>
-
-
-
-
-</head>
-<body ng-app="app">
-<div style="padding:30px">
-	<base></base>
-</div>
-</body>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title></title>
+        <link rel="stylesheet"
+              href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+              crossorigin="anonymous"/>
+        <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+    </head>
+    <body class="app-background-color">
+        <div id="app">
+            <!-- Main -->
+            <script src="/bundle.js"></script>
+            <script src="https://unpkg.com/react/umd/react.production.min.js" crossorigin />
+            <script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js" crossorigin/>
+            <script src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js" crossorigin/>
+            <script src="https://www.paypal.com/sdk/js?client-id=AQMboOGOpNUOktmEUWRCKgVJOJBils8SfSoIS-GDjPtqBzE2xlHwb20bAIk_rx2glJYnNyzFdS_guNGn"/>
+           </div>
+    </body>
 </html>

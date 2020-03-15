@@ -143,6 +143,45 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<executions>
+					<execution>
+						<id>npm-install</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>npm</executable>
+							<arguments>
+								<argument>install</argument>
+							</arguments>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>npm-build</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>npm</executable>
+							<arguments>
+								<argument>run-script</argument>
+								<argument>build</argument>
+							</arguments>
+							<environmentVariables>
+								<NODE_ENV>${webpack.node-env}</NODE_ENV>
+							</environmentVariables>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>

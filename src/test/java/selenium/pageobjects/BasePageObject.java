@@ -2,6 +2,7 @@ package selenium.pageobjects;
 
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -11,11 +12,15 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.util.List;
+
+import static selenium.config.Constants.*;
 
 public class BasePageObject {
 
-    protected WebDriver webDriver;
-    protected WebDriverWait wait;
+    private WebDriver webDriver;
+    private WebDriverWait wait;
 
 
     public BasePageObject(WebDriver webDriver, WebDriverWait wait) {
@@ -32,11 +37,7 @@ public class BasePageObject {
      * @param url URL to visit
      */
     public void visit(String url){
-        if(url.contains("http")) {
             this.webDriver.get(url);
-        }else{
-            this.webDriver.get("https" + url);
-        }
     }
 
     private WebElement find(By locator){
@@ -44,9 +45,20 @@ public class BasePageObject {
     }
 
     /**
+     * Returns a list of elements defined by the locator
+     *
+     * @author Leo Jakus-Mejarec
+     * @param locator By locator
+     * @return
+     */
+    public List<WebElement> findList(By locator) {
+        return this.webDriver.findElements(locator);
+    }
+
+    /**
      * Click a web element
      *
-     * @param locator Element locator
+     * @param locator By locator
      */
     public void click(By locator){
         find(locator).click();
@@ -96,6 +108,16 @@ public class BasePageObject {
         return true;
     }
 
+    public boolean isNotDisplayed(By locator, int timeout){
+        try {
+            wait = new WebDriverWait(webDriver, timeout);
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
+        }catch (TimeoutException e){
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Compare current and expected title
      *
@@ -104,7 +126,26 @@ public class BasePageObject {
      * @return Returns true if expected title matches current title, false if not
      */
     public boolean isTitle(String expectedTitle){
+
+        System.out.println("Title is: " + webDriver.getTitle());
         try {
+            wait.until(ExpectedConditions.titleIs(expectedTitle));
+        }catch (TimeoutException e){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Compare current and expected title
+     *
+     * @author Leo Jakus-Mejarec
+     * @param expectedTitle Expected title
+     * @return Returns true if expected title matches current title, false if not
+     */
+    public boolean isTitle(String expectedTitle, int timeout){
+        try {
+            wait = new WebDriverWait(webDriver, timeout);
             wait.until(ExpectedConditions.titleIs(expectedTitle));
         }catch (TimeoutException e){
             return false;
@@ -130,9 +171,14 @@ public class BasePageObject {
      * @return True if text matches expected
      */
     public boolean compareText(By locator, String expectedText){
+
+        if(!isDisplayed(locator, 5)){
+            System.out.println("Could not find wanted element: " + locator.toString());
+            return false;
+        }
         String currentText;
         currentText = find(locator).getText();
-        if(currentText.equals(expectedText)){
+        if(currentText.contains(expectedText)){
             return true;
         }else{
             return false;
@@ -239,6 +285,33 @@ public class BasePageObject {
      */
     public File getBaselineScreenshot(By locator){
         return new File("customLocation" + locator); //TODO: change to specific path
+    }
+
+    /**
+     *
+     */
+    public boolean isElementUpdated(By locator, String attribute, String prevValue){
+        wait.pollingEvery(Duration.ofSeconds(1));
+        try {
+            wait.until(ExpectedConditions.not(ExpectedConditions.attributeContains(locator, attribute, prevValue)));
+        }catch (Exception e){
+            return false;
+        }
+        return true;
+    }
+
+
+    public boolean openSidebar(){
+        click(mainDropDown);
+        return isDisplayed(homeBtn, 5); //home should always be in the dropdown
+    }
+
+    public boolean closeSidebar(){
+        openSidebar();
+        isDisplayed(closeSidebarBtn);
+
+        click(closeSidebarBtn);
+        return isNotDisplayed(homeBtn, 10); //home should always be in the dropdown
     }
 
 }

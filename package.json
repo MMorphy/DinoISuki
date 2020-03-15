@@ -1,0 +1,55 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack --debug --progress -w"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.12.0",
+    "@types/lodash": "^4.14.149",
+    "@types/react-router-dom": "^5.1.3",
+    "axios": "^0.18.1",
+    "bootstrap": "^4.4.1",
+    "bootstrap-icons": "^1.0.0-alpha2",
+    "eslint-loader": "^3.0.2",
+    "file-loader": "^4.2.0",
+    "lodash": "^4.17.15",
+    "mobx": "^5.9.4",
+    "mobx-react": "^5.4.3",
+    "node-sass": "^4.13.0",
+    "react": "^16.8.4",
+    "react-bootstrap": "^1.0.0-beta.16",
+    "react-color": "^2.17.0",
+    "react-dom": "^16.8.4",
+    "react-dropzone": "^4.2.13",
+    "react-paypal-button-v2": "^2.6.1",
+    "react-player": "^1.14.2",
+    "react-router-dom": "^5.1.2",
+    "react-slideshow-image": "^1.3.1",
+    "sass-loader": "^8.0.0",
+    "ts-loader": "^6.2.1",
+    "video-react": "^0.14.1"
+  },
+  "devDependencies": {
+    "@types/react": "^16.8.8",
+    "@types/react-dom": "^16.8.2",
+    "@types/react-dropzone": "^4.2.2",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.2.0",
+    "react-scripts": "^2.1.8",
+    "typescript": "^3.3.3333",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

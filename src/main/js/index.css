@@ -1,0 +1,451 @@
+.dropdown-margin-top {
+    padding-top: 25px;
+}
+
+.dropdown-button-width {
+    width: 100px;
+}
+
+.fa-bars {
+    color: #f04e23;
+}
+
+.logo-margin {
+    margin-left:27%;
+    max-height: 95px!important;
+}
+
+@media (max-width: 479px) {
+    .logo-margin {
+        margin-left: 20%;
+        max-height: 95px!important;
+    }
+}
+
+.app-background-color {
+    background-color: black;
+    min-width: 1000px!important;
+}
+
+.navbar-background-color {
+    background-color: #000000;
+    margin-bottom: 0!important;
+    border: 0 solid grey!important;
+    padding: 0!important;
+    min-height: 100px;
+    border-bottom: 2px solid #f04e23!important;
+}
+
+.navbar {
+    justify-content: center;
+}
+
+.navbar-height {
+    width: 100%;
+    max-height: 100px;
+}
+
+.navbar > .container {
+    margin: 0!important;
+    padding: 0!important;
+    position: absolute!important;
+    max-height: 100px;
+}
+
+.navbar-default .navbar-collapse {
+    max-height: 100px;
+}
+
+.container {
+    min-width: 100%!important;
+}
+
+.about-letter-color {
+    color: #f04e23;
+    text-align: justify;
+    width: 55%;
+    margin: 20px auto;
+}
+
+.about-text-align {
+    color: white;
+    text-align: justify;
+    width: 55%;
+    margin: 0 auto;
+}
+
+.login-form-width {
+    width: 500px;
+    margin: 250px auto auto;
+}
+
+.show-password-button {
+    background-color: black;
+    border-color: black;
+}
+
+.login-password-input-form {
+    display: inline-flex;
+}
+
+.register-form-width {
+    width: 600px;
+    margin: 250px auto auto;
+}
+
+.edit-modal-center {
+    display: grid;
+}
+
+.register-text-padding {
+    padding-top: 10%;
+    margin-left: 115px;
+}
+
+.login-registration-button-center {
+    display: grid;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.successful-register-message {
+    width: 300px;
+    margin: 250px auto auto;
+}
+
+.error-message {
+    width: 350px;
+    margin: 250px auto auto;
+}
+
+.my-subsriptions-container {
+    margin-top: 50px;
+}
+
+.button-padding {
+    padding-top: 10%;
+}
+
+.button-color {
+    background-color: black;
+    border-color: black;
+}
+
+.glyphicon-color {
+    color: #f04e23;
+}
+
+.font-color {
+    color: #f04e23;
+}
+
+.font-size {
+    font-size: 15px;
+}
+
+.title-size {
+    font-size: 30px;
+}
+
+.login-registration-button-color {
+    background-color: #f04e23;
+    border-color: #f04e23;
+}
+
+.image-upload-container {
+    height: 200px;
+    border-style: dotted;
+    border-color: white;
+}
+
+.column {
+    float: left;
+}
+
+.sidebar-left {
+    width: 20%;
+}
+
+.right {
+    width: 80%;
+    max-height: 100px;
+}
+
+.my-profile-buttons-margin-top {
+    margin-top: 10px;
+}
+
+.contact-info-grid {
+    display: grid;
+    justify-content: center;
+}
+
+.updateErrorMessage {
+    display: grid;
+    justify-items: center;
+    font-size: 18px;
+    color: #f04e23;
+}
+
+.video-player-inline {
+    display: inline-block;
+}
+
+.video-gallery {
+    display: grid;
+    justify-items: center;
+    margin-top: 5%;
+}
+
+.paypal-container {
+    width: 200px;
+}
+
+/*IMAGE SLIDESHOW CSS*/
+
+.slide-container {
+    width: 100%;
+    height: 1000px;
+    margin-top: 100px;
+}
+
+h3 {
+    text-align: center;
+}
+
+.each-slide > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    height: 1000px;
+}
+
+.each-slide span {
+    padding: 20px;
+    font-size: 20px;
+    background: #efefef;
+    text-align: center;
+}
+
+.each-fade {
+    display: flex;
+}
+
+.each-fade .image-container {
+    width: 75%;
+    overflow: hidden;
+}
+
+.each-fade .image-container img {
+    width: 100%;
+}
+
+.each-fade h2 {
+    width: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    background: #adceed;
+}
+
+/*SIDEBAR CSS*/
+
+.sidebar .modal-content {
+    max-width: 50%;
+    min-height: 100%;
+}
+
+.modal-body.sidebar {
+    background-color: black;
+}
+
+.modal-header.sidebar {
+    background-color: black;
+    min-height: 99px;
+}
+
+.modal-header {
+    border-bottom: 1px solid #f04e23!important;
+}
+
+.modal-footer {
+    border-top: 1px solid #f04e23!important;
+}
+
+.modal-header.sidebar .close  {
+    color: #f04e23;
+}
+
+.modal-dialog.sidebar {
+    margin-left: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    max-height: 100%;
+    height: 100%;
+}
+
+.modal-backdrop.fade.show {
+    min-width: 1000px!important;
+}
+
+/**PANEL*/
+
+.panel {
+    margin-top: 50px;
+    margin-bottom: 50px!important;
+}
+
+/**EDIT-MODAL*/
+.edit-modal-color .modal-content {
+    background-color: black;
+    border-color: #f04e23;
+}
+
+.modal-padding {
+    padding-top: 70px;
+}
+
+/**ABOUT GO2PLAY*/
+.about-go2play-margin {
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.accordion-size {
+    margin-top: 100px;
+    min-width: 50%;
+    max-width: 50%;
+}
+
+.accordion>.card>.card-header {
+    background-color: black;
+    color: #f04e23;
+    border-color: #f04e23;
+    margin-bottom: 0px;
+    border-bottom-color: #f04e23;
+}
+
+.card-body {
+    background-color: black;
+    color: white;
+}
+
+.border-danger {
+    border-color: #f04e23!important;
+}
+
+.security-of-online-payments-align {
+    text-align: justify;
+    color: white;
+}
+
+.corvus-payment-logo-size {
+    width: 144px;
+    height: 36px;
+}
+
+.payment-logo-size {
+    width: 64px;
+    height: 37px;
+}
+
+.discover-sp-payment-logo-size {
+    width: 100px;
+    height: 37px;
+}
+
+.payment-modal-color .modal-content {
+    background-color: black;
+    border-color: #f04e23;
+}
+
+/**MY PROFILE - GENERAL INFORMATION*/
+.my-profile-container {
+    display: flex;
+    align-items: center;
+    margin-top: 200px;
+    flex-direction: column;
+}
+
+.my-profile-card {
+    min-width: 50%;
+    border-color: #f04e23;
+}
+
+@media (max-width: 479px) {
+    .my-profile-card {
+        min-width: 80%;
+        border-color: #f04e23;
+    }
+}
+
+.my-profile-card>.card-header {
+    background-color: black;
+    color: #f04e23;
+    border-bottom-color: #f04e23;
+}
+
+.column.my-profile-card-first-column {
+    width: 69%;
+}
+
+.column.my-profile-card-second-column {
+    width: 31%;
+}
+
+@media (max-width: 479px) {
+    .column.my-profile-card-first-column {
+        width: 65%;
+    }
+
+    .column.my-profile-card-second-column {
+        width: 35%;
+    }
+}
+
+.edit-profile-button {
+    background-color: #f04e23;
+    border-color: #f04e23;
+    min-width: 130px;
+    font-size: 12px;
+}
+
+.h5-my-profile-card-title {
+    margin-bottom: 0px;
+    margin-top: .25rem;
+}
+
+.dropzone-margin {
+    margin-left: 15%;
+}
+
+.image-dropzone {
+    border-style: none;
+}
+
+.image-message-margin {
+    margin-top: 35%;
+    margin-left: 12%;
+    margin-right: 8%;
+}
+
+.font-margin {
+    margin-top: 20px;
+    margin-left: 10px;
+}
+
+.secondary-font-color {
+    color: white;
+}
+
+.profile-photo-message {
+    font-size: 10px;
+    margin-bottom: 0;
+    margin-left: 40px;
+}
+
+

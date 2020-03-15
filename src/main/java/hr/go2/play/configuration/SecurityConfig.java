@@ -48,8 +48,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/api/dev/**").permitAll()
 		    .antMatchers("/api/user/login").permitAll()//
 		    .antMatchers("/api/user/register").permitAll()//
-		    // Disallow everything else..
-		    .anyRequest().authenticated();
+			.antMatchers("/",
+						"/favicon.ico",
+						"/**/*.png",
+						"/**/*.gif",
+						"/**/*.svg",
+						"/**/*.jpg",
+						"/**/*.html",
+						"/**/*.css",
+						"/**/*.js",
+						"/**/*.ttf",
+					    "/**/*.woff*").permitAll()
+			.anyRequest().permitAll();
 
 		// If a user try to access a resource without having enough permissions
 		http.exceptionHandling().accessDeniedPage("/api/user/login");
