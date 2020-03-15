@@ -16,11 +16,12 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.PostConstruct;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
@@ -64,8 +65,13 @@ import hr.go2.play.util.Commons;
 @Secured("ROLE_USER")
 public class UserManagement {
 
-	@Value("${application.users.profile-photo-location}")
+//	@Value("${application.users.profile-photo-location}")
 	String profilePhotoLocation;
+
+	@PostConstruct
+	private void initVariables() {
+		profilePhotoLocation = commons.getProperty("application_users_profilePhotoLocation", String.class);
+	}
 
 	// Login
 	// Logout

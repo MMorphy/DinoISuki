@@ -15,16 +15,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.annotation.PostConstruct;
+
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import hr.go2.play.entities.Video;
 import hr.go2.play.services.VideoService;
+import hr.go2.play.util.Commons;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.sftp.SFTPClient;
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
@@ -33,23 +35,35 @@ public class MoveToArchiveJob extends QuartzJobBean {
 
 	private static Logger logger = LoggerFactory.getLogger(MoveToArchiveJob.class);
 
-	@Value("${application.job.move-to-archive.ip}")
+//	@Value("${application.job.move-to-archive.ip}")
 	String remoteIp;
-	@Value("${application.job.move-to-archive.username}")
+//	@Value("${application.job.move-to-archive.username}")
 	String remoteUsername;
-	@Value("${application.job.move-to-archive.password}")
+//	@Value("${application.job.move-to-archive.password}")
 	String remotePassword;
-	@Value("${application.job.move-to-archive.remote-archive-folder}")
+//	@Value("${application.job.move-to-archive.remote-archive-folder}")
 	String remoteArchiveFolder;
-	@Value("${application.job.video-finder.archive-folder-location}")
+//	@Value("${application.job.video-finder.archive-folder-location}")
 	String archiveFolderLocation;
-	@Value("${application.job.move-to-archive.time-to-archive-found-videos-in-days}")
+//	@Value("${application.job.move-to-archive.time-to-archive-found-videos-in-days}")
 	int timeToArchiveFound;
-	@Value("${application.job.move-to-archive.time-to-archive-archived-videos-in-days}")
+//	@Value("${application.job.move-to-archive.time-to-archive-archived-videos-in-days}")
 	int timeToArchiveArchived;
 
 	@Autowired
 	private VideoService videoService;
+	@Autowired
+	Commons commons;
+
+	@PostConstruct
+	private void initVariables() {
+		remoteIp = commons.getProperty("application_job_moveToArchive_ip", String.class);
+		remoteUsername = commons.getProperty("application_job_moveToArchive_username", String.class);
+		remoteArchiveFolder = commons.getProperty("application_job_moveToArchive_remoteArchiveFolder", String.class);
+		archiveFolderLocation = commons.getProperty("application_job_videoFinder_archiveFolderLocation", String.class);
+		timeToArchiveFound = commons.getProperty("application_job_moveToArchive_timeToArchiveFoundVideosInDays", Integer.class);
+		timeToArchiveArchived = commons.getProperty("application_job_moveToArchive_timeToArchiveArchivedVideosInDays", Integer.class);
+	}
 
 	@Override
 	protected void executeInternal(JobExecutionContext context) throws JobExecutionException {

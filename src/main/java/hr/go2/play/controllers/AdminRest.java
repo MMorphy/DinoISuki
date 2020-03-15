@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import hr.go2.play.DTO.AdminStatisticsDTO;
@@ -258,6 +259,23 @@ public class AdminRest {
 		applicationPropertiesService.saveApplicationProperty(applicationProperties);
 
 		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Application property added/updated!"), HttpStatus.OK);
+	}
+
+	/*
+	 * Call example: https://localhost:8443/api/admin/getApplicationProperty
+	 */
+	@GetMapping("/getApplicationProperty")
+	public ResponseEntity<?> getApplicationProperty(@RequestParam(name = "key") String key) {
+		ApplicationPropertiesDTO applicationPropertiesDTO = new ApplicationPropertiesDTO();
+		if (key == null || key.isEmpty()) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("No property key provided"), HttpStatus.BAD_REQUEST);
+		}
+		Object valueObj = commons.getProperty(key, String.class);
+		String value = valueObj != null ? valueObj.toString() : null;
+		applicationPropertiesDTO.setKey(key);
+		applicationPropertiesDTO.setValue(value);
+
+		return new ResponseEntity<>(applicationPropertiesDTO, HttpStatus.OK);
 	}
 
 }

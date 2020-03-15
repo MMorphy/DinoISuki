@@ -18,12 +18,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.annotation.PostConstruct;
+
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import de.jollyday.Holiday;
@@ -41,13 +42,13 @@ public class VideoFinderJob extends QuartzJobBean {
 
 	private static Logger logger = LoggerFactory.getLogger(VideoFinderJob.class);
 
-	@Value("${application.job.video-finder.search-folder-location}")
+//	@Value("${application.job.video-finder.search-folder-location}")
 	String searchFolderLocation;
-	@Value("${application.job.video-finder.found-folder-location}")
+//	@Value("${application.job.video-finder.found-folder-location}")
 	String foundFolderLocation;
-	@Value("${application.job.video-finder.error-folder-location}")
+//	@Value("${application.job.video-finder.error-folder-location}")
 	String errorFolderLocation;
-	@Value("${application.job.video-finder.archive-folder-location}")
+//	@Value("${application.job.video-finder.archive-folder-location}")
 	String archiveFolderLocation;
 
 	@Autowired
@@ -56,6 +57,14 @@ public class VideoFinderJob extends QuartzJobBean {
 	private CameraServiceImpl cameraService;
 	@Autowired
 	private LocationService locationService;
+
+	@PostConstruct
+	private void initVariables() {
+		searchFolderLocation = commons.getProperty("application_job_videoFinder_searchFolderLocation", String.class);
+		foundFolderLocation = commons.getProperty("application_job_videoFinder_foundFolderLocation", String.class);
+		errorFolderLocation = commons.getProperty("application_job_videoFinder_errorFolderLocation", String.class);
+		archiveFolderLocation = commons.getProperty("application_job_videoFinder_archiveFolderLocation", String.class);
+	}
 
 	@Override
 	protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
