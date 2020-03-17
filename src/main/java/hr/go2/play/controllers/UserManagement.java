@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -46,6 +47,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import hr.go2.play.DTO.ContactInformationDTO;
 import hr.go2.play.DTO.PasswordDTO;
+import hr.go2.play.DTO.RoleDTO;
 import hr.go2.play.DTO.UserDTO;
 import hr.go2.play.DTO.UserRoleDTO;
 import hr.go2.play.entities.ContactInformation;
@@ -628,6 +630,22 @@ public class UserManagement {
 		user.getRoles().remove(role);
 		userService.updateUser(user);
 		return new ResponseEntity<String>(commons.JSONfyReturnMessage("User roles updated!"), HttpStatus.OK);
+	}
+
+	/*
+	 * Fetch user roles
+	 * Call example: https://localhost:8443/api/user/getUserRoles?username=test2
+	 */
+	@GetMapping("/getUserRoles")
+	public ResponseEntity<?> getUserRoles(@RequestParam(name = "username") String username) {
+		User user = userService.findUserByUsername(username);
+		if (user != null) {
+			List<Role> roleList = roleService.findRoleByUsersUsername(username);
+			List<RoleDTO> roleDTOList = roleList.stream().map(role -> mapper.map(role, RoleDTO.class)).collect(Collectors.toList());
+			return new ResponseEntity<List<RoleDTO>>(roleDTOList, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to find user"), HttpStatus.NOT_ACCEPTABLE);
+		}
 	}
 
 }

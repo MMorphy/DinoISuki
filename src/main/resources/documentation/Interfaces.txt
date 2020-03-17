@@ -523,3 +523,21 @@ Output:
     "message": "Application property added/updated!"
 }
 
+/api/user/getUserRoles
+Description: Fetch user roles
+Type: get
+Input: String username
+Example: https://localhost:8443/api/user/getUserRoles?username=test2
+Output:
+[
+    {
+        "id": 1,
+        "name": "role_user"
+    },
+    {
+        "id": 2,
+        "name": "role_admin"
+    }
+]
+
+

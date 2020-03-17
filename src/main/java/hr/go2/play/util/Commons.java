@@ -108,20 +108,29 @@ public class Commons {
 		if (propertyKey == null || propertyKey.isEmpty() || classType == null) {
 			return null;
 		}
-		// fetch from DB
-		Optional<ApplicationProperties> applicationProperty = applicationPropertiesService.findByKey(propertyKey);
-		if (applicationProperty.isPresent()) {
-			String valueString = applicationProperty.get().getValue();
-			return (T) classType.cast(valueString);
+		Object returnValue = null;
+		try {
+			// fetch from DB
+			Optional<ApplicationProperties> applicationProperty = applicationPropertiesService.findByKey(propertyKey);
+			if (applicationProperty.isPresent()) {
+				String valueString = applicationProperty.get().getValue();
+				returnValue = valueString;
+				return (T) classType.cast(valueString);
+			}
+			// fetch from properties
+			Object localVariable = fetchLocalVariable(propertyKey);
+			if (localVariable == null) {
+				// give another try, but prepare the variable name first
+				propertyKey = prepareKey(propertyKey);
+				localVariable = fetchLocalVariable(propertyKey);
+			}
+			returnValue = localVariable;
+			return (T) classType.cast(localVariable);
+		} catch (ClassCastException e) {
+			logger.warn("Unable to cast " + returnValue + " to " + classType.toString());
+			e.printStackTrace();
 		}
-		// fetch from properties
-		Object localVariable = fetchLocalVariable(propertyKey);
-		if (localVariable == null) {
-			// give another try, but prepare the variable name first
-			propertyKey = prepareKey(propertyKey);
-		}
-		localVariable = fetchLocalVariable(propertyKey);
-		return (T) classType.cast(localVariable);
+		return (T) returnValue;
 	}
 
 	private Object fetchLocalVariable(String propertyKey) {
