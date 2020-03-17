@@ -21,7 +21,7 @@ interface MyProfileProps {
 @observer
 export default class MyProfile extends React.Component<MyProfileProps, {}> {
     render() {
-        document.title = "MyProfile";
+        document.title = "Moj profil";
 
         return (
             <div className="my-profile-container">
@@ -31,7 +31,7 @@ export default class MyProfile extends React.Component<MyProfileProps, {}> {
                 <GeneralInformationCard/>
                 <UserSubscriptionCard/>
                 <br/>
-                <Button variant="link" onClick={() => appStore.changeSecurityOfOnlinePaymentsModalVisibility()}>Security of Online Payments</Button>
+                <Button variant="link" onClick={() => appStore.changeSecurityOfOnlinePaymentsModalVisibility()}>Izjava o sigurnosti online plaćanja</Button>
                 <CorvusAndPaymentLogos/>
             </div>
         );

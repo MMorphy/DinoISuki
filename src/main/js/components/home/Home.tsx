@@ -4,7 +4,7 @@ import AboutDescription from "./AboutDescription";
 
 export default class Home extends React.Component<{}, {}> {
     render() {
-        document.title = "Go2Play";
+        document.title = "The Ball";
 
         return (
             <div>

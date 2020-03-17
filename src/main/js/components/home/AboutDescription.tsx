@@ -4,34 +4,28 @@ export default class AboutDescription extends React.Component<{}, {}> {
     render() {
         return (
             <div>
-                <h5 className="about-letter-color">About <b>Go2Play</b></h5>
+                <h5 className="about-letter-color"><b>The Ball</b></h5>
                 <div className="about-text-align">
                     <p>
-                        "I scored an incredibly beautiful goal yesterday!" - this is the sentence which
-                        at the same time describes who we are, how we started and what are the benefits
-                        you have from us. Can you guess?
+                        "Jučer sam zabio nevjerojatno prekrasan gol." - rečenica je koja ujedno opisuje tko smo,
+                        kako smo nastali te kakve koristi ti imaš od nas. Pogađaš?
                         <br/><br/>
-                        About us? The Ball is website where you can download records that contain all your
-                        goals, dribbles, defences, moves or funny situations you want to be
-                        seen, but no one have ever seen them (as always, they are difficult to demonstrate...).
-                        We set up cameras around the soccer fields in Zagreb and we are recording every game,
-                        every one of your goals, every dribble, volley and defense, your every fall over the
-                        ball and every miss, so you can show them whoever you want - your friends, wife,
-                        girlfriend, mom, dad - whoever you want. All you need to do is register and/or download
-                        our mobile application and video or clip of the match awaits for you.
-                        You couldn't come to the appointment? You are injured? Or away on the trip? You have
-                        obligations? We have solution for that, too - join to live broadcast of your appointment
-                        and support yout team!
+                        Tko smo: The Ball je aplikacija na kojoj možeš skinuti snimku svih svojih golova, driblinga,
+                        obrana, poteza, smiješnih situacija koje nitko nije vidio (klasika, kako to nekome objasniti?).
+                        Postavili smo kamere po nogometnim terenima u Zagrebu, snimamo svaku tekmu, svaki tvoj gol,
+                        svaki dribling, svaki volej, svaku obranu, svaki tvoj pad preko lopte, svaki tvoj promašaj,
+                        tako da ga možeš pokazati kome god želiš - frendovima, ženi, curi, mami, tati - kome god hoćeš.
+                        Trebaš se samo registrirati ili skinuti našu aplikaciju i čeka te video ili isječak dijela tekme
+                        koji želiš. Nisi mogao na termin? Ozlijeđen si? Na putu si? Imaš obaveza? Imamo rješenje i za
+                        to, uključi se u live prijenos svog termina i prati svoju ekipu!
                         <br/><br/>
-                        How we started? Exactly like this - no one had ever seen all those beautiful and funny
-                        moves, goals and misses and you couldn't describe or demonstrate them ever again.
+                        Kako smo nastali: upravo tako - nitko nije vidio sve te lijepe i smiješne poteze, golove,
+                        promašaje koje kasnije nikome ne bi mogao opisati i dočarati.
                         <br/><br/>
-                        What are the benefits you have from us? With live broadcast of the appointments, video
-                        appointments, we also prepared rich weekly and monthly prizes, interesting quizzes and
-                        much more...
+                        Kakve koristi imaš od nas? Uz live prijenos termina, video termina, pripremili smo i bogate
+                        tjedne i mjesečne nagrade, zanimljive kvizove i ostalo.
                         <br/><br/>
-                        If you want to know more about us or have additional questions, please just send email:
-                        the_ball_team@email.com.
+                        Ako te zanima nešto više o nama ili imaš dodatnih pitanja, javi se na mail: --------
                         <br/><br/><br/>
                         The Ball team
                     </p>

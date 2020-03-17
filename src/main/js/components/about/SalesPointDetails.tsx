@@ -3,10 +3,12 @@ import {Accordion, Card} from "react-bootstrap";
 
 export default class SalesPointDetails extends React.Component<{}, {}> {
     render() {
+        document.title = "O aplikaciji";
+
         return (
             <Card border="danger">
                 <Accordion.Toggle as={Card.Header} eventKey="0">
-                    <h5>Sales Point Details</h5>
+                    <h5>Podaci o prodajnom mjestu</h5>
                 </Accordion.Toggle>
                 <Accordion.Collapse eventKey="0">
                     <Card.Body>
@@ -17,11 +19,11 @@ export default class SalesPointDetails extends React.Component<{}, {}> {
                             <br/>
                             OIB: *99999999999999999*
                             <br/>
-                            Tax number: *9999*
+                            Porezni broj: *9999*
                             <br/>
-                            Phone Number: *9999999999*
+                            Broj telefona: *9999999999*
                             <br/>
-                            E-mail: *bla@email.hr*
+                            Email adresa: *bla@email.hr*
                         </Card.Text>
                     </Card.Body>
                 </Accordion.Collapse>

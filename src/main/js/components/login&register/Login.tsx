@@ -15,31 +15,29 @@ interface LoginProps {
 @observer
 export default class Login extends React.Component<LoginProps, {}>  {
     render() {
-        document.title = "Login";
+        document.title = "Prijava";
 
         return (
             <div>
                 <Form className="login-form-width">
                     <FormGroup controlId="formHorizontalEmail">
                         <Col>
-                            <FormLabel><h5 className="font-color font-size">Username</h5></FormLabel>
+                            <FormLabel><h5 className="font-color font-size">Korisničko ime</h5></FormLabel>
                         </Col>
                         <Col>
                             <FormControl defaultValue={localStorage.getItem('username') ? localStorage.getItem('username') as string : ""}
                                          type="username"
-                                         placeholder="Username"
                                          onChange={(e: any) => userStore.updateUserLoginDto(e.target.value, "username")}/>
                         </Col>
                     </FormGroup>
 
                     <FormGroup controlId="formHorizontalPassword">
                         <Col>
-                            <FormLabel><h5 className="font-color font-size">Password</h5></FormLabel>
+                            <FormLabel><h5 className="font-color font-size">Lozinka</h5></FormLabel>
                         </Col>
                         <Col className="login-password-input-form">
                             <FormControl defaultValue={localStorage.getItem('password') ? localStorage.getItem('password') as string : ""}
                                          type={appStore.isLoginPasswordVisible ? "text" : "password"}
-                                         placeholder="Password"
                                          onChange={(e: any) => userStore.updateUserLoginDto(e.target.value, "password")}
                                          className="login-password-input-form-border"/>
                             <Button id="pass-status" className="fa fa-eye show-password-button" aria-hidden="true" onClick={() => appStore.showLoginPassword()}/>
@@ -48,15 +46,15 @@ export default class Login extends React.Component<LoginProps, {}>  {
                     <Col>
                     {
                         appStore.unsuccessfulLogin
-                            ? <ErrorMessage errorMessage={"You haven't successfully logged in! Try again."} loginButton={false}/>
+                            ? <ErrorMessage errorMessage={"Neuspješna prijava! Pokušaj ponovo."} loginButton={false}/>
                             : <div/>
                     }
                     </Col>
                     <FormGroup>
                         <Col className="login-registration-button-center">
-                            <Button type="submit" className="login-registration-button-color" onClick={(e: any) => this.login(e)}><b>Sign in</b></Button>
+                            <Button type="submit" className="login-registration-button-color" onClick={(e: any) => this.login(e)}><b>Prijavi se</b></Button>
                         </Col>
-                        <p className="register-text-padding font-color">Not registered yet? <Link to="/register"><b>Register</b></Link> now</p>
+                        <p className="register-text-padding font-color">Nemaš račun? <Link to="/register"><b>Registriraj se</b></Link></p>
                     </FormGroup>
                 </Form>
             </div>

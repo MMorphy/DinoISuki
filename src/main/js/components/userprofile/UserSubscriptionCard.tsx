@@ -7,7 +7,7 @@ export default class UserSubscriptionCard extends React.Component<{}, {}> {
         return (
             <Card className="my-profile-card">
                 <Card.Header>
-                    <h5 className="h5-my-profile-card-title">My Subscriptions</h5>
+                    <h5 className="h5-my-profile-card-title">Moje pretplate</h5>
                 </Card.Header>
                 <Card.Body>
                     <div className="row">

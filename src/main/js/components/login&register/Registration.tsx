@@ -6,6 +6,8 @@ import {History, LocationState} from "history";
 import appStore from "../../store/AppStore";
 import ErrorMessage from "../utils/ErrorMessage";
 import {action} from "mobx";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface RegistrationProps {
     history: History<LocationState>;
@@ -14,75 +16,84 @@ interface RegistrationProps {
 @observer
 export default class Registration extends React.Component<RegistrationProps, {}> {
     render() {
-        document.title = "Registration";
+        document.title = "Registracija";
 
         return (
             <div>
                 <Form className="register-form-width">
                     <FormGroup controlId="username">
                         <Col>
-                            <FormLabel><h5 className="font-color font-size">Username</h5></FormLabel>
+                            <FormLabel><h5 className="font-color font-size">Korisničko ime</h5></FormLabel>
                         </Col>
                         <Col>
-                            <FormControl type="username" placeholder="Username" onChange={(e: any) => userStore.updateUserRegistrationDto(e.target.value, "username")}/>
+                            <FormControl type="username" onChange={(e: any) => userStore.updateUserRegistrationDto(e.target.value, "username")}/>
                         </Col>
                     </FormGroup>
 
                     <FormGroup controlId="password">
                         <Col>
-                            <FormLabel><h5 className="font-color font-size">Password</h5></FormLabel>
+                            <FormLabel><h5 className="font-color font-size">Lozinka</h5></FormLabel>
                         </Col>
                         <Col>
-                            <FormControl type="password" placeholder="Password" onChange={(e: any) => userStore.changePasswordForRegistration(e.target.value)}/>
+                            <FormControl type="password" onChange={(e: any) => userStore.changePasswordForRegistration(e.target.value)}/>
                         </Col>
                     </FormGroup>
 
                     <FormGroup controlId="confirmedPassword">
                         <Col>
-                            <FormLabel><h5 className="font-color font-size">Confirm Password</h5></FormLabel>
+                            <FormLabel><h5 className="font-color font-size">Potvrdi lozinku</h5></FormLabel>
                         </Col>
                         <Col>
-                            <FormControl type="password" placeholder="Password" onChange={(e: any) => userStore.changeConfirmedPasswordForRegistration(e.target.value)}/>
+                            <FormControl type="password" onChange={(e: any) => userStore.changeConfirmedPasswordForRegistration(e.target.value)}/>
                         </Col>
                     </FormGroup>
 
                     <FormGroup controlId="email">
                         <Col>
-                            <FormLabel><h5 className="font-color font-size">Email</h5></FormLabel>
+                            <FormLabel><h5 className="font-color font-size">Email adresa</h5></FormLabel>
                         </Col>
                         <Col>
-                            <FormControl type="email" placeholder="Email" onChange={(e: any) => userStore.updateContactInformationRegistrationDto(e.target.value, 'email')}/>
+                            <FormControl type="email" onChange={(e: any) => userStore.updateContactInformationRegistrationDto(e.target.value, 'email')}/>
                         </Col>
                     </FormGroup>
 
                     <FormGroup controlId="dateOfBirth">
                         <Col>
-                            <FormLabel><h5 className="font-color font-size">Date of Birth</h5></FormLabel>
+                            <FormLabel><h5 className="font-color font-size">Datum rođenja</h5></FormLabel>
                         </Col>
-                        <Col>
-                            <FormControl type="date" placeholder="Date of Birth" max="2020-12-31" onChange={(e: any) => userStore.updateUserRegistrationDto(e.target.value, "dateOfBirth")}/>
+                        <Col className="date-picker-input-wrapper">
+                            <DatePicker
+                                selected={userStore.date}
+                                onChange={(date: Date) => userStore.reformatDate(date)}
+                                maxDate={new Date()}
+                                peekNextMonth
+                                showMonthDropdown
+                                showYearDropdown
+                                dropdownMode="select"
+                                className="date-picker-input"
+                            />
                         </Col>
                     </FormGroup>
                     <Col>
                     {
                         appStore.showDifferentPassAtRegistrationErrorMessage
-                            ? <ErrorMessage errorMessage="Passwords don't match!" loginButton={false}/>
+                            ? <ErrorMessage errorMessage="Lozinke ne odgovaraju!" loginButton={false}/>
                             : <div/>
                     }
                     {
                         appStore.successfulRegistration
-                            ? <ErrorMessage errorMessage={"You have successfully registered! "} loginButton={true}/>
+                            ? <ErrorMessage errorMessage={"Uspješna registracija! "} loginButton={true}/>
                             : <div/>
                     }
                     {
                         appStore.unsuccessfulRegistration
-                            ? <ErrorMessage errorMessage="You haven't successfully registered! Try again." loginButton={false}/>
+                            ? <ErrorMessage errorMessage="Neuspješna registracija! Pokušaj ponovo." loginButton={false}/>
                             : <div/>
                     }
                     </Col>
                     <FormGroup>
                         <Col className="login-registration-button-center">
-                            <Button type="submit" className="login-registration-button-color" onClick={(e: any) => this.submitRegistration(e)}><b>Register</b></Button>
+                            <Button type="submit" className="login-registration-button-color" onClick={(e: any) => this.submitRegistration(e)}><b>Registriraj se</b></Button>
                         </Col>
                     </FormGroup>
                 </Form>
@@ -95,6 +106,7 @@ export default class Registration extends React.Component<RegistrationProps, {}>
         appStore.unsuccessfulRegistration = false;
         appStore.successfulRegistration = false;
         appStore.showDifferentPassAtRegistrationErrorMessage = false;
+        userStore.resetDate();
     }
 
     private submitRegistration(e: any) {

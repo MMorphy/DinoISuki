@@ -28,6 +28,8 @@ class UserStore {
     @observable passwordForRegistration: string = "";
     @observable confirmedPasswordForRegistration: string = "";
 
+    @observable date: Date | undefined = undefined;
+
     //update nakon unosa
     @action
     updateUserRegistrationDto(value: string, key: string) {
@@ -250,6 +252,19 @@ class UserStore {
     @action
     changeConfirmedPasswordForRegistration(value: string) {
         this.confirmedPasswordForRegistration = value;
+    }
+
+    @action
+    reformatDate(date: Date, key: string = 'register') {
+        this.date = date;
+        (key === 'register')
+            ? this.updateUserRegistrationDto(date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(), 'dateOfBirth')
+            : this.updateUserUpdateDto(date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(), 'dateOfBirth')
+    }
+
+    @action
+    resetDate() {
+        this.date = undefined;
     }
 }
 

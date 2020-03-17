@@ -6,7 +6,7 @@ export default class ProductServices extends React.Component<{}, {}> {
         return (
             <Card border="danger">
                    <Accordion.Toggle as={Card.Header} eventKey="1">
-                       <h5>Products and/or Services</h5>
+                       <h5>O proizvodima i/ili uslugama</h5>
                    </Accordion.Toggle>
                    <Accordion.Collapse eventKey="1">
                        <Card.Body>

@@ -8,7 +8,7 @@ import VideoDTO from "../../model/VideoDTO";
 @observer
 export default class VideoGallery extends React.Component<{}, {}> {
     render() {
-        document.title = "Videos";
+        document.title = "Video";
         let videoThumbnailHtmls : Array<any> = [];
 
         videoStore.videoGallery.forEach((video: VideoDTO, index: number) => {

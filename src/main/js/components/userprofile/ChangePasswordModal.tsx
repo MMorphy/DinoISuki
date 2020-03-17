@@ -12,60 +12,60 @@ export default class ChangePasswordModal extends React.Component<{}, {}>{
         return (
             <Modal show={appStore.isChangePasswordModalVisible} onHide={() => {}} size='lg' autoFocus keyboard className='edit-modal-color modal-padding'>
                 <Modal.Header>
-                    <Modal.Title className='font-color'>Change password</Modal.Title>
+                    <Modal.Title className='font-color'>Promjena lozinke</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <FormGroup controlId="password" className="edit-modal-input-form-size">
                         <Col>
-                            <FormLabel><h5 className="font-color font-size">Old password</h5></FormLabel>
+                            <FormLabel><h5 className="font-color font-size">Stara lozinka</h5></FormLabel>
                         </Col>
                         <Col>
-                            <FormControl type="password" placeholder="Password" onChange={(e: any) => {userStore.changeOldPasswordForUpdate(e.target.value)}}/>
+                            <FormControl type="password" onChange={(e: any) => {userStore.changeOldPasswordForUpdate(e.target.value)}}/>
                         </Col>
                     </FormGroup>
                     {
                         appStore.showWrongOldPasswordErrorMessage
-                            ? <ErrorMessage errorMessage="Wrong password!" loginButton={false}/>
+                            ? <ErrorMessage errorMessage="Pogrešna lozinka!" loginButton={false}/>
                             : <div></div>
                     }
                     <FormGroup controlId="password" className="edit-modal-input-form-size">
                         <Col>
-                            <FormLabel><h5 className="font-color font-size">New password</h5></FormLabel>
+                            <FormLabel><h5 className="font-color font-size">Nova lozinka</h5></FormLabel>
                         </Col>
                         <Col>
-                            <FormControl type="password" placeholder="Password" onChange={(e: any) => {userStore.changeNewPasswordForUpdate(e.target.value)}}/>
+                            <FormControl type="password" onChange={(e: any) => {userStore.changeNewPasswordForUpdate(e.target.value)}}/>
                         </Col>
                     </FormGroup>
 
                     <FormGroup controlId="password" className="edit-modal-input-form-size">
                         <Col>
-                            <FormLabel><h5 className="font-color font-size">Confirm new password</h5></FormLabel>
+                            <FormLabel><h5 className="font-color font-size">Potvrdi novu lozinku</h5></FormLabel>
                         </Col>
                         <Col>
-                            <FormControl type="password" placeholder="Password" onChange={(e: any) => {userStore.changeConfirmedPasswordForUpdate(e.target.value)}}/>
+                            <FormControl type="password" onChange={(e: any) => {userStore.changeConfirmedPasswordForUpdate(e.target.value)}}/>
                         </Col>
                     </FormGroup>
                     {
                         appStore.showDifferentConfirmedPasswordErrorMessage
-                            ? <ErrorMessage errorMessage="Passwords don't match!" loginButton={false}/>
+                            ? <ErrorMessage errorMessage="Lozinke ne odgovarajju!" loginButton={false}/>
                             : <div/>
                     }
 
                     {
                         appStore.showUnsuccessfulPasswordUpdateMessage
-                            ? <ErrorMessage errorMessage="Your password is not updated! Try again." loginButton={false}/>
+                            ? <ErrorMessage errorMessage="Neuspješna promjena lozinke! Pokušaj ponovo." loginButton={false}/>
                             : <div/>
                     }
 
                     {
                         appStore.showSuccessfulPasswordUpdateMessage
-                            ? <ErrorMessage errorMessage="Password is successfully updated!" loginButton={false}/>
+                            ? <ErrorMessage errorMessage="Uspješna promjena lozinke!" loginButton={false}/>
                             : <div/>
                     }
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button className='login-registration-button-color' onClick={() => userStore.updatePassword()}><b>Submit</b></Button>
-                    <Button className='login-registration-button-color' onClick={() => this.onModalClose()}><b>Close</b></Button>
+                    <Button className='login-registration-button-color' onClick={() => userStore.updatePassword()}><b>Promijeni</b></Button>
+                    <Button className='login-registration-button-color' onClick={() => this.onModalClose()}><b>Zatvori</b></Button>
                 </Modal.Footer>
             </Modal>
         );

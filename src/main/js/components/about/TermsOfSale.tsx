@@ -6,7 +6,7 @@ export default class TermsOfSale extends React.Component<{}, {}> {
         return (
             <Card border="danger">
                 <Accordion.Toggle as={Card.Header} eventKey="2">
-                    <h5>Terms of Sale</h5>
+                    <h5>Uvjeti prodaje</h5>
                 </Accordion.Toggle>
                 <Accordion.Collapse eventKey="2">
                     <Card.Body>

@@ -108,7 +108,7 @@
 
 .register-text-padding {
     padding-top: 10%;
-    margin-left: 115px;
+    margin-left: 150px;
 }
 
 .login-registration-button-center {
@@ -460,6 +460,20 @@ h3 {
 .edit-modal-input-form-size {
     width: 50%;
     margin-left: 25%;
+}
+
+.date-picker-input-wrapper > .react-datepicker-wrapper {
+    max-width: 100%;
+    width: 100%;
+    height: 38px;
+}
+
+.date-picker-input {
+    max-width: 100%;
+    width: 100%;
+    height: 38px;
+    border-radius: .25rem;
+    border: 1px solid #ced4da;
 }
 
 

@@ -10,7 +10,7 @@ export default class SecurityOfOnlinePaymentsModal extends React.Component<{}, {
         return (
             <Modal show={appStore.isSecurityOfOnlinePaymentsModalVisible} onHide={() => appStore.changeSecurityOfOnlinePaymentsModalVisibility()} size='lg' autoFocus keyboard className='payment-modal-color modal-padding'>
                 <Modal.Header closeButton>
-                    <Modal.Title className='font-color'>Security of Online Payments</Modal.Title>
+                    <Modal.Title className='font-color'>Izjava o sigurnosti online plaćanja</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <SecurityOfOnlinePaymentsText/>
