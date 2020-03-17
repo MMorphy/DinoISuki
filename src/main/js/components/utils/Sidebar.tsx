@@ -44,6 +44,12 @@ export default class Sidebar extends React.Component<{}, {}> {
                             ? <Link className="font-color" to="/register" onClick={() => appStore.changeSidebarVisibility()}><h5 id="register">Register</h5></Link>
                             : <div/>
                     }
+					<br/>
+					{
+                        (sessionStorage.getItem('token') && sessionStorage.getItem('isAdmin'))
+                            ? <Link className="font-color" to="/admin" onClick={() => appStore.changeSidebarVisibility()}><h5 id="admin">Administration</h5></Link>
+                            : <div/>
+                    }
                     {
                         (sessionStorage.getItem('token'))
                             ? <Link className="font-color" to="/" onClick={() => this.logout()}><h5 id="logout">Logout</h5></Link>

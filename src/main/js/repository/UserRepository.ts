@@ -70,6 +70,13 @@ class UserRepository {
                 }
             });
     }
+
+	getUserRoles(username: string, token: string): Promise<AxiosResponse> {
+        return axios.get(`/api/user/getUserRoles?username=${username}`,
+            {
+                headers: {'Authorization': `Bearer ${token}`}
+            });
+    }
 }
 
 const userRepository = new UserRepository();

@@ -1,6 +1,7 @@
 import {action, observable} from "mobx";
 import UserDTO from "../model/UserDTO";
 import ContactInformationDTO from "../model/ContactInformationDTO";
+import RoleDTO from "../model/RoleDTO";
 import userRepository from "../repository/UserRepository";
 import {AxiosResponse} from "axios";
 import appStore from "./AppStore";
@@ -92,6 +93,7 @@ class UserStore {
          return userRepository.login(this.userLoginDto)
             .then(action((response: AxiosResponse) => {
                 this.addUserToSessionStorage(response.data[1].token, response.data[0].username);
+				this.getUserRoles();
             }))
     }
 
@@ -117,6 +119,19 @@ class UserStore {
         }));
     }
 
+	getUserRoles() {
+		userRepository.getUserRoles(sessionStorage.getItem('username')!, sessionStorage.getItem('token')!)
+            .then(action((response: AxiosResponse) => {
+				sessionStorage.removeItem('isAdmin');
+                response.data.forEach((role: RoleDTO) => {
+		            if(role.name !== undefined && role.name.includes('admin')) {
+						sessionStorage.setItem('isAdmin', 'true');
+						return;
+					}
+		        });
+        }));
+	}
+	
     @action
     submitUserUpdate() {
         this.updateContactInformationUpdateDto(this.userUpdateDto.username, "username");

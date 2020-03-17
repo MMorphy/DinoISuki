@@ -10,6 +10,8 @@ import Registration from "./login&register/Registration";
 import CustomNavbar from "./utils/CustomNavbar";
 import Sidebar from "./utils/Sidebar";
 import AboutGo2Play from "./about/AboutGo2Play";
+import AdminHome from "./admin/AdminHome";
+
 
 export default class App extends React.Component<{}, {}> {
     render() {
@@ -27,6 +29,7 @@ export default class App extends React.Component<{}, {}> {
                         <Route path="/login" component={Login}/>
                         <Route path="/register" component={Registration}/>
                         <Route path="/about" component={AboutGo2Play}/>
+						<Route path="/admin" component={AdminHome}/>
                     </Switch>
                 </div>
             </HashRouter>
