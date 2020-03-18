@@ -13,17 +13,27 @@ export default class SalesPointDetails extends React.Component<{}, {}> {
                 <Accordion.Collapse eventKey="0">
                     <Card.Body>
                         <Card.Text>
-                            *Ime tvrtke/obrta*
+                            Go2Play j.d.o.o.
                             <br/>
-                            *Adresa*
                             <br/>
-                            OIB: *99999999999999999*
+                            Adresa: Hrgovici 35, Kneza Ljudevita Posavskog 36b, 10 000 Zagreb
+                            <br/>
+                            <br/>
+                            OIB: 14509637799
+                            <br/>
                             <br/>
                             Porezni broj: *9999*
                             <br/>
-                            Broj telefona: *9999999999*
                             <br/>
-                            Email adresa: *bla@email.hr*
+                            Tehnički kontakt:
+                            Dino *prezime* - +385 91 619 9912, Ivan Šušnja - +385 91 160 0010
+                            <br/>
+                            <br/>
+                            Računovodstveni kontakt: Snježana Frulja +385 98 817 471
+                            <br/>
+                            <br/>
+                            Email adresa: dinoh8@outlook.com, info@ibas-idea.hr
+                            {/*Maticni br posl.sub.- 5201411*/}
                         </Card.Text>
                     </Card.Body>
                 </Accordion.Collapse>
