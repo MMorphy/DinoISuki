@@ -200,12 +200,16 @@ public class UserServiceImpl implements UserService, org.springframework.securit
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepo.findByUsername(username).get();
-		if (user != null) {
-			List<GrantedAuthority> authorities = getUserAuthority((List<Role>) user.getRoles());
-			return buildUserForAuthentication(user, authorities);
+		if (userRepo.findByUsername(username).isPresent()) {
+			User user = userRepo.findByUsername(username).get();
+			if (user != null) {
+				List<GrantedAuthority> authorities = getUserAuthority((List<Role>) user.getRoles());
+				return buildUserForAuthentication(user, authorities);
+			} else {
+				throw new UsernameNotFoundException("username not found");
+			}
 		} else {
-			throw new UsernameNotFoundException("username not found");
+			return null;
 		}
 	}
 
