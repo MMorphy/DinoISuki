@@ -12,8 +12,7 @@ public class RestControllerTestUtility {
     protected static int statusFail = 400;
     protected static int statusUnauthorized = 401;
     protected static String defaultLoginJSON="{\"username\":\"defaultUser\",\"password\":\"thisIsThePassword\"}";
-    protected static String registerJSON="{\"userDto\":{\"createdAt\":\"2019/11/19 00:00:00\",\"dateOfBirth\":\"1995/10/10\",\"username\":\"defaultUser\",\"password\":\"thisIsThePassword\"},\"contactInfoDto\":{\"telephoneNumber\":\"0800091091\",\"email\":\"defaultman@gmail.com\"}}";
-    protected static String cameraURL= "/admin/create/camera";
+    protected static String registerJSON="{\"createdAt\":\"2018-05-30T16:19:58.016Z\",\"dateOfBirth\":\"1994-10-10\",\"username\":\"defaultUser\",\"password\":\"thisIsThePassword\",\"enabled\":\"false\"}";
     protected static String token;
 
 

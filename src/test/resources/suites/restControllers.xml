@@ -13,20 +13,20 @@
                     <!--<exclude name="updateSameReservationTest"/>-->
                 <!--</methods>-->
             <!--</class>-->
-            <class name="rest.UserAAARestControllerTest">
+            <class name="rest.UserManagementRestControllerTest">
                 <methods>
                     <exclude name="falseRegisterTest"/>
                 </methods>
             </class>
-            <class name="rest.AdminRestControllerTest">
-                <methods>
-                    <exclude name="createLocationTest"/>
-                    <exclude name="doubleDeleteCameraTest"/>
-                    <exclude name="deleteNonExistingCameraUrlTest"/>
-                    <exclude name="deleteCameraTest"/>
-                </methods>
-            </class>
-            <class name="rest.MyUserRestControllerTest"/>
+            <!--<class name="rest.AdminRestControllerTest">-->
+                <!--<methods>-->
+                    <!--<exclude name="createLocationTest"/>-->
+                    <!--<exclude name="doubleDeleteCameraTest"/>-->
+                    <!--<exclude name="deleteNonExistingCameraUrlTest"/>-->
+                    <!--<exclude name="deleteCameraTest"/>-->
+                <!--</methods>-->
+            <!--</class>-->
+            <!--<class name="rest.MyUserRestControllerTest"/>-->
         </classes>
     </test>
 </suite>

@@ -1,24 +1,24 @@
 package rest;
 
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertTrue;
 import static rest.RestControllerTestUtility.*;
 
-public class UserAAARestControllerTest extends AbstractTest  {
+public class UserManagementRestControllerTest extends AbstractTest {
 
     private String fakeJSON="{\"createdAt\":\"2019/11/24 00:00:00\",\"dateOfBirth\":\"1991/1/2\",\"username\":\"fake\",\"password\":\"fake\"}";
-    private String brokenJSON="{\"createdAt\":\"broken\",\"dateOfBirth\":\"broken\",\"username\":\"broken\",\"password\":\"broken\"}";
-    private String cameraJSON="{\"id\":\"\",\"name\":\"Kamera1\",\"videos\":[{\"id\":null,\"location\":\"Agram\"}]}";
-    private String registerURL="/api/user/register";
+    private String brokenJSON="{\"createdAt\":\"2018-05-30T16:19:58\",\"dateOfBirth\":\"1994-10\",\"username\":\"miljenko\",\"password\":\"miljenkovasifra je ovo\",\"enabled\":\"\"}";
+    private String registerURL="/api/user/createUser";
     private String loginURL="/api/user/login";
-
 
     @BeforeMethod
     public void setUp() {
 //        RestControllerTestUtility.setup();
 //        Not needed for these tests
-        System.out.println("Starting tests: UserAAARestControllerTest");
+        System.out.println("Starting tests: UserManagementRestControllerTest");
     }
 
     @AfterMethod
@@ -82,7 +82,7 @@ public class UserAAARestControllerTest extends AbstractTest  {
     public void correctTokenFromLoginTest() {
         postRequest(registerURL, registerJSON);
         String localToken = getToken(loginURL, defaultLoginJSON);
-        String result = getRequestWithToken("/admin/get/cameras", localToken).toString();
+        String result = getRequestWithToken("/api/video/getAllVideos", localToken).toString();
         assertTrue(result.equals("[]"));
     }
 
@@ -108,5 +108,6 @@ public class UserAAARestControllerTest extends AbstractTest  {
         assertTrue(result == statusSuccess);
     }
     //TODO: provjere bez tokena!!!
+
 
 }
