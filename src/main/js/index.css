@@ -489,3 +489,7 @@ h3 {
 	border-color: #f04e23;
 	border-width: thin;
 }
+
+.sales-point-details-column-width {
+    width: 50%;
+}
