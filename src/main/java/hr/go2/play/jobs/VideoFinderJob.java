@@ -280,3 +280,4 @@ public class VideoFinderJob extends QuartzJobBean {
 		return false;
 	}
 }
+

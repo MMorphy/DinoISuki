@@ -476,4 +476,16 @@ h3 {
     border: 1px solid #ced4da;
 }
 
+.admin-statistics-table-header-cell {
+	font-weight: bold;
+	padding: 5px 12px;
+	border: 1px solid #f04e23;
+	color: #f04e23;
+}
 
+.admin-statistics-table-body-cell {
+	padding: 5px 12px;
+	border-style: solid;
+	border-color: #f04e23;
+	border-width: thin;
+}
