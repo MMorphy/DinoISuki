@@ -2,31 +2,31 @@ import * as React from "react";
 import {observer} from "mobx-react";
 import videoStore from "../../store/VideoStore";
 import Video from "./Video";
-import VideoDTO from "../../model/VideoDTO";
-
+import VideoSlideshow from "./VideoSlideshow";
 
 @observer
 export default class VideoGallery extends React.Component<{}, {}> {
     render() {
         document.title = "Video";
-        let videoThumbnailHtmls : Array<any> = [];
 
-        videoStore.videoGallery.forEach((video: VideoDTO, index: number) => {
-            videoThumbnailHtmls.push( //videoName bude string ime videa
-                <Video videoName={video.id} isVideoThumbnail={true} playing={false} width={"360px"} height={"240px"} onStart={() => videoStore.chooseVideo(video.id)}
-                       key={index}/>
-                )
+        let videoSlideshowHtmls: Array<any> = [];
+
+        videoStore.videoDates.forEach((date: any, index: number) => {
+            videoSlideshowHtmls.push(
+                <VideoSlideshow date={date} index={index} key={index}/>
+            );
         });
 
         return (
             <div className="video-gallery">
                 {
                     videoStore.showChosenVideo
-                        ? <Video videoName={videoStore.chosenVideoId} isVideoThumbnail={false} playing={true} width={"1024px"} height={"720px"} onStart={() => {}}/>
+                        ?<div><Video videoName={videoStore.chosenVideoId} isVideoThumbnail={false} playing={true} width={"1024px"} height={"720px"} onStart={() => {}}/><br/><br/><br/></div>
                         : <div/>
                 }
-
-                <div>{videoThumbnailHtmls}</div>
+                {
+                    videoSlideshowHtmls
+                }
             </div>
         );
     }

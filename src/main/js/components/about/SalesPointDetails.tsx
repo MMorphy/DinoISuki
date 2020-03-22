@@ -12,7 +12,6 @@ export default class SalesPointDetails extends React.Component<{}, {}> {
                 </Accordion.Toggle>
                 <Accordion.Collapse eventKey="0">
                     <Card.Body>
-                        <Card.Text>
                             <div className="row">
                                 <div className="column sales-point-details-column-width">
                                     Ime tvrtke:
@@ -50,7 +49,6 @@ export default class SalesPointDetails extends React.Component<{}, {}> {
                                     &nbsp;&nbsp;&nbsp;&nbsp;Kneza Ljudevita Posavskog 36b, 10 000 Zagreb
                                 </div>
                             </div>
-                        </Card.Text>
                     </Card.Body>
                 </Accordion.Collapse>
             </Card>

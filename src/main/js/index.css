@@ -196,16 +196,6 @@
     color: #f04e23;
 }
 
-.video-player-inline {
-    display: inline-block;
-}
-
-.video-gallery {
-    display: grid;
-    justify-items: center;
-    margin-top: 5%;
-}
-
 .paypal-container {
     width: 200px;
 }
@@ -330,7 +320,7 @@ h3 {
     max-width: 50%;
 }
 
-.accordion>.card>.card-header {
+.accordion-size>.card>.card-header {
     background-color: black;
     color: #f04e23;
     border-color: #f04e23;
@@ -493,3 +483,47 @@ h3 {
 .sales-point-details-column-width {
     width: 50%;
 }
+
+/**VIDEO PAGE*/
+.video-gallery {
+    margin-top: 200px!important;
+    display: grid;
+    justify-items: center;
+    margin-top: 5%;
+}
+
+.video-player-inline {
+    display: inline-block;
+}
+
+.video-horizontal-scroll-parent-width {
+    width: 85em;
+    height: 300px;
+}
+
+.video-horizontal-scroll-child-width {
+    width: 30em;
+    height: 300px;
+}
+
+.video-card-header-background {
+    background-color: black;
+    color: #f04e23;
+    border-color: #f04e23;
+    margin-bottom: 0px;
+    border-bottom-color: #f04e23;
+}
+
+@media (max-width: 1024px) {
+    .video-horizontal-scroll-parent-width {
+        width: 60em;
+        height: 240px;
+    }
+
+    .video-horizontal-scroll-child-width {
+        width: 30em;
+        height: 240px;
+    }
+}
+
+

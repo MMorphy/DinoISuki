@@ -7,3 +7,5 @@ declare module 'react-bootstrap-sidebar';
 declare module 'video-react';
 
 declare module 'react-paypal-button-v2';
+
+declare module 'react-scroll-horizontal';
