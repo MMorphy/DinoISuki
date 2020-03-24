@@ -41,7 +41,7 @@ public class TransactionDetailsRest {
 
 	/*
 	 * Description: Fetch transaction details
-	 * Filtering options: by user name or by transactionId
+	 * Filtering options: by user name or by transactionId or all
 	 * Call example:
 	 * https://localhost:8443/api/transactions/getTransactionDetails?username=test6&transactionId=12345
 	 *
@@ -75,7 +75,15 @@ public class TransactionDetailsRest {
 			return new ResponseEntity<List<TransactionDetailsDTO>>(transactionDetailsDTOList, HttpStatus.OK);
 		}
 
-		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Username or transaction id not provided"), HttpStatus.BAD_REQUEST);
+		Collection<TransactionDetails> transactionDetailsCollection = transactionDetailsService.findAllTransactionDetails();
+		if (transactionDetailsCollection.size() == 0) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("No transactions found"), HttpStatus.NOT_FOUND);
+		}
+		transactionDetailsCollection.forEach(transactionDetails -> {
+			TransactionDetailsDTO transactionDetailsDTO = mapper.map(transactionDetails, TransactionDetailsDTO.class);
+			transactionDetailsDTOList.add(transactionDetailsDTO);
+		});
+		return new ResponseEntity<List<TransactionDetailsDTO>>(transactionDetailsDTOList, HttpStatus.OK);
 	}
 
 	/*
@@ -125,7 +133,7 @@ public class TransactionDetailsRest {
 	}
 
 	/*
-	 * Description: Delete transaction details 
+	 * Description: Delete transaction details
 	 * Input params: notification id
 	 * Call example: https://localhost:8443/api/transactions/deleteTransactionDetails?id=1
 	 *
@@ -136,6 +144,10 @@ public class TransactionDetailsRest {
 		logger.debug("/api/transactions/deleteTransactionDetails Started");
 		if (id == null || id <= 0) {
 			return new ResponseEntity<>(commons.JSONfyReturnMessage("Invalid id provided"), HttpStatus.BAD_REQUEST);
+		}
+		Optional<TransactionDetails> optionalTransactionDetails = transactionDetailsService.findTransactionDetailsById(id);
+		if (optionalTransactionDetails.isEmpty()) {
+			return new ResponseEntity<>(commons.JSONfyReturnMessage("Transaction details not found"), HttpStatus.NOT_FOUND);
 		}
 		transactionDetailsService.deleteById(id);
 		logger.debug("/api/transactions/deleteTransactionDetails Finished");

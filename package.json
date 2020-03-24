@@ -21,6 +21,7 @@
     "eslint-loader": "^3.0.2",
     "file-loader": "^4.2.0",
     "lodash": "^4.17.15",
+    "mdbreact": "^4.25.4",
     "mobx": "^5.9.4",
     "mobx-react": "^5.4.3",
     "node-sass": "^4.13.0",

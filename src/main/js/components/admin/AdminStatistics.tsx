@@ -33,10 +33,10 @@ export default class AdminStatistics extends React.Component<{}, {}> {
 		for (var i = 0; i < adminStore.adminStatisticsDTO.diskSpaceInfo.length; i++){
 			let rowID = `row${i}`;
 			let diskSpaceCell = [];
-			diskSpaceCell.push(<td id="cell1" className="admin-statistics-table-body-cell">{adminStore.adminStatisticsDTO.diskSpaceInfo[i].partition}</td>);
-			diskSpaceCell.push(<td id="cell2" className="admin-statistics-table-body-cell">{adminStore.adminStatisticsDTO.diskSpaceInfo[i].available}</td>);
-			diskSpaceCell.push(<td id="cell3" className="admin-statistics-table-body-cell">{adminStore.adminStatisticsDTO.diskSpaceInfo[i].used}</td>);
-			diskSpaceCell.push(<td id="cell3" className="admin-statistics-table-body-cell">{adminStore.adminStatisticsDTO.diskSpaceInfo[i].total}</td>);
+			diskSpaceCell.push(<td key="cell1{i}" id="cell1" className="admin-statistics-table-body-cell">{adminStore.adminStatisticsDTO.diskSpaceInfo[i].partition}</td>);
+			diskSpaceCell.push(<td key="cell2{i}" id="cell2" className="admin-statistics-table-body-cell">{adminStore.adminStatisticsDTO.diskSpaceInfo[i].available}</td>);
+			diskSpaceCell.push(<td key="cell3{i}" id="cell3" className="admin-statistics-table-body-cell">{adminStore.adminStatisticsDTO.diskSpaceInfo[i].used}</td>);
+			diskSpaceCell.push(<td key="cell4{i}" id="cell3" className="admin-statistics-table-body-cell">{adminStore.adminStatisticsDTO.diskSpaceInfo[i].total}</td>);
 			diskSpaceRows.push(<tr key={i} id={rowID} style={{borderBlockStyle: 'solid'}}>{diskSpaceCell}</tr>);
 	    }
 

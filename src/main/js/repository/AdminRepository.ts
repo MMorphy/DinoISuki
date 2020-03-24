@@ -9,6 +9,20 @@ class AdminRepository {
             });
     }
 
+	getTransactionDetails(username: string, transactionId: string, token: string): Promise<AxiosResponse> {
+        return axios.get(`/api/transactions/getTransactionDetails?username=${username}&transactionId=${transactionId}`,
+            {
+                headers: {'Authorization': `Bearer ${token}`}
+            });
+    }
+
+	deleteTransactionDetails(id: number, token: string): Promise<AxiosResponse> {
+        return axios.get(`/api/transactions/deleteTransactionDetails?id=${id}`,
+            {
+                headers: {'Authorization': `Bearer ${token}`}
+            });
+    }
+
 }
 
 const adminRepository = new AdminRepository();

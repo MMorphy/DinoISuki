@@ -2,6 +2,7 @@ import React from "react";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import AdminStatistics from "./AdminStatistics";
+import AdminTransactions from "./AdminTransactions";
 import adminStore from "../../store/AdminStore";
 import {observer} from "mobx-react";
 
@@ -14,7 +15,7 @@ export default class AdminHome extends React.Component<{}, {}> {
 					<TabList style={{paddingTop: '20px'}}>
 						<Tab>Statistike</Tab>
 						<Tab disabled>Pretplate</Tab>
-						<Tab disabled>Transakcije</Tab>
+						<Tab>Transakcije</Tab>
 				    </TabList>
 				
 				    <TabPanel>
@@ -24,7 +25,7 @@ export default class AdminHome extends React.Component<{}, {}> {
 						<h2>Admin pretplate</h2>
 				    </TabPanel>
 					<TabPanel>
-						<h2>Admin transakcije</h2>
+						<AdminTransactions/>
 				    </TabPanel>
 				</Tabs>
 				<br/>
@@ -34,5 +35,6 @@ export default class AdminHome extends React.Component<{}, {}> {
 
 	componentDidMount(): void {
         adminStore.getAdminStatistics();
+		adminStore.getTransactionDetails("", "");
     }
 }

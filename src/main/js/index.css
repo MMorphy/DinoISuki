@@ -527,3 +527,21 @@ h3 {
 }
 
 
+.admin-transactions-MDBDataTable {
+	color: white;
+}
+.admin-transactions-MDBDataTable table {
+	color: #f04e23;
+}
+.admin-transactions-MDBDataTable th {
+	border: 1px solid #f04e23;
+	border-bottom: 1px solid #f04e23!important;
+}
+.admin-transactions-MDBDataTable td {
+	border: 1px solid #f04e23;
+	border-bottom: 1px solid #f04e23!important;
+}
+.admin-transactions-MDBDataTable button {
+	border: 1px solid #212529!important;
+	color: white!important;
+}
