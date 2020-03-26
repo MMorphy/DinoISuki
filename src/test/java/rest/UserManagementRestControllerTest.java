@@ -7,12 +7,15 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertTrue;
 import static rest.RestControllerTestUtility.*;
 
-public class UserManagementRestControllerTest extends AbstractTest {
+public class UserManagementRestControllerTest {
 
     private String fakeJSON="{\"createdAt\":\"2019/11/24 00:00:00\",\"dateOfBirth\":\"1991/1/2\",\"username\":\"fake\",\"password\":\"fake\"}";
     private String brokenJSON="{\"createdAt\":\"2018-05-30T16:19:58\",\"dateOfBirth\":\"1994-10\",\"username\":\"miljenko\",\"password\":\"miljenkovasifra je ovo\",\"enabled\":\"\"}";
-    private String registerURL="/api/user/createUser";
-    private String loginURL="/api/user/login";
+    private String updateUserJSON="{\"createdAt\":\"2019-05-30T16:19:58.016Z\",\"dateOfBirth\":\"1990-01-01\",\"username\":\"defaultUser\",\"password\":\"thisIsThePassword\",\"enabled\":\"true\"}";
+
+
+    private String updateUserURL="/api/user/updateUser";
+
 
     @BeforeMethod
     public void setUp() {
@@ -107,7 +110,12 @@ public class UserManagementRestControllerTest extends AbstractTest {
         int result = postRequest(loginURL, defaultLoginJSON);
         assertTrue(result == statusSuccess);
     }
-    //TODO: provjere bez tokena!!!
+
+
+
+
+
+
 
 
 }

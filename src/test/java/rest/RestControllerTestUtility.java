@@ -12,7 +12,9 @@ public class RestControllerTestUtility {
     protected static int statusFail = 400;
     protected static int statusUnauthorized = 401;
     protected static String defaultLoginJSON="{\"username\":\"defaultUser\",\"password\":\"thisIsThePassword\"}";
+    protected static String loginURL="/api/user/login";
     protected static String registerJSON="{\"createdAt\":\"2018-05-30T16:19:58.016Z\",\"dateOfBirth\":\"1994-10-10\",\"username\":\"defaultUser\",\"password\":\"thisIsThePassword\",\"enabled\":\"false\"}";
+    protected static String registerURL="/api/user/createUser";
     protected static String token;
 
 
@@ -20,10 +22,8 @@ public class RestControllerTestUtility {
 
         System.out.println("Starting with setup");
         try{
-            postRequest("/api/user/register", registerJSON);
-            token = getToken("/api/user/login", defaultLoginJSON);
-
-
+            postRequest(registerURL, registerJSON);
+            token = getToken(loginURL, defaultLoginJSON);
         }catch (Exception e){
             System.out.println("Something went wrong :(");
             e.printStackTrace();

@@ -26,7 +26,12 @@
                     <!--<exclude name="deleteCameraTest"/>-->
                 <!--</methods>-->
             <!--</class>-->
-            <!--<class name="rest.MyUserRestControllerTest"/>-->
+            <class name="rest.UserManagementUpdateDeleteControllerTest">
+                <methods>
+                    <exclude name="doubleDeleteUserTest"/>
+                    <exclude name="getNonExistingUserTest"/>
+                </methods>
+            </class>
         </classes>
     </test>
 </suite>
