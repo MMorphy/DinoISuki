@@ -20,6 +20,8 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
 
 	Collection<Subscription> findBySubscriptionType_Name (String name);
 
+	Collection<Subscription> findByValid(boolean valid);
+
 	@Modifying
 	@Query("UPDATE Subscription s SET s.valid = FALSE WHERE s.validTo < DATE(?1) AND s.valid = TRUE")
 	void updateValidityByTime(Date date);

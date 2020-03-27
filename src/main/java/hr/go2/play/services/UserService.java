@@ -38,4 +38,6 @@ public interface UserService {
 
 	public abstract int countActiveUsers();
 
+	public abstract User findBySubscriptionId(Long subscriptionId);
+
 }

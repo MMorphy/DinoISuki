@@ -99,4 +99,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		return (List<SubscriptionStatistics>) subRepo.getSubscriptionStatistics();
 	}
 
+	@Override
+	public List<Subscription> findSubscriptionByValid(boolean valid) {
+		return (List<Subscription>) subRepo.findByValid(valid);
+	}
+
 }

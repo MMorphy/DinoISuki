@@ -85,6 +85,7 @@ public class SubscriptionRest {
 	@PostMapping("/saveSubscription")
 	public ResponseEntity<?> saveSubscription(@RequestBody SubscriptionDTO subscriptionDTO) {
 		logger.debug("/api/subscriptions/saveSubscription Started");
+		logger.debug("subscriptionDTO.getSubscriptionTypeName():" + subscriptionDTO.getSubscriptionTypeName());
 		User user = null;
 		if (subscriptionDTO.getUsername() == null || subscriptionDTO.getUsername().isEmpty()) {
 			return new ResponseEntity<>(commons.JSONfyReturnMessage("Username not provided"), HttpStatus.BAD_REQUEST);
@@ -200,6 +201,27 @@ public class SubscriptionRest {
 
 		logger.debug("/api/subscriptions/getInactiveSubscription Finished");
 		return new ResponseEntity<>(insubscriptionsDTOList, HttpStatus.OK);
+	}
+
+	/*
+	 * Description: Fetch all subscriptions
+	 * Call example: https://localhost:8443/api/subscriptions/getAllSubscriptions?active=false
+	 *
+	 */
+	@GetMapping("/getAllSubscriptions")
+	public ResponseEntity<?> getAllSubscriptions(@RequestParam(name = "active", required = false) boolean active) {
+		logger.debug("/api/subscriptions/getAllSubscriptions Started");
+		List<Subscription> subscriptions = new ArrayList<Subscription>();
+		if (active) {
+			subscriptions = subscriptionService.findSubscriptionByValid(true);
+		} else {
+			subscriptions = subscriptionService.findAllSubcscriptions();
+		}
+
+		List<SubscriptionDTO> subscriptionsDTOList = subscriptions.stream().map(subscription -> new SubscriptionDTO(subscription.getId(), subscription.isValid(), subscription.getValidFrom(), subscription.getValidTo(), subscription.getSubscriptionType().getName(), userService.findBySubscriptionId(subscription.getId()).getUsername())).collect(Collectors.toList());
+
+		logger.debug("/api/subscriptions/getAllSubscriptions Finished");
+		return new ResponseEntity<>(subscriptionsDTOList, HttpStatus.OK);
 	}
 
 	/*

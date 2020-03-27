@@ -12,6 +12,8 @@ public interface SubscriptionService {
 
 	public abstract Subscription findSubscriptionById(Long id);
 
+	public abstract List<Subscription> findSubscriptionByValid(boolean valid);
+
 	public abstract List<Subscription> findSubscriptionByValidFrom(Date validFrom);
 
 	public abstract List<Subscription> findSubscriptionByValidTo(Date validTo);

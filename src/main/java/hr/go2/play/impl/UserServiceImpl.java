@@ -244,4 +244,14 @@ public class UserServiceImpl implements UserService, org.springframework.securit
 	public int countActiveUsers() {
 		return userRepo.countActiveUsers();
 	}
+
+	@Override
+	public User findBySubscriptionId(Long subscriptionId) {
+		Optional<User> optionalUser = userRepo.findBySubscriptionId(subscriptionId);
+		if (optionalUser.isPresent()) {
+			return optionalUser.get();
+		} else {
+			return null;
+		}
+	}
 }

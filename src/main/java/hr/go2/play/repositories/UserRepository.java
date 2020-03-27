@@ -31,4 +31,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Query("SELECT COUNT(u.id) FROM User u WHERE u.enabled = TRUE")
 	int countActiveUsers();
+
+	@Query("SELECT u FROM User u JOIN u.subscriptions s WHERE s.id = ?1")
+	Optional<User> findBySubscriptionId(Long subscriptionId);
+
 }

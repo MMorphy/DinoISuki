@@ -545,3 +545,30 @@ h3 {
 	border: 1px solid #212529!important;
 	color: white!important;
 }
+
+.admin-subscription-active-check {
+	width: 100%;
+	height: 20px;
+	display: flex;
+	justify-content: flex-end;
+}
+.admin-subscription-active-checkbox {
+	margin: 6px;
+}
+.admin-subscription-form-width {
+    width: 500px;
+    margin: auto auto;
+}
+.admin-subscription-date-picker {
+	color: black;
+}
+.react-tabs__tab {
+	color: lightgray;
+}
+.dataTables_paginate li {
+	color: black;
+}
+.dataTables_paginate a {
+	cursor: pointer;
+}
+
