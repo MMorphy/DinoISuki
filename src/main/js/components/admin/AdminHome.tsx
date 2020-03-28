@@ -4,6 +4,7 @@ import 'react-tabs/style/react-tabs.css';
 import AdminStatistics from "./AdminStatistics";
 import AdminTransactions from "./AdminTransactions";
 import AdminSubscriptions from "./AdminSubscriptions";
+import AdminNotifications from "./AdminNotifications";
 import adminStore from "../../store/AdminStore";
 import {observer} from "mobx-react";
 
@@ -17,7 +18,7 @@ export default class AdminHome extends React.Component<{}, {}> {
 						<Tab>Statistike</Tab>
 						<Tab>Pretplate</Tab>
 						<Tab>Transakcije</Tab>
-						<Tab disabled>Notifikacije</Tab>
+						<Tab>Poruke</Tab>
 				    </TabList>
 				
 				    <TabPanel>
@@ -30,7 +31,7 @@ export default class AdminHome extends React.Component<{}, {}> {
 						<AdminTransactions/>
 				    </TabPanel>
 					<TabPanel>
-						<h5>Admin notifikacije</h5>
+						<AdminNotifications/>
 				    </TabPanel>
 				</Tabs>
 				<br/>

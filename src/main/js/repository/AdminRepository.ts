@@ -1,5 +1,6 @@
 import axios, {AxiosResponse} from 'axios';
 import SubscriptionDTO from '../model/SubscriptionDTO';
+import AdminNotificationDTO from '../model/AdminNotificationDTO';
 
 class AdminRepository {
 
@@ -51,6 +52,35 @@ class AdminRepository {
                 headers: {'Authorization': `Bearer ${token}`}
             });
     }
+
+	getNotifications(srcUser: string, destUser: string, token: string): Promise<AxiosResponse> {
+        return axios.get(`/api/notifications/getNotifications?srcUser=${srcUser}&destUser=${destUser}`,
+            {
+                headers: {'Authorization': `Bearer ${token}`}
+            });
+    }
+
+	deleteNotifications(notificationIdList: number[], token: string): Promise<AxiosResponse> {
+        return axios.get(`/api/notifications/deleteNotifications?notificationIdList=${notificationIdList}`,
+            {
+                headers: {'Authorization': `Bearer ${token}`}
+            });
+    }
+
+	addNotification(adminNotificationDTO: AdminNotificationDTO, token: string): Promise<AxiosResponse> {
+        return axios.post("/api/notifications/addNotification", adminNotificationDTO,
+            {
+                headers: {'Authorization': `Bearer ${token}`}
+            });
+    }
+
+	updateNotification(adminNotificationDTO: AdminNotificationDTO, token: string): Promise<AxiosResponse> {
+        return axios.post("/api/notifications/updateNotification", adminNotificationDTO,
+            {
+                headers: {'Authorization': `Bearer ${token}`}
+            });
+    }
+
 
 }
 

@@ -10,7 +10,7 @@ import DateTime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
 
 @observer
-export default class AdminSubscriptions extends React.Component<{}, {}> {
+export default class AdminSubscriptions extends React.Component<{}, {saveSubscriptionFinished: boolean}> {
 	constructor(props: any) {
     	super(props);
     	this.state = {
@@ -133,13 +133,13 @@ export default class AdminSubscriptions extends React.Component<{}, {}> {
 					validTo: validTo.toLocaleString(),
 					subscriptionTypeName: adminStore.subscriptionDTOList[i].subscriptionTypeName,
 					user: adminStore.subscriptionDTOList[i].username,
-					delete: <MDBBtn id={i} color="red" size="sm" onClick={() => this.delete()}>Obriši</MDBBtn>
+					delete: <MDBBtn className="admin-table-button" id={i} color="red" size="sm" onClick={() => this.delete()}>Obriši</MDBBtn>
 				}
 			)
 		}
 
 		// combined columns and rows for subscriptions data
-		const subscriptinData = {
+		const subscriptionData = {
 		    columns,
 		    rows
 		};
@@ -191,7 +191,7 @@ export default class AdminSubscriptions extends React.Component<{}, {}> {
 								entriesLabel="Prikaži pretplata"
 								searchLabel="Pronađi..."
 								tbodyTextWhite
-								data={subscriptinData}
+								data={subscriptionData}
 						    />
 	                    </div>
 	                </Card.Body>
@@ -250,7 +250,6 @@ export default class AdminSubscriptions extends React.Component<{}, {}> {
 			                    </FormGroup>
 
 								{
-									// @ts-ignore
 				                    (this.state.saveSubscriptionFinished && !adminStore.successfulSubscriptionSave)
 				                        ? 	<div className="updateErrorMessage">
                 								<b>Pogreška kod unosa pretplate Tekst pogreške:</b>
@@ -259,7 +258,6 @@ export default class AdminSubscriptions extends React.Component<{}, {}> {
 				                        : <div/>
 				                }
 								{
-									// @ts-ignore
 				                    (this.state.saveSubscriptionFinished && adminStore.successfulSubscriptionSave)
 				                        ? 	<div className="updateErrorMessage">
                 								<b>Pretplata uspješno unesena!</b>
@@ -274,7 +272,7 @@ export default class AdminSubscriptions extends React.Component<{}, {}> {
         );
     }
 
-	componentDidMount(): void {
+	componentWillMount(): void {
 		adminStore.getAllSubscriptions(adminStore.displayOnlyActiveSubscriptins);
 		adminStore.getSubscriptionTypes();
 		// setting up predefined data for new subscription input

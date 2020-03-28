@@ -556,7 +556,7 @@ h3 {
 	margin: 6px;
 }
 .admin-subscription-form-width {
-    width: 500px;
+    width: 490px;
     margin: auto auto;
 }
 .admin-subscription-date-picker {
@@ -571,4 +571,12 @@ h3 {
 .dataTables_paginate a {
 	cursor: pointer;
 }
-
+.admin-notifications-modal-footer {
+	display: unset;
+}
+.admin-notifications-modal-footer-cancel-button {
+	float: right;
+}
+.admin-table-button {
+	background-color: #f04e23;
+}

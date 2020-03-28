@@ -74,7 +74,7 @@ public class NotificationRest {
 	}
 
 	/*
-	 * Description: Fetch notifications Filtering options: by parts of subject or message 
+	 * Description: Fetch notifications Filtering options: by parts of subject or message
 	 * Call example:
 	 * https://localhost:8443/api/notifications/searchBySubjectOrMessage?message=dd
 	 *
@@ -110,6 +110,10 @@ public class NotificationRest {
 	@PostMapping("/addNotification")
 	public ResponseEntity<?> addNotification(@RequestBody NotificationDTO notificationDTO) {
 		logger.debug("/api/notifications/addNotification Started");
+		String error = checkNotification(notificationDTO);
+		if (error != null) {
+			return new ResponseEntity<>(commons.JSONfyReturnMessage(error), HttpStatus.BAD_REQUEST);
+		}
 		Notification notification = getNotificationFromNotificationDTO(notificationDTO);
 		notification.setId(null);
 		notificationService.saveNotification(notification);
@@ -137,6 +141,10 @@ public class NotificationRest {
 	@PostMapping("/updateNotification")
 	public ResponseEntity<?> updateNotification(@RequestBody NotificationDTO notificationDTO) {
 		logger.debug("/api/notifications/updateNotification Started");
+		String error = checkNotification(notificationDTO);
+		if (error != null) {
+			return new ResponseEntity<>(commons.JSONfyReturnMessage(error), HttpStatus.BAD_REQUEST);
+		}
 		Notification notification = getNotificationFromNotificationDTO(notificationDTO);
 		notificationService.updateNotification(notification);
 		logger.debug("/api/notifications/updateNotification Finished");
@@ -160,6 +168,29 @@ public class NotificationRest {
 
 		Notification notification = new Notification(notificationDTO.getId(), createdAt, srcUser, destUser, notificationDTO.getSubject(), notificationDTO.getMessage(), notificationStatusList.isEmpty() ? null : notificationStatusList.get(0));
 		return notification;
+	}
+
+	private String checkNotification(NotificationDTO notificationDTO) {
+		if (notificationDTO.getSrcUser() == null || notificationDTO.getSrcUser().isEmpty()) {
+			return "Src user not provided";
+		}
+		User srcUser = userService.findUserByUsername(notificationDTO.getSrcUser());
+		if (srcUser == null) {
+			return "Invalid src user provided";
+		}
+		if (notificationDTO.getDestUser() != null && !notificationDTO.getDestUser().isEmpty()) {
+			User destUser = userService.findUserByUsername(notificationDTO.getDestUser());
+			if (destUser == null) {
+				return "Invalid dest user provided";
+			}
+		}
+		if (notificationDTO.getSubject() == null || notificationDTO.getSubject().isEmpty()) {
+			return "No subject provided";
+		}
+		if (notificationDTO.getMessage() == null || notificationDTO.getMessage().isEmpty()) {
+			return "No message body provided";
+		}
+		return null;
 	}
 
 	/*

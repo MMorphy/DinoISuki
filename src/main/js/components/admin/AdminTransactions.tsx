@@ -69,7 +69,7 @@ export default class AdminTransactions extends React.Component<{}, {}> {
 					transactionId: adminStore.transactionDetailsDTO[i].transactionId,
 					timestamp: timestamp.toLocaleString(),
 					transactionStatus: adminStore.transactionDetailsDTO[i].transactionStatus,
-					delete: <MDBBtn id={i} color="red" size="sm" onClick={() => this.delete()}>Obriši</MDBBtn>
+					delete: <MDBBtn className="admin-table-button" id={i} color="red" size="sm" onClick={() => this.delete()}>Obriši</MDBBtn>
 				}
 			)
 		}
