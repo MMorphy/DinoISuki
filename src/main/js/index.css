@@ -526,6 +526,9 @@ h3 {
     }
 }
 
+div.scroll-horizontal > div {
+    transform: none!important;
+}
 
 .admin-transactions-MDBDataTable {
 	color: white;
