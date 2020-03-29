@@ -69,7 +69,11 @@ export default class AdminTransactions extends React.Component<{}, {}> {
 					transactionId: adminStore.transactionDetailsDTO[i].transactionId,
 					timestamp: timestamp.toLocaleString(),
 					transactionStatus: adminStore.transactionDetailsDTO[i].transactionStatus,
-					delete: <MDBBtn className="admin-table-button" id={i} color="red" size="sm" onClick={() => this.delete()}>Obriši</MDBBtn>
+					delete: <div className="admin-table-button-div">
+								<MDBBtn bs-style="primary" size="sm" className="admin-table-button" id={i} color="red" onClick={() => this.delete()}>
+									<i id={i.toString()} className="fas fa-trash"></i>
+	                            </MDBBtn>
+							</div>
 				}
 			)
 		}
@@ -97,6 +101,8 @@ export default class AdminTransactions extends React.Component<{}, {}> {
 						</div>
 	                    <div className="row">
 							<MDBDataTable className="admin-transactions-MDBDataTable"
+								autoWidth
+								reponsive
 								striped
 								bordered
 								small
@@ -114,6 +120,10 @@ export default class AdminTransactions extends React.Component<{}, {}> {
 	            </Card>
             </div>
         );
+    }
+
+	componentDidMount(): void {
+		adminStore.getTransactionDetails("", "");
     }
 
 }

@@ -168,6 +168,8 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 						</div>
 	                    <div className="row">
 							<MDBDataTable className="admin-transactions-MDBDataTable"
+								autoWidth
+								reponsive
 								striped
 								bordered
 								small

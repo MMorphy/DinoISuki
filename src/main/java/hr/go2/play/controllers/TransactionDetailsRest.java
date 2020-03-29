@@ -122,6 +122,10 @@ public class TransactionDetailsRest {
 		Optional<TransactionDetails> existingTransaction = transactionDetailsService.findByTransactionId(transactionDetailsDTO.getTransactionId());
 		if (existingTransaction.isPresent()) {
 			transactionDetailsDTO.setTransactionId(transactionDetailsDTO.getTransactionId() + "-" + transactionDetailsDTO.getTimestamp().getTime());
+			existingTransaction = transactionDetailsService.findByTransactionId(transactionDetailsDTO.getTransactionId());
+			if (existingTransaction.isPresent()) {
+				transactionDetailsDTO.setTransactionId(transactionDetailsDTO.getTransactionId() + "-" + (new Date()).getTime());
+			}
 		}
 
 		TransactionDetails transactionDetails = mapper.map(transactionDetailsDTO, TransactionDetails.class);

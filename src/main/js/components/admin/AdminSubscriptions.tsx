@@ -16,6 +16,7 @@ export default class AdminSubscriptions extends React.Component<{}, {saveSubscri
     	this.state = {
 			saveSubscriptionFinished: false
 		};
+		this.saveSubscription = this.saveSubscription.bind(this);
 	}
 	
 	delete = async () => {
@@ -29,7 +30,7 @@ export default class AdminSubscriptions extends React.Component<{}, {saveSubscri
 				await adminStore.getAllSubscriptions(adminStore.displayOnlyActiveSubscriptins);	// does not return a Promise (void)
 				this.forceUpdate();
 			}
-		}
+		} 
   	};
 	
 	onlyActiveChange = async () => {
@@ -133,7 +134,11 @@ export default class AdminSubscriptions extends React.Component<{}, {saveSubscri
 					validTo: validTo.toLocaleString(),
 					subscriptionTypeName: adminStore.subscriptionDTOList[i].subscriptionTypeName,
 					user: adminStore.subscriptionDTOList[i].username,
-					delete: <MDBBtn className="admin-table-button" id={i} color="red" size="sm" onClick={() => this.delete()}>Obriši</MDBBtn>
+					delete: <div className="admin-table-button-div">
+								<MDBBtn bs-style="primary" size="sm" className="admin-table-button" id={i} color="red" onClick={() => this.delete()}>
+									<i id={i.toString()} className="fas fa-trash"></i>
+	                            </MDBBtn>
+							</div>
 				}
 			)
 		}
@@ -272,7 +277,7 @@ export default class AdminSubscriptions extends React.Component<{}, {saveSubscri
         );
     }
 
-	componentWillMount(): void {
+	componentDidMount(): void {
 		adminStore.getAllSubscriptions(adminStore.displayOnlyActiveSubscriptins);
 		adminStore.getSubscriptionTypes();
 		// setting up predefined data for new subscription input

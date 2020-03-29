@@ -580,3 +580,9 @@ h3 {
 .admin-table-button {
 	background-color: #f04e23;
 }
+.admin-table-button-div {
+	text-align: center;
+}
+.col-md-5 {
+	max-width: 35%;
+}

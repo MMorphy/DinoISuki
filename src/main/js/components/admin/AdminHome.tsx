@@ -5,12 +5,17 @@ import AdminStatistics from "./AdminStatistics";
 import AdminTransactions from "./AdminTransactions";
 import AdminSubscriptions from "./AdminSubscriptions";
 import AdminNotifications from "./AdminNotifications";
-import adminStore from "../../store/AdminStore";
 import {observer} from "mobx-react";
+import {History, LocationState} from "history";
+
+interface AdminHomeProps {
+    history: History<LocationState>;
+}
 
 @observer
-export default class AdminHome extends React.Component<{}, {}> {
+export default class AdminHome extends React.Component<AdminHomeProps, {}> {
     render() {
+		document.title = "Postavke";
         return (
             <div className="about-go2play-margin">
 				<Tabs className="reactTabs">
@@ -38,10 +43,10 @@ export default class AdminHome extends React.Component<{}, {}> {
             </div>
         );
     }
-
+	
 	componentDidMount(): void {
-        adminStore.getAdminStatistics();
-		adminStore.getTransactionDetails("", "");
-		// adminStore.getAllSubscriptions(false);
+        if (!sessionStorage.getItem('username')) {
+            this.props.history.push("/login");
+        }
     }
 }
