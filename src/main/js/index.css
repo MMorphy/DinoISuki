@@ -586,3 +586,18 @@ h3 {
 .col-md-5 {
 	max-width: 35%;
 }
+.reactTabs {
+	font-size: smaller;
+}
+.page-link {
+	padding: .4rem .55rem!important;
+}
+.pagination {
+	float: right!important;
+}
+.dataTables_filter {
+	float: right!important;
+}
+.dataTables_length label {
+	display: none;
+}
