@@ -3,6 +3,7 @@ package hr.go2.play.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +28,12 @@ public class LocationServiceImplTests {
 	@Autowired
 	private LocationServiceImpl locationService;
 
+	@Autowired
+	private FieldServiceImpl fieldService;
+
+	@Autowired
+	private WorkingHoursServiceImpl workingHoursService;
+
 	private Location location = new Location();
 	private User user = new User();
 	private WorkingHours wh = new WorkingHours();
@@ -35,13 +42,17 @@ public class LocationServiceImplTests {
 
 	@Before
 	public void init() {
+		field = fieldService.saveField(field);
 		fields.add(field);
 
 		wh.setFromTime(new Date());
 		wh.setToTime(new Date());
+		wh = workingHoursService.saveWorkingHours(wh);
+		Collection<WorkingHours> hours = new ArrayList<WorkingHours>();
+		hours.add(wh);
 
 		location.setAddress("Zagreb, Krapinska 12");
-		// location.setHours(wh);
+		location.setHours(hours);
 		location.setFields(fields);
 		location.setName("Rudes");
 
