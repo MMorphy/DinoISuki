@@ -5,7 +5,6 @@ import AdminStatisticsDTO from "../model/AdminStatisticsDTO";
 import TransactionDetailsDTO from "../model/TransactionDetailsDTO";
 import SubscriptionDTO from "../model/SubscriptionDTO";
 import AdminSubscriptionTypesDTO from "../model/AdminSubscriptionTypesDTO";
-import AdminNotificationDTO from "../model/AdminNotificationDTO";
 
 
 class AdminStore {
@@ -19,12 +18,7 @@ class AdminStore {
 	@observable adminSubscriptionTypesDTO: AdminSubscriptionTypesDTO[] = [];
 	@observable successfulSubscriptionSave: boolean = true;
 	@observable subscriptionSaveErrorMessage: string = '';
-	@observable adminNotificationDTOList: AdminNotificationDTO[] = [];
-	@observable successfulNotificationsDelete: boolean = true;
 	@observable responseErrorMessage: string = '';
-	@observable successfulNotificationSave: boolean = true;
-	@observable newNotification: AdminNotificationDTO = new AdminNotificationDTO();
-	@observable editNotification: AdminNotificationDTO = new AdminNotificationDTO();
 
     getAdminStatistics() {
         adminRepository.getAdminStatistics(sessionStorage.getItem('token')!)
@@ -105,61 +99,6 @@ class AdminStore {
 		return this.successfulSubscriptionSave;
     }
 
-	getNotifications(srcUser: string, destUser: string) {
-        adminRepository.getNotifications(srcUser, destUser, sessionStorage.getItem('token')!)
-            .then(action((response: AxiosResponse) => {
-            	this.adminNotificationDTOList = response.data;
-            }))
-			.catch(action(() => {
-                this.adminNotificationDTOList = [];
-            }));
-    }
-
-	async deleteNotifications(notificationIdList: number[]) {
-        await adminRepository.deleteNotifications(notificationIdList, sessionStorage.getItem('token')!)
-            .then(action((response: AxiosResponse) => {
-            	this.successfulNotificationsDelete = true;
-            }))
-			.catch(action((error: AxiosError) => {
-				if(error.response) {
-					this.responseErrorMessage = error.response.data.message;
-				}
-                this.successfulNotificationsDelete = false;
-            }));
-		return this.successfulNotificationsDelete;
-    }
-
-	@action
-	async addNotification(adminNotificationDTO: AdminNotificationDTO) {
-        await adminRepository.addNotification(adminNotificationDTO, sessionStorage.getItem('token')!)
-            .then(action((response: AxiosResponse) => {
-            	this.successfulNotificationSave = true;
-            }))
-			.catch(action((error: AxiosError) => {
-				if(error.response) {
-					this.responseErrorMessage = error.response.data.message;
-				}
-                this.successfulNotificationSave = false;
-            }));
-		return this.successfulNotificationSave;
-    }
-
-	@action
-	async updateNotification(adminNotificationDTO: AdminNotificationDTO) {
-        await adminRepository.updateNotification(adminNotificationDTO, sessionStorage.getItem('token')!)
-            .then(action((response: AxiosResponse) => {
-            	this.successfulNotificationSave = true;
-            }))
-			.catch(action((error: AxiosError) => {
-				if(error.response) {
-					this.responseErrorMessage = error.response.data.message;
-				}
-                this.successfulNotificationSave = false;
-            }));
-		return this.successfulNotificationSave;
-    }
-
-
 
 	/*** Util functions ***/
 	@action
@@ -171,23 +110,6 @@ class AdminStore {
     newSubscriptionHolder(value: any, key: string) {
         // @ts-ignore
         this.newSubscription[key] = value;
-    }
-
-	@action
-    newNotificationHolder(value: any, key: string) {
-        // @ts-ignore
-        this.newNotification[key] = value;
-    }
-
-	@action
-    editNotificationHolder(value: any, key: string) {
-        // @ts-ignore
-        this.editNotification[key] = value;
-    }
-
-	@action
-    setEditNotification(editNotification: AdminNotificationDTO) {
-        this.editNotification = editNotification;
     }
 
     

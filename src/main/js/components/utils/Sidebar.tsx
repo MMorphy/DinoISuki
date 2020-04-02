@@ -34,6 +34,13 @@ export default class Sidebar extends React.Component<{}, {}> {
                             ? <Link className="font-color" to="/myprofile" onClick={() => appStore.changeSidebarVisibility()}><h5 id="myprofile">Moj profil</h5></Link>
                             : <div/>
                     }
+					{
+						(sessionStorage.getItem('token')) 
+							? (userStore.hasUnreadMessages)
+		                        ? <Link className="font-color" to="/usernotifications" onClick={() => appStore.changeSidebarVisibility()}><h5 className="usernotifications" id="usernotifications">Poruke</h5><i className="fas fa-circle sidebar-notification-dot"></i></Link>
+								: <Link className="font-color" to="/usernotifications" onClick={() => appStore.changeSidebarVisibility()}><h5 id="usernotifications">Poruke</h5></Link>
+							: <div/>
+	                }
                     {
                         (!sessionStorage.getItem('token'))
                             ? <Link className="font-color" to="/login" onClick={() => appStore.changeSidebarVisibility()}><h5 id="login">Prijava</h5></Link>
@@ -63,6 +70,7 @@ export default class Sidebar extends React.Component<{}, {}> {
     }
 
     private logout() {
+		userStore.setHasUnreadMessages(false);
         userStore.clearSessionStorage();
         appStore.changeSidebarVisibility();
     }

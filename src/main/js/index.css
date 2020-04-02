@@ -604,3 +604,10 @@ div.scroll-horizontal > div {
 .dataTables_length label {
 	display: none;
 }
+.sidebar-notification-dot {
+	color: red;
+	transform: scale(0.4);
+}
+.usernotifications {
+	float: left;
+}

@@ -11,6 +11,7 @@ import CustomNavbar from "./utils/CustomNavbar";
 import Sidebar from "./utils/Sidebar";
 import AboutGo2Play from "./about/AboutGo2Play";
 import AdminHome from "./admin/AdminHome";
+import UserNotifications from "./usernotifications/UserNotifications";
 
 
 export default class App extends React.Component<{}, {}> {
@@ -30,6 +31,7 @@ export default class App extends React.Component<{}, {}> {
                         <Route path="/register" component={Registration}/>
                         <Route path="/about" component={AboutGo2Play}/>
 						<Route path="/admin" component={AdminHome}/>
+						<Route path="/usernotifications" component={UserNotifications}/>
                     </Switch>
                 </div>
             </HashRouter>

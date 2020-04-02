@@ -1,7 +1,7 @@
 import React from "react";
 import {observer} from "mobx-react";
 import { MDBDataTable, MDBBtn } from 'mdbreact';
-import adminStore from "../../store/AdminStore";
+import notificationsStore from "../../store/NotificationsStore";
 import {Card, Button, Col, Form, FormControl, FormGroup, FormLabel} from "react-bootstrap";
 import ErrorMessage from "../utils/ErrorMessage";
 import 'react-dropdown/style.css';
@@ -23,7 +23,7 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 	showEditMessageDialog = async () => {
 		if(event !== undefined && event.srcElement !== null) {
 			// @ts-ignore
-			adminStore.setEditNotification(adminStore.adminNotificationDTOList[event.srcElement.id]);
+			notificationsStore.setEditNotification(notificationsStore.adminNotificationDTOList[event.srcElement.id]);
 			this.setState({
 		    	modalVisible: true
 		    });
@@ -31,12 +31,12 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 	};
 	
 	deleteNotification = async () => {
-		const notificationId: number = adminStore.editNotification.id;
+		const notificationId: number = notificationsStore.editNotification.id;
 		const notificationIdList: number[] = [];
 		notificationIdList.push(notificationId);
-		let deleted: boolean = await adminStore.deleteNotifications(notificationIdList);
+		let deleted: boolean = await notificationsStore.deleteNotifications(notificationIdList);
 		if(deleted) {
-			await adminStore.getNotifications('', '');	// does not return a Promise (void)
+			await notificationsStore.getNotifications('', '');	// does not return a Promise (void)
 		}
 		this.onModalClose();
   	};
@@ -45,16 +45,16 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 		this.setState({
 	      saveNotificationFinished: false
 	    });
-		adminStore.newNotificationHolder(new Date(), "createdAt");
-		const success: boolean = await adminStore.addNotification(adminStore.newNotification);
+		notificationsStore.newNotificationHolder(new Date(), "createdAt");
+		const success: boolean = await notificationsStore.addNotification(notificationsStore.newNotification);
 		this.setState({
 	      saveNotificationFinished: true
 	    });
 		if(success) {
-			await adminStore.getNotifications('', '');
-			adminStore.newNotificationHolder('', "destUser");
-			adminStore.newNotificationHolder('', "subject");
-			adminStore.newNotificationHolder('', "message");
+			await notificationsStore.getNotifications('', '');
+			notificationsStore.newNotificationHolder('', "destUser");
+			notificationsStore.newNotificationHolder('', "subject");
+			notificationsStore.newNotificationHolder('', "message");
 		}
 		this.onModalClose();
 	}
@@ -63,12 +63,12 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 		this.setState({
 	      editNotificationFinished: false
 	    });
-		const success: boolean = await adminStore.updateNotification(adminStore.editNotification);
+		const success: boolean = await notificationsStore.updateNotification(notificationsStore.editNotification);
 		this.setState({
 	      editNotificationFinished: true
 	    });
 		if(success) {
-			await adminStore.getNotifications('', '');
+			await notificationsStore.getNotifications('', '');
 		}
 	}
 
@@ -123,22 +123,22 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
       	}
 		];
 		const rows = [];
-		for (var i = 0; i < adminStore.adminNotificationDTOList.length; i++){
-			let createdAtStr: string = adminStore.adminNotificationDTOList[i].createdAt.toString();
+		for (var i = 0; i < notificationsStore.adminNotificationDTOList.length; i++){
+			let createdAtStr: string = notificationsStore.adminNotificationDTOList[i].createdAt.toString();
 			let createdAt: Date = new Date(createdAtStr.substring(0, createdAtStr.indexOf('.')) + 'Z');
-			let messageStr: string = adminStore.adminNotificationDTOList[i].message;
+			let messageStr: string = notificationsStore.adminNotificationDTOList[i].message;
 			if(messageStr.length > 40) {
 				messageStr = messageStr.substr(0, 37) + '...';
 			}
 			rows.push(
 				{
-					id: adminStore.adminNotificationDTOList[i].id,
+					id: notificationsStore.adminNotificationDTOList[i].id,
 					createdAt: createdAt.toLocaleString(),
-					srcUser: adminStore.adminNotificationDTOList[i].srcUser,
-					destUser: adminStore.adminNotificationDTOList[i].destUser,
-					subject: adminStore.adminNotificationDTOList[i].subject,
+					srcUser: notificationsStore.adminNotificationDTOList[i].srcUser,
+					destUser: notificationsStore.adminNotificationDTOList[i].destUser,
+					subject: notificationsStore.adminNotificationDTOList[i].subject,
 					body: messageStr,
-					notificationType: adminStore.adminNotificationDTOList[i].notificationType,
+					notificationType: notificationsStore.adminNotificationDTOList[i].notificationType,
 					view: <MDBBtn className="admin-table-button" id={i} color="cyan" size="sm" onClick={() => this.showEditMessageDialog()}>Detalji</MDBBtn>
 				}
 			)
@@ -161,8 +161,8 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 	                <Card.Body>
 						<div>
 						{
-		                    !adminStore.transactionDeleteSuccessfull
-		                        ? <ErrorMessage errorMessage="Pogreška kod brisanja pretplate" loginButton={false}/>
+		                    !notificationsStore.successfulNotificationsDelete
+		                        ? <ErrorMessage errorMessage="Pogreška kod brisanja poruke" loginButton={false}/>
 		                        : <div/>
 		                }
 						</div>
@@ -198,7 +198,7 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 			                            <FormLabel><h5 className="font-color font-size">Za korisnika</h5></FormLabel>
 			                        </Col>
 			                        <Col>
-			                            <FormControl value={adminStore.newNotification.destUser} type="username" onChange={(e: any) => adminStore.newNotificationHolder(e.target.value, "destUser")}/>
+			                            <FormControl value={notificationsStore.newNotification.destUser} type="username" onChange={(e: any) => notificationsStore.newNotificationHolder(e.target.value, "destUser")}/>
 			                        </Col>
 			                    </FormGroup>
 								<FormGroup>
@@ -206,7 +206,7 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 			                            <FormLabel><h5 className="font-color font-size">Naslov</h5></FormLabel>
 			                        </Col>
 			                        <Col>
-			                            <FormControl value={adminStore.newNotification.subject} onChange={(e: any) => adminStore.newNotificationHolder(e.target.value, "subject")}/>
+			                            <FormControl value={notificationsStore.newNotification.subject} onChange={(e: any) => notificationsStore.newNotificationHolder(e.target.value, "subject")}/>
 			                        </Col>
 			                    </FormGroup>
 								<FormGroup>
@@ -214,7 +214,7 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 			                            <FormLabel><h5 className="font-color font-size">Poruka</h5></FormLabel>
 			                        </Col>
 			                        <Col>
-			                            <FormControl as="textarea" rows="3" value={adminStore.newNotification.message} onChange={(e: any) => adminStore.newNotificationHolder(e.target.value, "message")}/>
+			                            <FormControl as="textarea" rows="3" value={notificationsStore.newNotification.message} onChange={(e: any) => notificationsStore.newNotificationHolder(e.target.value, "message")}/>
 			                        </Col>
 			                    </FormGroup>
 							
@@ -225,15 +225,15 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 			                    </FormGroup>
 
 								{
-				                    (this.state.saveNotificationFinished && !adminStore.successfulNotificationSave)
+				                    (this.state.saveNotificationFinished && !notificationsStore.successfulNotificationSave)
 				                        ? 	<div className="updateErrorMessage">
                 								<b>Pogreška kod unosa poruke - tekst pogreške:</b>
-												<p>{adminStore.responseErrorMessage}</p>
+												<p>{notificationsStore.responseErrorMessage}</p>
 											</div>
 				                        : <div/>
 				                }
 								{
-				                    (this.state.saveNotificationFinished && adminStore.successfulNotificationSave)
+				                    (this.state.saveNotificationFinished && notificationsStore.successfulNotificationSave)
 				                        ? 	<div className="updateErrorMessage">
                 								<b>Poruka uspješno unesena!</b>
 											</div>
@@ -255,7 +255,7 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 		                            <FormLabel><h5 className="font-color font-size">Za korisnika</h5></FormLabel>
 		                        </Col>
 		                        <Col>
-		                            <FormControl value={adminStore.editNotification.destUser} type="username" onChange={(e: any) => adminStore.editNotificationHolder(e.target.value, "destUser")}/>
+		                            <FormControl value={notificationsStore.editNotification.destUser} type="username" onChange={(e: any) => notificationsStore.editNotificationHolder(e.target.value, "destUser")}/>
 		                        </Col>
 		                    </FormGroup>
 							<FormGroup>
@@ -263,7 +263,7 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 		                            <FormLabel><h5 className="font-color font-size">Naslov</h5></FormLabel>
 		                        </Col>
 		                        <Col>
-		                            <FormControl value={adminStore.editNotification.subject} onChange={(e: any) => adminStore.editNotificationHolder(e.target.value, "subject")}/>
+		                            <FormControl value={notificationsStore.editNotification.subject} onChange={(e: any) => notificationsStore.editNotificationHolder(e.target.value, "subject")}/>
 		                        </Col>
 		                    </FormGroup>
 							<FormGroup>
@@ -271,20 +271,20 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 		                            <FormLabel><h5 className="font-color font-size">Poruka</h5></FormLabel>
 		                        </Col>
 		                        <Col>
-		                            <FormControl as="textarea" rows="3" value={adminStore.editNotification.message} onChange={(e: any) => adminStore.editNotificationHolder(e.target.value, "message")}/>
+		                            <FormControl as="textarea" rows="3" value={notificationsStore.editNotification.message} onChange={(e: any) => notificationsStore.editNotificationHolder(e.target.value, "message")}/>
 		                        </Col>
 		                    </FormGroup>
 						
 							{
-			                    (this.state.editNotificationFinished && !adminStore.successfulNotificationSave)
+			                    (this.state.editNotificationFinished && !notificationsStore.successfulNotificationSave)
 			                        ? 	<div className="updateErrorMessage">
 	        								<b>Pogreška kod spremanja poruke - tekst pogreške:</b>
-											<p>{adminStore.responseErrorMessage}</p>
+											<p>{notificationsStore.responseErrorMessage}</p>
 										</div>
 			                        : <div/>
 			                }
 							{
-			                    (this.state.editNotificationFinished && adminStore.successfulNotificationSave)
+			                    (this.state.editNotificationFinished && notificationsStore.successfulNotificationSave)
 			                        ? 	<div className="updateErrorMessage">
 	        								<b>Poruka je uspješno pohranjena</b>
 										</div>
@@ -304,10 +304,10 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
     }
 
 	componentWillMount(): void {
-		adminStore.getNotifications('', '');
+		notificationsStore.getNotifications('', '');
 		// settitng default values for new notification
-		adminStore.newNotificationHolder(sessionStorage.getItem('username'), "srcUser");
-		adminStore.newNotificationHolder('UNREAD', "notificationType");
+		notificationsStore.newNotificationHolder(sessionStorage.getItem('username'), "srcUser");
+		notificationsStore.newNotificationHolder('UNREAD', "notificationType");
     }
 
 	@action

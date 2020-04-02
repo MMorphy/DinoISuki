@@ -68,8 +68,10 @@ export default class Login extends React.Component<LoginProps, {}>  {
 
     private login(e: any) {
         e.preventDefault();
+		
         userStore.login()
-            .then(() => {
+            .then(async () => {
+				userStore.getUserNotifications(userStore.userLoginDto.username);
                 this.props.history.push("/");
             })
             .catch(action(() => {

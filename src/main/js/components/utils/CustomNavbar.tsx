@@ -4,6 +4,7 @@ import {Button, Navbar} from "react-bootstrap";
 import appStore from "../../store/AppStore";
 // @ts-ignore
 import image from "../../../resources/images/logo.png";
+import userStore from "../../store/UserStore";
 
 @observer
 export default class CustomNavbar extends React.Component<{}, {}> {
@@ -15,7 +16,12 @@ export default class CustomNavbar extends React.Component<{}, {}> {
                         <div className="column sidebar-left">
                             <div className="button-padding">
                                 <Button bs-style="primary" size="lg" className="button-color" onClick={() => appStore.changeSidebarVisibility()}>
-                                    <i className="fas fa-bars"></i>
+									<i className="fas fa-bars"></i>
+									{
+					                    userStore.hasUnreadMessages
+					                        ? <i className="fas fa-circle sidebar-notification-dot"></i>
+											: <div/>
+					                }
                                 </Button>
                             </div>
                         </div>
