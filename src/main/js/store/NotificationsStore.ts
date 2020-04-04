@@ -10,6 +10,8 @@ class NotificationsStore {
 	@observable successfulNotificationSave: boolean = true;
 	@observable newNotification: AdminNotificationDTO = new AdminNotificationDTO();
 	@observable editNotification: AdminNotificationDTO = new AdminNotificationDTO();
+	@observable userNotificationDTOList: AdminNotificationDTO[] = [];
+	@observable hasUnreadMessages: boolean = false;
 
 	getNotifications(srcUser: string, destUser: string) {
         adminRepository.getNotifications(srcUser, destUser, sessionStorage.getItem('token')!)
@@ -67,6 +69,27 @@ class NotificationsStore {
 		return this.successfulNotificationSave;
     }
 
+	async getUserNotifications(username: string) {
+		await adminRepository.getNotifications('', username, sessionStorage.getItem('token')!)
+            .then(action((response: AxiosResponse) => {
+            	this.userNotificationDTOList = response.data;
+            }))
+			.catch(action(() => {
+                this.userNotificationDTOList = [];
+            }));
+		this.setHasUnreadMessages(false);
+		const tempUserNotificationDTOList: AdminNotificationDTO[] = [];
+		for (var i = 0; i < this.userNotificationDTOList.length; i++){
+			if(this.userNotificationDTOList[i].notificationType === 'unread' || this.userNotificationDTOList[i].notificationType === 'UNREAD') {
+				this.setHasUnreadMessages(true);
+			}
+			if(this.userNotificationDTOList[i].notificationType !== 'deleted' && this.userNotificationDTOList[i].notificationType !== 'DELETED') {
+				tempUserNotificationDTOList.push(this.userNotificationDTOList[i]);
+			}
+		}
+		this.setUserNotificationDTOList(tempUserNotificationDTOList);
+	}
+
 
 	/*** Util functions ***/
 	@action
@@ -84,6 +107,16 @@ class NotificationsStore {
 	@action
     setEditNotification(editNotification: AdminNotificationDTO) {
         this.editNotification = editNotification;
+    }
+
+	@action
+	setHasUnreadMessages(hasUnreadMessages: boolean) {
+		this.hasUnreadMessages = hasUnreadMessages;
+	}
+	
+	@action
+    private setUserNotificationDTOList(userNotificationDTOList: AdminNotificationDTO[]) {
+        this.userNotificationDTOList = userNotificationDTOList;
     }
     
 }

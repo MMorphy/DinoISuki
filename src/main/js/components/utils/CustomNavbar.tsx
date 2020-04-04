@@ -4,7 +4,8 @@ import {Button, Navbar} from "react-bootstrap";
 import appStore from "../../store/AppStore";
 // @ts-ignore
 import image from "../../../resources/images/logo.png";
-import userStore from "../../store/UserStore";
+import notificationsStore from "../../store/NotificationsStore";
+
 
 @observer
 export default class CustomNavbar extends React.Component<{}, {}> {
@@ -18,7 +19,7 @@ export default class CustomNavbar extends React.Component<{}, {}> {
                                 <Button bs-style="primary" size="lg" className="button-color" onClick={() => appStore.changeSidebarVisibility()}>
 									<i className="fas fa-bars"></i>
 									{
-					                    userStore.hasUnreadMessages
+					                    notificationsStore.hasUnreadMessages
 					                        ? <i className="fas fa-circle sidebar-notification-dot"></i>
 											: <div/>
 					                }

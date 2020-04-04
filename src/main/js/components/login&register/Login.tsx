@@ -7,6 +7,7 @@ import {History, LocationState} from "history";
 import appStore from "../../store/AppStore";
 import ErrorMessage from "../utils/ErrorMessage";
 import {action} from "mobx";
+import notificationsStore from "../../store/NotificationsStore";
 
 interface LoginProps {
     history: History<LocationState>;
@@ -71,7 +72,7 @@ export default class Login extends React.Component<LoginProps, {}>  {
 		
         userStore.login()
             .then(async () => {
-				userStore.getUserNotifications(userStore.userLoginDto.username);
+				notificationsStore.getUserNotifications(userStore.userLoginDto.username);
                 this.props.history.push("/");
             })
             .catch(action(() => {

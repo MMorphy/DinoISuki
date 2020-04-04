@@ -611,3 +611,6 @@ div.scroll-horizontal > div {
 .usernotifications {
 	float: left;
 }
+.user-notifications-table-row-bold {
+	font-weight: bold;
+}

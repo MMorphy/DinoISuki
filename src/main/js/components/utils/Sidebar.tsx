@@ -4,6 +4,7 @@ import * as React from "react";
 import {observer} from "mobx-react";
 import {Link} from "react-router-dom";
 import userStore from "../../store/UserStore";
+import notificationsStore from "../../store/NotificationsStore";
 
 @observer
 export default class Sidebar extends React.Component<{}, {}> {
@@ -36,7 +37,7 @@ export default class Sidebar extends React.Component<{}, {}> {
                     }
 					{
 						(sessionStorage.getItem('token')) 
-							? (userStore.hasUnreadMessages)
+							? (notificationsStore.hasUnreadMessages)
 		                        ? <Link className="font-color" to="/usernotifications" onClick={() => appStore.changeSidebarVisibility()}><h5 className="usernotifications" id="usernotifications">Poruke</h5><i className="fas fa-circle sidebar-notification-dot"></i></Link>
 								: <Link className="font-color" to="/usernotifications" onClick={() => appStore.changeSidebarVisibility()}><h5 id="usernotifications">Poruke</h5></Link>
 							: <div/>
@@ -70,7 +71,7 @@ export default class Sidebar extends React.Component<{}, {}> {
     }
 
     private logout() {
-		userStore.setHasUnreadMessages(false);
+		notificationsStore.setHasUnreadMessages(false);
         userStore.clearSessionStorage();
         appStore.changeSidebarVisibility();
     }

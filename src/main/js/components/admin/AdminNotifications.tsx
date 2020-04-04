@@ -303,7 +303,7 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
         );
     }
 
-	componentWillMount(): void {
+	componentDidMount(): void {
 		notificationsStore.getNotifications('', '');
 		// settitng default values for new notification
 		notificationsStore.newNotificationHolder(sessionStorage.getItem('username'), "srcUser");

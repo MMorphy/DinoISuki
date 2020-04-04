@@ -6,8 +6,6 @@ import userRepository from "../repository/UserRepository";
 import {AxiosResponse} from "axios";
 import appStore from "./AppStore";
 import _ from 'lodash';
-import AdminNotificationDTO from "../model/AdminNotificationDTO";
-import adminRepository from "../repository/AdminRepository";
 
 class UserStore {
     @observable userProfileDto: UserDTO = new UserDTO();
@@ -31,9 +29,6 @@ class UserStore {
     @observable confirmedPasswordForRegistration: string = "";
 
     @observable date: Date | undefined = undefined;
-
-	@observable userNotificationDTOList: AdminNotificationDTO[] = [];
-	@observable hasUnreadMessages: boolean = false;
 
     //update nakon unosa
     @action
@@ -197,22 +192,6 @@ class UserStore {
             }));
     }
 
-	async getUserNotifications(username: string) {
-		await adminRepository.getNotifications('', username, sessionStorage.getItem('token')!)
-            .then(action((response: AxiosResponse) => {
-            	this.userNotificationDTOList = response.data;
-            }))
-			.catch(action(() => {
-                this.userNotificationDTOList = [];
-            }));
-		this.setHasUnreadMessages(false);
-		for (var i = 0; i < this.userNotificationDTOList.length; i++){
-			if(this.userNotificationDTOList[i].notificationType === 'unread' || this.userNotificationDTOList[i].notificationType === 'UNREAD') {
-				this.setHasUnreadMessages(true);
-				break;
-			}
-		}
-	}
 
     // util funkcije
     @action
@@ -289,10 +268,6 @@ class UserStore {
         this.date = undefined;
     }
 
-	@action
-	setHasUnreadMessages(hasUnreadMessages: boolean) {
-		this.hasUnreadMessages = hasUnreadMessages;
-	}
 }
 
 const userStore = new UserStore();
