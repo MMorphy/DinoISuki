@@ -254,7 +254,7 @@ public class VideoFinderJob extends QuartzJobBean {
 			}
 		}
 		// not found anything matching holiday, returning the first one
-		logger.warn("Not found working hours for date:" + videoDate);
+		logger.warn("Not found working hours for date:" + videoDate + " total woring hours found:" + workingHoursList.size());
 		return null;
 	}
 
