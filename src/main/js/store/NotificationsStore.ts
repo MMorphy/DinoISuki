@@ -2,6 +2,7 @@ import {action, observable} from "mobx";
 import adminRepository from "../repository/AdminRepository";
 import {AxiosResponse, AxiosError} from "axios";
 import AdminNotificationDTO from "../model/AdminNotificationDTO";
+import UserStore from "./UserStore";
 
 class NotificationsStore {
 	@observable adminNotificationDTOList: AdminNotificationDTO[] = [];
@@ -19,8 +20,11 @@ class NotificationsStore {
             	this.adminNotificationDTOList = response.data;
             }))
 			.catch(action((error: AxiosError) => {
-                this.adminNotificationDTOList = [];
 				if(error.response) {
+					this.adminNotificationDTOList = [];
+					if(error.response.data.includes("Expired or invalid JWT token")) {
+						UserStore.clearSessionStorage();
+					}
 				}
             }));
     }
@@ -32,9 +36,12 @@ class NotificationsStore {
             }))
 			.catch(action((error: AxiosError) => {
 				if(error.response) {
+					if(error.response.data.includes("Expired or invalid JWT token")) {
+						UserStore.clearSessionStorage();
+					}
 					this.responseErrorMessage = error.response.data.message;
 				}
-                this.successfulNotificationsDelete = false;
+				this.successfulNotificationsDelete = false;
             }));
 		return this.successfulNotificationsDelete;
     }
@@ -47,9 +54,13 @@ class NotificationsStore {
             }))
 			.catch(action((error: AxiosError) => {
 				if(error.response) {
+					this.adminNotificationDTOList = [];
+					if(error.response.data.includes("Expired or invalid JWT token")) {
+						UserStore.clearSessionStorage();
+					}
 					this.responseErrorMessage = error.response.data.message;
 				}
-                this.successfulNotificationSave = false;
+				this.successfulNotificationSave = false;
             }));
 		return this.successfulNotificationSave;
     }
@@ -62,9 +73,12 @@ class NotificationsStore {
             }))
 			.catch(action((error: AxiosError) => {
 				if(error.response) {
+					if(error.response.data.includes("Expired or invalid JWT token")) {
+						UserStore.clearSessionStorage();
+					}
 					this.responseErrorMessage = error.response.data.message;
 				}
-                this.successfulNotificationSave = false;
+				this.successfulNotificationSave = false;
             }));
 		return this.successfulNotificationSave;
     }
@@ -74,8 +88,13 @@ class NotificationsStore {
             .then(action((response: AxiosResponse) => {
             	this.userNotificationDTOList = response.data;
             }))
-			.catch(action(() => {
-                this.userNotificationDTOList = [];
+			.catch(action((error: AxiosError) => {
+				if(error.response) {
+					this.userNotificationDTOList = [];
+					if(error.response.data.includes("Expired or invalid JWT token")) {
+						UserStore.clearSessionStorage();
+					}
+				}
             }));
 		this.setHasUnreadMessages(false);
 		const tempUserNotificationDTOList: AdminNotificationDTO[] = [];

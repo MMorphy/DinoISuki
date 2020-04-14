@@ -26,7 +26,8 @@ export default class Login extends React.Component<LoginProps, {}>  {
                             <FormLabel><h5 className="font-color font-size">Korisničko ime</h5></FormLabel>
                         </Col>
                         <Col>
-                            <FormControl defaultValue={localStorage.getItem('username') ? localStorage.getItem('username') as string : ""}
+                            <FormControl autoFocus
+										 defaultValue={localStorage.getItem('username') ? localStorage.getItem('username') as string : ""}
                                          type="username"
                                          onChange={(e: any) => userStore.updateUserLoginDto(e.target.value, "username")}/>
                         </Col>

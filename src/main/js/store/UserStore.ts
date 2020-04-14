@@ -216,6 +216,7 @@ class UserStore {
     clearSessionStorage() {
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('username');
+		location.href = '/#/login';
     }
 
     @action

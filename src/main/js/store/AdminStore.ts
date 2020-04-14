@@ -5,7 +5,7 @@ import AdminStatisticsDTO from "../model/AdminStatisticsDTO";
 import TransactionDetailsDTO from "../model/TransactionDetailsDTO";
 import SubscriptionDTO from "../model/SubscriptionDTO";
 import AdminSubscriptionTypesDTO from "../model/AdminSubscriptionTypesDTO";
-
+import UserStore from "./UserStore";
 
 class AdminStore {
     @observable adminStatisticsDTO: AdminStatisticsDTO = new AdminStatisticsDTO();
@@ -25,8 +25,12 @@ class AdminStore {
             .then(action((response: AxiosResponse) => {
                 this.adminStatisticsDTO = response.data;
             }))
-			.catch(action(() => {
-                // TODO
+			.catch(action((error: AxiosError) => {
+				if(error.response) {
+					if(error.response.data.includes("Expired or invalid JWT token")) {
+						UserStore.clearSessionStorage();
+					}
+				}
             }));
     }
 
@@ -35,8 +39,13 @@ class AdminStore {
             .then(action((response: AxiosResponse) => {
             	this.transactionDetailsDTO = response.data;
             }))
-			.catch(action(() => {
-                this.transactionDetailsDTO = [];
+			.catch(action((error: AxiosError) => {
+				this.transactionDetailsDTO = [];
+				if(error.response) {
+					if(error.response.data.includes("Expired or invalid JWT token")) {
+						UserStore.clearSessionStorage();
+					}
+				}
             }));
     }
 
@@ -46,8 +55,13 @@ class AdminStore {
             .then(action(() => {
             	this.transactionDeleteSuccessfull = true;
             }))
-			.catch(action(() => {
-                this.transactionDeleteSuccessfull = false;
+			.catch(action((error: AxiosError) => {
+				this.transactionDeleteSuccessfull = false;
+				if(error.response) {
+					if(error.response.data.includes("Expired or invalid JWT token")) {
+						UserStore.clearSessionStorage();
+					}
+				}
             }));
 		return this.transactionDeleteSuccessfull;
     }
@@ -57,8 +71,13 @@ class AdminStore {
             .then(action((response: AxiosResponse) => {
             	this.subscriptionDTOList = response.data;
             }))
-			.catch(action(() => {
-                this.subscriptionDTOList = [];
+			.catch(action((error: AxiosError) => {
+				this.subscriptionDTOList = [];
+				if(error.response) {
+					if(error.response.data.includes("Expired or invalid JWT token")) {
+						UserStore.clearSessionStorage();
+					}
+				}
             }));
     }
 
@@ -68,8 +87,13 @@ class AdminStore {
             .then(action(() => {
             	this.subscriptionDeleteSuccessfull = true;
             }))
-			.catch(action(() => {
-                this.subscriptionDeleteSuccessfull = false;
+			.catch(action((error: AxiosError) => {
+				this.subscriptionDeleteSuccessfull = false;
+				if(error.response) {
+					if(error.response.data.includes("Expired or invalid JWT token")) {
+						UserStore.clearSessionStorage();
+					}
+				}
             }));
 		return this.subscriptionDeleteSuccessfull;
     }
@@ -79,8 +103,13 @@ class AdminStore {
             .then(action((response: AxiosResponse) => {
             	this.adminSubscriptionTypesDTO = response.data;
             }))
-			.catch(action(() => {
-                this.adminSubscriptionTypesDTO = [];
+			.catch(action((error: AxiosError) => {
+				this.adminSubscriptionTypesDTO = [];
+				if(error.response) {
+					if(error.response.data.includes("Expired or invalid JWT token")) {
+						UserStore.clearSessionStorage();
+					}
+				}
             }));
     }
 
@@ -91,10 +120,14 @@ class AdminStore {
             	this.successfulSubscriptionSave = true;
             }))
 			.catch(action((error: AxiosError) => {
+				this.adminSubscriptionTypesDTO = [];
 				if(error.response) {
+					if(error.response.data.includes("Expired or invalid JWT token")) {
+						UserStore.clearSessionStorage();
+					}
 					this.subscriptionSaveErrorMessage = error.response.data.message;
 				}
-                this.successfulSubscriptionSave = false;
+				this.successfulSubscriptionSave = false;
             }));
 		return this.successfulSubscriptionSave;
     }
