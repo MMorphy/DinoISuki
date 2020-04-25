@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,10 +32,13 @@ import hr.go2.play.DTO.ApplicationPropertiesDTO;
 import hr.go2.play.DTO.CameraDTO;
 import hr.go2.play.DTO.DiskSpaceInfo;
 import hr.go2.play.DTO.LocationDTO;
+import hr.go2.play.DTO.QuizDTO;
 import hr.go2.play.entities.ApplicationProperties;
 import hr.go2.play.entities.Camera;
 import hr.go2.play.entities.Field;
 import hr.go2.play.entities.Location;
+import hr.go2.play.entities.QuizQuestions;
+import hr.go2.play.entities.QuizStatus;
 import hr.go2.play.entities.SubscriptionStatistics;
 import hr.go2.play.entities.User;
 import hr.go2.play.impl.CameraServiceImpl;
@@ -42,6 +46,7 @@ import hr.go2.play.services.ApplicationPropertiesService;
 import hr.go2.play.services.CameraService;
 import hr.go2.play.services.FieldService;
 import hr.go2.play.services.LocationService;
+import hr.go2.play.services.QuizQuestionsService;
 import hr.go2.play.services.SubscriptionService;
 import hr.go2.play.services.UserService;
 import hr.go2.play.services.VideoService;
@@ -82,6 +87,8 @@ public class AdminRest {
 	@Autowired
 	private ApplicationPropertiesService applicationPropertiesService;
 
+	@Autowired
+	private QuizQuestionsService quizQuestionsService;
 
 	//CRUD kamera
 	//CRUD Lokacija
@@ -276,6 +283,163 @@ public class AdminRest {
 		applicationPropertiesDTO.setValue(value);
 
 		return new ResponseEntity<>(applicationPropertiesDTO, HttpStatus.OK);
+	}
+
+	/*** Admin quizes ***/
+	/**
+	 * Desc: add new quiz
+	 * JSON body example:
+	 * {
+		  "name": "poll1",
+		  "noOfQuestions": 3,
+		  "status": "NOT_PUBLISHED",
+		  "questions": [
+		    {
+		      "q": "q1",
+		      "a": [
+		        "a1a",
+		        "a1b",
+		        "a1c"
+		      ],
+		      "ca": "a1a"
+		    },
+		    {
+		      "q": "q2",
+		      "a": [
+		        "a2a",
+		        "a2b",
+		        "a2c"
+		      ],
+		      "ca": "a2b"
+		    },
+		    {
+		      "q": "q3",
+		      "a": [
+		        "a3a",
+		        "a3b",
+		        "a3c"
+		      ],
+		      "ca": "a3c"
+		    }
+		  ]
+		}
+	 * @param QuizDTO
+	 * @return
+	 */
+	@PostMapping("/addNewQuiz")
+	public ResponseEntity<String> addNewQuiz(@RequestBody QuizDTO quizDTO) {
+		logger.debug("/api/admin/addNewQuiz Started");
+		if (quizDTO == null || quizDTO.getNoOfQuestions() <= 0 || quizDTO.getName() == null || quizDTO.getName().isEmpty() || quizDTO.getQuestions() == null) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid quiz data"), HttpStatus.BAD_REQUEST);
+		}
+		Optional<QuizQuestions> optionalQuizQuestions = quizQuestionsService.findByName(quizDTO.getName());
+		if (optionalQuizQuestions.isPresent()) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Quiz with this name already exists"), HttpStatus.BAD_REQUEST);
+		}
+		if (quizDTO.getCreatedAt() == null) {
+			quizDTO.setCreatedAt(new Date());
+		}
+		if (quizDTO.getStatus() == null) {
+			quizDTO.setStatus(QuizStatus.NOT_PUBLISHED);
+		}
+		quizDTO.setId(0);
+
+		QuizQuestions quizQuestions = mapper.map(quizDTO, QuizQuestions.class);
+		quizQuestionsService.saveQuizQuestions(quizQuestions);
+
+		logger.debug("/api/admin/addNewQuiz Finished");
+
+		return new ResponseEntity<String>(commons.JSONfyReturnMessage("New quiz saved!"), HttpStatus.OK);
+	}
+
+	/*
+	 * Description: Fetches quiz by quiz name or all quizes if no name provided
+	 * Input params: quiz name (string)
+	 * Call example:
+	 * 	https://localhost:8443/api/admin/getQuiz?name=poll2
+	 *
+	 */
+	@Transactional
+	@GetMapping("/getQuiz")
+	public ResponseEntity<?> getQuiz(@RequestParam(name = "name", required = false) String name) {
+		logger.debug("/api/admin/getQuiz Started");
+		List<QuizDTO> quizes = new ArrayList<QuizDTO>();
+		if (name == null || name.isEmpty()) {
+			quizes = quizQuestionsService.findAll().stream().map(quizQuestion -> mapper.map(quizQuestion, QuizDTO.class)).collect(Collectors.toList());
+		} else {
+			Optional<QuizQuestions> optionalQuizQuestions = quizQuestionsService.findByName(name);
+			if (optionalQuizQuestions.isPresent()) {
+				QuizDTO quizDTO = mapper.map(optionalQuizQuestions.get(), QuizDTO.class);
+				quizes.add(quizDTO);
+			}
+		}
+		logger.debug("/api/admin/getQuiz Finished");
+		return new ResponseEntity<>(quizes, HttpStatus.OK);
+	}
+
+	/**
+	 * Desc: modify existing quiz
+	 * JSON body example:
+	 * {
+		  "name": "poll1",
+		  "noOfQuestions": 3,
+		  "status": "NOT_PUBLISHED",
+		  "questions": [
+		    {
+		      "q": "q1",
+		      "a": [
+		        "a1a",
+		        "a1b",
+		        "a1c"
+		      ],
+		      "ca": "a1a"
+		    },
+		    {
+		      "q": "q2",
+		      "a": [
+		        "a2a",
+		        "a2b",
+		        "a2c"
+		      ],
+		      "ca": "a2b"
+		    },
+		    {
+		      "q": "q3",
+		      "a": [
+		        "a3a",
+		        "a3b",
+		        "a3c"
+		      ],
+		      "ca": "a3c"
+		    }
+		  ]
+		}
+	 * @param QuizDTO
+	 * @return
+	 */
+	@PostMapping("/updateQuiz")
+	public ResponseEntity<String> updateQuiz(@RequestBody QuizDTO quizDTO) {
+		logger.debug("/api/admin/updateQuiz Started");
+		if (quizDTO == null || quizDTO.getNoOfQuestions() <= 0 || quizDTO.getName() == null || quizDTO.getName().isEmpty() || quizDTO.getQuestions() == null) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid quiz data"), HttpStatus.BAD_REQUEST);
+		}
+		Optional<QuizQuestions> optionalQuizQuestions = quizQuestionsService.findByName(quizDTO.getName());
+		if (optionalQuizQuestions.isEmpty()) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Not found quiz with name: " + quizDTO.getName()), HttpStatus.NOT_FOUND);
+		}
+		if (quizDTO.getCreatedAt() == null) {
+			quizDTO.setCreatedAt(new Date());
+		}
+
+		QuizQuestions quizQuestions = optionalQuizQuestions.get();
+		quizQuestions.setNoOfQuestions(quizDTO.getNoOfQuestions());
+		quizQuestions.setQuestions(quizDTO.getQuestions());
+		quizQuestions.setStatus(quizDTO.getStatus());
+		quizQuestionsService.saveQuizQuestions(quizQuestions);
+
+		logger.debug("/api/admin/updateQuiz Finished");
+
+		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Quiz updated!"), HttpStatus.OK);
 	}
 
 }

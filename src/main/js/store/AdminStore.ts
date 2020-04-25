@@ -27,7 +27,7 @@ class AdminStore {
             }))
 			.catch(action((error: AxiosError) => {
 				if(error.response) {
-					if(error.response.data.includes("Expired or invalid JWT token")) {
+					if(error.response.data.toString().includes("Expired or invalid JWT token")) {
 						UserStore.clearSessionStorage();
 					}
 				}
@@ -42,7 +42,7 @@ class AdminStore {
 			.catch(action((error: AxiosError) => {
 				this.transactionDetailsDTO = [];
 				if(error.response) {
-					if(error.response.data.includes("Expired or invalid JWT token")) {
+					if(error.response.data.toString().includes("Expired or invalid JWT token")) {
 						UserStore.clearSessionStorage();
 					}
 				}
@@ -58,7 +58,7 @@ class AdminStore {
 			.catch(action((error: AxiosError) => {
 				this.transactionDeleteSuccessfull = false;
 				if(error.response) {
-					if(error.response.data.includes("Expired or invalid JWT token")) {
+					if(error.response.data.toString().includes("Expired or invalid JWT token")) {
 						UserStore.clearSessionStorage();
 					}
 				}
@@ -74,7 +74,7 @@ class AdminStore {
 			.catch(action((error: AxiosError) => {
 				this.subscriptionDTOList = [];
 				if(error.response) {
-					if(error.response.data.includes("Expired or invalid JWT token")) {
+					if(error.response.data.toString().includes("Expired or invalid JWT token")) {
 						UserStore.clearSessionStorage();
 					}
 				}
@@ -90,7 +90,7 @@ class AdminStore {
 			.catch(action((error: AxiosError) => {
 				this.subscriptionDeleteSuccessfull = false;
 				if(error.response) {
-					if(error.response.data.includes("Expired or invalid JWT token")) {
+					if(error.response.data.toString().includes("Expired or invalid JWT token")) {
 						UserStore.clearSessionStorage();
 					}
 				}
@@ -106,7 +106,7 @@ class AdminStore {
 			.catch(action((error: AxiosError) => {
 				this.adminSubscriptionTypesDTO = [];
 				if(error.response) {
-					if(error.response.data.includes("Expired or invalid JWT token")) {
+					if(error.response.data.toString().includes("Expired or invalid JWT token")) {
 						UserStore.clearSessionStorage();
 					}
 				}
@@ -122,7 +122,7 @@ class AdminStore {
 			.catch(action((error: AxiosError) => {
 				this.adminSubscriptionTypesDTO = [];
 				if(error.response) {
-					if(error.response.data.includes("Expired or invalid JWT token")) {
+					if(error.response.data.toString().includes("Expired or invalid JWT token")) {
 						UserStore.clearSessionStorage();
 					}
 					this.subscriptionSaveErrorMessage = error.response.data.message;

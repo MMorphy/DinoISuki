@@ -564,3 +564,108 @@ Output:
         "username": "test2"
     }
 ]
+
+/api/admin/addNewQuiz
+Description: add new quiz
+Type: put
+Input: QuizDTO
+{
+  "name": "poll1",
+  "noOfQuestions": 3,
+  "status": "NOT_PUBLISHED",
+  "questions": [
+	{
+	  "q": "q1",
+	  "a": [
+		"a1a",
+		"a1b",
+		"a1c"
+	  ],
+	  "ca": "a1a"
+	},
+	{
+	  "q": "q2",
+	  "a": [
+		"a2a",
+		"a2b",
+		"a2c"
+	  ],
+	  "ca": "a2b"
+	},
+	{
+	  "q": "q3",
+	  "a": [
+		"a3a",
+		"a3b",
+		"a3c"
+	  ],
+	  "ca": "a3c"
+	}
+  ]
+}
+Example: https://localhost:8443/api/admin/addNewQuiz
+Output:
+{
+    "message": "Quiz with this name already exists"
+}
+
+/api/admin/getQuiz
+Description: Fetches quiz by quiz name or all quizes if no name provided 
+Type: get
+Input: String name
+Example: https://localhost:8443/api/admin/getQuiz?name=poll2
+Output:
+[
+    {
+        "id": 2,
+        "name": "poll2",
+        "createdAt": "2020-04-22T18:29:35.882+0000",
+        "noOfQuestions": 3,
+        "status": "NOT_PUBLISHED",
+        "questions": "[{q=q1, a=[a1a, a1b, a1c], ca=a1a}, {q=q2, a=[a2a, a2b, a2c], ca=a2b}, {q=q3, a=[a3a, a3b, a3c], ca=a3c}]"
+    }
+]
+
+/api/admin/updateQuiz
+Description: modify existing quiz
+Type: put
+Input: QuizDTO
+{
+  "name": "poll1",
+  "noOfQuestions": 4,
+  "status": "NOT_PUBLISHED",
+  "questions": [
+	{
+	  "q": "q1",
+	  "a": [
+		"a1a",
+		"a1b",
+		"a1c"
+	  ],
+	  "ca": "a1a"
+	},
+	{
+	  "q": "q2",
+	  "a": [
+		"a2a",
+		"a2b",
+		"a2c"
+	  ],
+	  "ca": "a2b"
+	},
+	{
+	  "q": "q3",
+	  "a": [
+		"a3a",
+		"a3b",
+		"a3c"
+	  ],
+	  "ca": "a3c"
+	}
+  ]
+}
+Example: https://localhost:8443/api/admin/updateQuiz
+Output:
+{
+    "message": "Quiz updated!"
+}
