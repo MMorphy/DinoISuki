@@ -579,8 +579,10 @@ public class AdminRest {
 	}
 
 	/*
-	 * Description: Fetches all quizes that are PUBLISHED the user has not taken yet Input params: username (string) Call example:
-	 * https://localhost:8443/api/admin/getNewQuizesForUser?username=test2
+	 * Description: Fetches all answers by all users that have taken the quiz by quiz name 
+	 * Input params: quizname (string) 
+	 * Call example:
+	 * https://localhost:8443/api/admin/getAllAnswersForQuiz?quizname=Some quiz
 	 *
 	 */
 	@Transactional
