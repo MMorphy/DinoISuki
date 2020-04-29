@@ -179,6 +179,7 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 								infoLabel={["Prikazano", "do", "od", "poruka"]}
 								entriesLabel="Prikaži poruka"
 								searchLabel="Pronađi..."
+								noRecordsFoundLabel="Nema podataka"
 								tbodyTextWhite
 								data={notificationsData}
 						    />

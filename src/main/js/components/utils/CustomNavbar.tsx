@@ -5,7 +5,7 @@ import appStore from "../../store/AppStore";
 // @ts-ignore
 import image from "../../../resources/images/logo.png";
 import notificationsStore from "../../store/NotificationsStore";
-
+import quizStore from "../../store/QuizStore";
 
 @observer
 export default class CustomNavbar extends React.Component<{}, {}> {
@@ -19,7 +19,7 @@ export default class CustomNavbar extends React.Component<{}, {}> {
                                 <Button bs-style="primary" size="lg" className="button-color" onClick={() => appStore.changeSidebarVisibility()}>
 									<i className="fas fa-bars"></i>
 									{
-					                    notificationsStore.hasUnreadMessages
+					                    (notificationsStore.hasUnreadMessages || quizStore.userHasUntakenQuizes)
 					                        ? <i className="fas fa-circle sidebar-notification-dot"></i>
 											: <div/>
 					                }

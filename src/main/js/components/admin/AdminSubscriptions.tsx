@@ -194,6 +194,7 @@ export default class AdminSubscriptions extends React.Component<{}, {saveSubscri
 								paginationLabel={["Prethodna", "Slijedeća"]}
 								infoLabel={["Prikazano", "do", "od", "pretplata"]}
 								entriesLabel="Prikaži pretplata"
+								noRecordsFoundLabel="Nema podataka"
 								searchLabel="Pronađi..."
 								tbodyTextWhite
 								data={subscriptionData}

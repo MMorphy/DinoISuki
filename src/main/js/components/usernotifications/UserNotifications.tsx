@@ -138,7 +138,7 @@ export default class UserNotifications extends React.Component<{}, {modalVisible
 	                    <div className="row">
 							<MDBDataTable className="admin-transactions-MDBDataTable"
 								autoWidth
-								reponsive={true}
+								reponsive={"true"}
 								striped
 								bordered
 								small
@@ -148,6 +148,7 @@ export default class UserNotifications extends React.Component<{}, {modalVisible
 								infoLabel={["Prikazano", "do", "od", "poruka"]}
 								entriesLabel="Prikaži poruka"
 								searchLabel="Pronađi..."
+								noRecordsFoundLabel="Nema podataka"
 								tbodyTextWhite
 								searching={false}
 								data={notificationsData}
@@ -185,7 +186,7 @@ export default class UserNotifications extends React.Component<{}, {modalVisible
 		                            <FormLabel><h5 className="font-color font-size">Poruka</h5></FormLabel>
 		                        </Col>
 		                        <Col>
-		                            <FormControl readOnly as="textarea" rows="3" value={notificationsStore.editNotification.message} />
+		                            <FormControl readOnly as="textarea" rows='3' value={notificationsStore.editNotification.message} />
 		                        </Col>
 		                    </FormGroup>
 		                </Form>

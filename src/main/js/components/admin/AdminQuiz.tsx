@@ -151,7 +151,7 @@ export default class AdminQuiz extends React.Component<{}, {}> {
 	                    <div className="row">
 							<MDBDataTable className="admin-transactions-MDBDataTable"
 								autoWidth
-								reponsive
+								reponsive={"true"}
 								striped
 								bordered
 								small
@@ -161,6 +161,7 @@ export default class AdminQuiz extends React.Component<{}, {}> {
 								infoLabel={["Prikazano", "do", "od", "kvozova"]}
 								entriesLabel="Prikaži kvizova"
 								searchLabel="Pronađi..."
+								noRecordsFoundLabel="Nema podataka"
 								tbodyTextWhite
 								data={notificationsData}
 						    />

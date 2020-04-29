@@ -8,6 +8,7 @@ import appStore from "../../store/AppStore";
 import ErrorMessage from "../utils/ErrorMessage";
 import {action} from "mobx";
 import notificationsStore from "../../store/NotificationsStore";
+import quizStore from "../../store/QuizStore";
 
 interface LoginProps {
     history: History<LocationState>;
@@ -74,6 +75,7 @@ export default class Login extends React.Component<LoginProps, {}>  {
         userStore.login()
             .then(async () => {
 				notificationsStore.getUserNotifications(userStore.userLoginDto.username);
+				quizStore.getNewQuizesForUser(userStore.userLoginDto.username);
                 this.props.history.push("/");
             })
             .catch(action(() => {

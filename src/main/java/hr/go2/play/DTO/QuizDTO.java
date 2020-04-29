@@ -12,6 +12,9 @@ public class QuizDTO {
 	private int noOfQuestions;
 	private QuizStatus status;
 	private Object questions;
+	private Object answers;
+	private int correctAnswers;
+	private String username;
 
 	public QuizDTO() {
 	}
@@ -62,6 +65,30 @@ public class QuizDTO {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Object getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(Object answers) {
+		this.answers = answers;
+	}
+
+	public int getCorrectAnswers() {
+		return correctAnswers;
+	}
+
+	public void setCorrectAnswers(int correctAnswers) {
+		this.correctAnswers = correctAnswers;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 }

@@ -114,7 +114,7 @@ export default class AdminQuizNewQuestions extends React.Component<{}, {isError:
 			const questionLabel: string = 'Pitanje broj ' + questionNumber;
 			const questionNo: number = parseInt(`${i}`);
 			
-			questions.push(	<FormGroup controlId={'q' + questionNo}>
+			questions.push(	<FormGroup controlId={'q' + questionNo} key={'q' + questionNo}>
 								<Col> <FormLabel><h5 className="font-color font-size">{questionLabel}</h5></FormLabel> </Col>
 								<Col> <FormControl as="textarea" rows="3" value={quizStore.newQuizQuestions[questionNo].question} type="username" onChange={(e: any) => quizStore.newQuizEmptyQuestionHolder(e.target.value, "question", questionNo, 0)}/> </Col>
 							</FormGroup>
@@ -127,7 +127,7 @@ export default class AdminQuizNewQuestions extends React.Component<{}, {isError:
 				const answerLabel: string = 'Odgovor broj ' + answerNumber;
 				const answerNo: number = parseInt(`${j}`);
 				
-				questions.push(	<FormGroup controlId={'a' + questionNo + answerNo} style={{marginLeft:'20px'}}>
+				questions.push(	<FormGroup controlId={'a' + questionNo + answerNo} style={{marginLeft:'20px'}}  key={'a' + questionNo + answerNo}>
 									<Col> <FormLabel><h5 className="font-color font-size">{answerLabel}</h5></FormLabel> </Col>
 									<Col> <FormControl value={quizStore.newQuizQuestions[questionNo].answers[answerNo]} type="username" onChange={(e: any) => quizStore.newQuizEmptyQuestionHolder(e.target.value, "answers", questionNo, answerNo)}/> </Col>
 								</FormGroup>
@@ -135,12 +135,11 @@ export default class AdminQuizNewQuestions extends React.Component<{}, {isError:
 				
 			}
 			
-			questions.push(	<FormGroup>
+			questions.push(	<FormGroup key={'ca' + questionNo} style={{paddingBottom:'25px'}}>
 								<Col> <FormLabel><h5 className="font-color font-size">Točan odgovor</h5></FormLabel> </Col>
 								<Col> <Dropdown key={questionNo} options={quizStore.newQuizQuestions[questionNo].answers} onChange={param => this.dropdownChange(param, questionNo)} value={quizStore.newQuizQuestions[questionNo].correctAnswer} placeholder="Odaberi točan odgovor" /> </Col>
 							</FormGroup>
 			);
-			questions.push(	<br/> );				
 			
 	    }
 	

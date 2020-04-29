@@ -112,6 +112,7 @@ export default class AdminTransactions extends React.Component<{}, {}> {
 								infoLabel={["Prikazano", "do", "od", "transakcija"]}
 								entriesLabel="Prikaži transakcija"
 								searchLabel="Pronađi..."
+								noRecordsFoundLabel="Nema podataka"
 								tbodyTextWhite
 								data={data}
 						    />

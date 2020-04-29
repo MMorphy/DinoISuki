@@ -24,6 +24,27 @@ class QuizRepository {
             });
     }
 
+	getNewQuizesForUser(username: string, token: string): Promise<AxiosResponse> {
+		return axios.get(`/api/admin/getNewQuizesForUser?username=${username}`,
+            {
+                headers: {'Authorization': `Bearer ${token}`}
+            });
+    }
+
+	getQuizesTakenByUser(username: string, token: string): Promise<AxiosResponse> {
+		return axios.get(`/api/admin/getQuizesTakenByUser?username=${username}`,
+            {
+                headers: {'Authorization': `Bearer ${token}`}
+            });
+    }
+
+	addQuizAnswers(quizDTO: QuizDTO, token: string): Promise<AxiosResponse> {
+        return axios.post("/api/admin/addQuizAnswers", quizDTO,
+            {
+                headers: {'Authorization': `Bearer ${token}`}
+            });
+    }
+
 }
 
 const quizRepository = new QuizRepository();

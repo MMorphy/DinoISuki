@@ -37,6 +37,7 @@ import hr.go2.play.entities.ApplicationProperties;
 import hr.go2.play.entities.Camera;
 import hr.go2.play.entities.Field;
 import hr.go2.play.entities.Location;
+import hr.go2.play.entities.QuizAnswers;
 import hr.go2.play.entities.QuizQuestions;
 import hr.go2.play.entities.QuizStatus;
 import hr.go2.play.entities.SubscriptionStatistics;
@@ -46,6 +47,7 @@ import hr.go2.play.services.ApplicationPropertiesService;
 import hr.go2.play.services.CameraService;
 import hr.go2.play.services.FieldService;
 import hr.go2.play.services.LocationService;
+import hr.go2.play.services.QuizAnswersService;
 import hr.go2.play.services.QuizQuestionsService;
 import hr.go2.play.services.SubscriptionService;
 import hr.go2.play.services.UserService;
@@ -89,6 +91,9 @@ public class AdminRest {
 
 	@Autowired
 	private QuizQuestionsService quizQuestionsService;
+
+	@Autowired
+	private QuizAnswersService quizAnswersService;
 
 	//CRUD kamera
 	//CRUD Lokacija
@@ -440,6 +445,131 @@ public class AdminRest {
 		logger.debug("/api/admin/updateQuiz Finished");
 
 		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Quiz updated!"), HttpStatus.OK);
+	}
+
+	/*
+	 * Description: Fetches all quizes that are PUBLISHED the user has not taken yet 
+	 * Input params: username (string) Call example:
+	 * https://localhost:8443/api/admin/getNewQuizesForUser?username=test2
+	 *
+	 */
+	@Transactional
+	@GetMapping("/getNewQuizesForUser")
+	public ResponseEntity<?> getNewQuizesForUser(@RequestParam(name = "username") String username) {
+		logger.debug("/api/admin/getNewQuizesForUser Started");
+
+		if (username == null || username.isEmpty()) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Username not provided"), HttpStatus.BAD_REQUEST);
+		}
+
+		User user = userService.findUserByUsername(username);
+		if (user == null) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("User with username: " + username + " not found"), HttpStatus.BAD_REQUEST);
+		}
+
+		List<QuizDTO> quizes = new ArrayList<QuizDTO>();
+		quizes = quizQuestionsService.getNewQuizesForUser(user).stream().map(quizQuestion -> mapper.map(quizQuestion, QuizDTO.class)).collect(Collectors.toList());
+
+		logger.debug("/api/admin/getNewQuizesForUser Finished");
+		return new ResponseEntity<>(quizes, HttpStatus.OK);
+	}
+
+	/*
+	 * Description: Fetches all quizes that are PUBLISHED already taken by user 
+	 * Input params: username (string) Call example:
+	 * https://localhost:8443/api/admin/getQuizesTakenByUser?username=test2
+	 *
+	 */
+	@Transactional
+	@GetMapping("/getQuizesTakenByUser")
+	public ResponseEntity<?> getQuizesTakenByUser(@RequestParam(name = "username") String username) {
+		logger.debug("/api/admin/getQuizesTakenByUser Started");
+
+		if (username == null || username.isEmpty()) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Username not provided"), HttpStatus.BAD_REQUEST);
+		}
+
+		User user = userService.findUserByUsername(username);
+		if (user == null) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("User with username: " + username + " not found"), HttpStatus.BAD_REQUEST);
+		}
+
+		List<QuizDTO> quizes = new ArrayList<QuizDTO>();
+		// fetching quizes taken by user
+		List<QuizQuestions> listQuizQuestions = quizQuestionsService.getQuizesTakenByUser(user);
+		for (QuizQuestions listQuizQuestion : listQuizQuestions) {
+			// for each found quiz, fetching answers
+			QuizDTO quizDTO = mapper.map(listQuizQuestion, QuizDTO.class);
+			Optional<QuizAnswers> optionalQuizAnswers = quizAnswersService.findByUserIdAndQuizId(user, listQuizQuestion);
+			if (optionalQuizAnswers.isPresent()) {
+				quizDTO.setAnswers(optionalQuizAnswers.get().getAnswers());
+				quizDTO.setCorrectAnswers(optionalQuizAnswers.get().getCorrectAnswers());
+				quizDTO.setUsername(username);
+			}
+			quizes.add(quizDTO);
+		}
+
+		logger.debug("/api/admin/getQuizesTakenByUser Finished");
+		return new ResponseEntity<>(quizes, HttpStatus.OK);
+	}
+
+
+	/**
+	 * Desc: store quiz answers
+	 * JSON body example:
+	 * {
+			"name": "Moj novi kviz3",
+			"noOfQuestions": 4,
+			"status": "NOT_PUBLISHED",
+			"answers": [
+				{
+				"q": "qzzzzY",
+				"a": "a1a"
+				},
+				{
+				"q": "q2",
+				"a": "a2a"
+				},
+				{
+				"q": "q3",
+				"a": "a3a"
+				}
+				],
+			"correctAnswers": 1,
+			"username": "test2"
+		}
+	 * @param QuizDTO
+	 * @return
+	 */
+	@PostMapping("/addQuizAnswers")
+	public ResponseEntity<String> addQuizAnswers(@RequestBody QuizDTO quizDTO) {
+		logger.debug("/api/admin/addQuizAnswers Started");
+		if (quizDTO == null || quizDTO.getNoOfQuestions() <= 0 || quizDTO.getName() == null || quizDTO.getName().isEmpty() || quizDTO.getAnswers() == null) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid quiz data"), HttpStatus.BAD_REQUEST);
+		}
+
+		Optional<QuizQuestions> optionalQuizQuestions = quizQuestionsService.findByName(quizDTO.getName());
+		if (optionalQuizQuestions.isEmpty()) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Could not find a quiz with name:" + quizDTO.getName()), HttpStatus.BAD_REQUEST);
+		}
+
+		User user = userService.findUserByUsername(quizDTO.getUsername());
+		if (user == null) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Could not find user with username:" + quizDTO.getUsername()), HttpStatus.BAD_REQUEST);
+		}
+
+		quizDTO.setId(0);
+
+		QuizAnswers quizAnswers = mapper.map(quizDTO, QuizAnswers.class);
+		quizAnswers.setTakenAt(new Date());
+		quizAnswers.setUserId(user);
+		quizAnswers.setQuizId(optionalQuizQuestions.get());
+
+		quizAnswersService.saveQuizAnswers(quizAnswers);
+
+		logger.debug("/api/admin/addQuizAnswers Finished");
+
+		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Quiz answers saved!"), HttpStatus.OK);
 	}
 
 }

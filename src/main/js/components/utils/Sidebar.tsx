@@ -5,6 +5,8 @@ import {observer} from "mobx-react";
 import {Link} from "react-router-dom";
 import userStore from "../../store/UserStore";
 import notificationsStore from "../../store/NotificationsStore";
+import quizStore from "../../store/QuizStore";
+
 
 @observer
 export default class Sidebar extends React.Component<{}, {}> {
@@ -42,6 +44,14 @@ export default class Sidebar extends React.Component<{}, {}> {
 								: <Link className="font-color" to="/usernotifications" onClick={() => appStore.changeSidebarVisibility()}><h5 id="usernotifications">Poruke</h5></Link>
 							: <div/>
 	                }
+					{
+						(sessionStorage.getItem('token')) 
+							? (quizStore.userHasUntakenQuizes)
+		                        ? <Link className="font-color" to="/userquizes" onClick={() => appStore.changeSidebarVisibility()}><h5 className="usernotifications" id="userquizes">Kvizovi</h5><i className="fas fa-circle sidebar-notification-dot"></i></Link>
+								: <Link className="font-color" to="/userquizes" onClick={() => appStore.changeSidebarVisibility()}><h5 id="userquizes">Kvizovi</h5></Link>
+							: <div/>
+	                }
+
                     {
                         (!sessionStorage.getItem('token'))
                             ? <Link className="font-color" to="/login" onClick={() => appStore.changeSidebarVisibility()}><h5 id="login">Prijava</h5></Link>
@@ -72,6 +82,7 @@ export default class Sidebar extends React.Component<{}, {}> {
 
     private logout() {
 		notificationsStore.setHasUnreadMessages(false);
+		quizStore.setUserHasUntakenQuizes(false);
         userStore.clearSessionStorage();
         appStore.changeSidebarVisibility();
     }

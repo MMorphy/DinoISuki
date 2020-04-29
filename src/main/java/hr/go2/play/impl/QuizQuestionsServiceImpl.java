@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import hr.go2.play.entities.QuizQuestions;
+import hr.go2.play.entities.User;
 import hr.go2.play.repositories.QuizQuestionsRepository;
 import hr.go2.play.services.QuizQuestionsService;
 
@@ -32,6 +33,16 @@ public class QuizQuestionsServiceImpl implements QuizQuestionsService {
 	@Override
 	public List<QuizQuestions> findAll() {
 		return quizQuestionsRepo.findAll();
+	}
+
+	@Override
+	public List<QuizQuestions> getNewQuizesForUser(User user) {
+		return (List<QuizQuestions>) quizQuestionsRepo.getNewQuizesForUser(user);
+	}
+
+	@Override
+	public List<QuizQuestions> getQuizesTakenByUser(User user) {
+		return (List<QuizQuestions>) quizQuestionsRepo.getQuizesTakenByUser(user);
 	}
 
 }

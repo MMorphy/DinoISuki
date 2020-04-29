@@ -669,3 +669,94 @@ Output:
 {
     "message": "Quiz updated!"
 }
+
+/api/admin/getNewQuizesForUser
+Description: Fetches all quizes that are PUBLISHED the user has not taken yet 
+Type: get
+Input: String username
+Example: https://localhost:8443/api/admin/getNewQuizesForUser?username=test2
+Output:
+[
+    {
+        "id": 30,
+        "createdAt": "2020-04-25T09:52:05.783+0000",
+        "name": "poll6",
+        "noOfQuestions": 3,
+        "status": "PUBLISHED",
+        "questions": [
+            {
+                "q": "q1",
+                "a": [
+                    "a1a",
+                    "a1b",
+                    "a1c"
+                ],
+                "ca": "a1a"
+            },
+            {
+                "q": "q2",
+                "a": [
+                    "a2a",
+                    "a2b",
+                    "a2c"
+                ],
+                "ca": "a2b"
+            },
+            {
+                "q": "q3",
+                "a": [
+                    "a3a",
+                    "a3b",
+                    "a3c"
+                ],
+                "ca": "a3c"
+            }
+        ],
+        "answers": null,
+        "correctAnswers": 0,
+        "username": null
+    }
+]
+
+/api/admin/getQuizesTakenByUser
+Description: Fetches all quizes that are PUBLISHED already taken by user 
+Type: get
+Input: String username
+Example: https://localhost:8443/api/admin/getQuizesTakenByUser?username=test2
+Output: (just as example)
+[
+    {
+        "id": 29,
+        "createdAt": "2020-04-25T08:01:16.196+0000",
+        "name": "Moj novi kviz3",
+        "noOfQuestions": 1,
+        "status": "PUBLISHED",
+        "questions": [
+            {
+                "question": "p3",
+                "answers": [
+                    "o1",
+                    "o2"
+                ],
+                "correctAnswer": "o1"
+            }
+        ],
+        "answers": [
+            {
+                "a": "a1a",
+                "q": "qzzzzY"
+            },
+            {
+                "a": "a2a",
+                "q": "q2"
+            },
+            {
+                "a": "a3a",
+                "q": "q3"
+            }
+        ],
+        "correctAnswers": 1,
+        "username": "test2"
+    }
+]
+

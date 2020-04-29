@@ -4,6 +4,7 @@ import {AxiosResponse, AxiosError} from "axios";
 import QuizDTO from "../model/QuizDTO";
 import UserStore from "./UserStore";
 import QuizQuestion from "../model/QuizQuestion";
+import QuizAnswer from "../model/QuizAnswer";
 
 
 class QuizStore {
@@ -12,11 +13,16 @@ class QuizStore {
 	@observable newQuizDTO: QuizDTO = new QuizDTO();
 	@observable successfulQuizUpdate: boolean = true;
 	@observable successfulQuizAdd: boolean = true;
+	@observable successfulQuizAnswersAdd: boolean = true;
 	@observable responseErrorMessage: string = '';
 	@observable adminDisplayNewQuizForm: boolean = true;	// new quiz form or update existing quiz form
 	@observable adminDisplayNewQuizFormQuestions: boolean = false;
 	@observable newQuizQuestions: QuizQuestion[] = [];
 	@observable newQuizQuestionsNumber: number = 0;
+	@observable quizForUserNewDTO: QuizDTO[] = [];
+	@observable quizForUserTakenDTO: QuizDTO[] = [];
+	@observable userHasUntakenQuizes: boolean = false;
+	@observable newQuizAnswers: QuizAnswer[] = [];
 
     getQuiz(name: string) {
         quizRepository.getQuiz(name, sessionStorage.getItem('token')!)
@@ -66,6 +72,57 @@ class QuizStore {
 				this.successfulQuizAdd = false;
             }));
 		return this.successfulQuizAdd;
+    }
+
+	@action
+	async getNewQuizesForUser(username: string) {
+		this.setUserHasUntakenQuizes(false);
+        await quizRepository.getNewQuizesForUser(username, sessionStorage.getItem('token')!)
+            .then(action((response: AxiosResponse) => {
+                this.quizForUserNewDTO = response.data;
+				if(this.quizForUserNewDTO.length > 0) {
+					this.setUserHasUntakenQuizes(true);
+				}
+            }))
+			.catch(action((error: AxiosError) => {
+				if(error.response) {
+					if(error.response.data.toString().includes("Expired or invalid JWT token")) {
+						UserStore.clearSessionStorage();
+					}
+				}
+            }));
+    }
+
+	getQuizesTakenByUser(username: string) {
+        quizRepository.getQuizesTakenByUser(username, sessionStorage.getItem('token')!)
+            .then(action((response: AxiosResponse) => {
+                this.quizForUserTakenDTO = response.data;
+            }))
+			.catch(action((error: AxiosError) => {
+				if(error.response) {
+					if(error.response.data.toString().includes("Expired or invalid JWT token")) {
+						UserStore.clearSessionStorage();
+					}
+				}
+            }));
+    }
+
+	@action
+	async addQuizAnswers(quizDTO: QuizDTO) {
+        await quizRepository.addQuizAnswers(quizDTO, sessionStorage.getItem('token')!)
+            .then(action((response: AxiosResponse) => {
+            	this.successfulQuizAnswersAdd = true;
+            }))
+			.catch(action((error: AxiosError) => {
+				if(error.response) {
+					if(error.response.data.toString().includes("Expired or invalid JWT token")) {
+						UserStore.clearSessionStorage();
+					}
+					this.responseErrorMessage = error.response.data.message;
+				}
+				this.successfulQuizAnswersAdd = false;
+            }));
+		return this.successfulQuizAnswersAdd;
     }
 
 
@@ -126,6 +183,23 @@ class QuizStore {
 	@action
     setNewQuizDTO(newQuizDTO: QuizDTO) {
 		this.newQuizDTO = newQuizDTO;
+    }
+	@action
+    setUserHasUntakenQuizes(userHasUntakenQuizes: boolean) {
+		this.userHasUntakenQuizes = userHasUntakenQuizes;
+    }
+	@action
+    async initializeNewQuizAnswers(quizDTO: QuizDTO) {
+		this.newQuizAnswers = [];
+		for (var i = 0; i < quizDTO.questions.length; i++) {
+			let quizAnswer: QuizAnswer = new QuizAnswer();
+			quizAnswer.question = quizDTO.questions[i].question;
+			this.newQuizAnswers.push(quizAnswer);
+		}
+    }
+	@action
+    async setNewQuizAnswer(questionNo: number, answer: string) {
+		this.newQuizAnswers[questionNo].answer = answer;
     }
 
 }
