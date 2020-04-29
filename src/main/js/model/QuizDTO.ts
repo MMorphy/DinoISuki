@@ -15,6 +15,7 @@ export default class QuizDTO {
 	@observable answers: QuizAnswer[] = [];
 	@observable correctAnswers: number = 0;
 	@observable username: string = '';
+	@observable usersParticipated: number = 0;
 	
 }
 

@@ -15,7 +15,10 @@ export default class AdminQuizNew extends React.Component<{}, {isError: boolean,
 	}
 	
 	createNewQuiz = async () => {
-		quizStore.setDisplayNewQuizFormQuestions(false);
+		if(quizStore.adminDisplayNewQuizFormQuestions) {
+			quizStore.setDisplayNewQuizFormQuestions(false);
+			return;
+		}
 		if(quizStore.newQuizDTO.name === undefined || quizStore.newQuizDTO.name === null || quizStore.newQuizDTO.name === '') {
 			this.setState({
 		    	isError: true,

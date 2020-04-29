@@ -23,6 +23,7 @@ class QuizStore {
 	@observable quizForUserTakenDTO: QuizDTO[] = [];
 	@observable userHasUntakenQuizes: boolean = false;
 	@observable newQuizAnswers: QuizAnswer[] = [];
+	@observable allAnswersForQuiz: QuizDTO[] = [];
 
     getQuiz(name: string) {
         quizRepository.getQuiz(name, sessionStorage.getItem('token')!)
@@ -123,6 +124,20 @@ class QuizStore {
 				this.successfulQuizAnswersAdd = false;
             }));
 		return this.successfulQuizAnswersAdd;
+    }
+
+	async getAllAnswersForQuiz(quizname: string) {
+        await quizRepository.getAllAnswersForQuiz(quizname, sessionStorage.getItem('token')!)
+            .then(action((response: AxiosResponse) => {
+                this.allAnswersForQuiz = response.data;
+            }))
+			.catch(action((error: AxiosError) => {
+				if(error.response) {
+					if(error.response.data.toString().includes("Expired or invalid JWT token")) {
+						UserStore.clearSessionStorage();
+					}
+				}
+            }));
     }
 
 

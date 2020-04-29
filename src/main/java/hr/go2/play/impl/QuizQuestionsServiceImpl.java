@@ -45,4 +45,9 @@ public class QuizQuestionsServiceImpl implements QuizQuestionsService {
 		return (List<QuizQuestions>) quizQuestionsRepo.getQuizesTakenByUser(user);
 	}
 
+	@Override
+	public int getNoOfUsersParticipatedInQuiz(String quizName) {
+		return quizQuestionsRepo.getNoOfUsersParticipatedInQuiz(quizName);
+	}
+
 }

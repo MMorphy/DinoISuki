@@ -45,6 +45,15 @@ class QuizRepository {
             });
     }
 
+	getAllAnswersForQuiz(quizname: string, token: string): Promise<AxiosResponse> {
+		return axios.get(`/api/admin/getAllAnswersForQuiz?quizname=${quizname}`,
+            {
+                headers: {'Authorization': `Bearer ${token}`}
+            });
+    }
+
+
+
 }
 
 const quizRepository = new QuizRepository();

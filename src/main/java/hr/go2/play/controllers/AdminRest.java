@@ -371,10 +371,16 @@ public class AdminRest {
 		List<QuizDTO> quizes = new ArrayList<QuizDTO>();
 		if (name == null || name.isEmpty()) {
 			quizes = quizQuestionsService.findAll().stream().map(quizQuestion -> mapper.map(quizQuestion, QuizDTO.class)).collect(Collectors.toList());
+			for (QuizDTO quiz : quizes) {
+				int noOfUsersParticipatedInQuiz = quizQuestionsService.getNoOfUsersParticipatedInQuiz(quiz.getName());
+				quiz.setUsersParticipated(noOfUsersParticipatedInQuiz);
+			}
 		} else {
 			Optional<QuizQuestions> optionalQuizQuestions = quizQuestionsService.findByName(name);
 			if (optionalQuizQuestions.isPresent()) {
 				QuizDTO quizDTO = mapper.map(optionalQuizQuestions.get(), QuizDTO.class);
+				int noOfUsersParticipatedInQuiz = quizQuestionsService.getNoOfUsersParticipatedInQuiz(quizDTO.getName());
+				quizDTO.setUsersParticipated(noOfUsersParticipatedInQuiz);
 				quizes.add(quizDTO);
 			}
 		}
@@ -448,7 +454,7 @@ public class AdminRest {
 	}
 
 	/*
-	 * Description: Fetches all quizes that are PUBLISHED the user has not taken yet 
+	 * Description: Fetches all quizes that are PUBLISHED the user has not taken yet
 	 * Input params: username (string) Call example:
 	 * https://localhost:8443/api/admin/getNewQuizesForUser?username=test2
 	 *
@@ -475,7 +481,7 @@ public class AdminRest {
 	}
 
 	/*
-	 * Description: Fetches all quizes that are PUBLISHED already taken by user 
+	 * Description: Fetches all quizes that are PUBLISHED already taken by user
 	 * Input params: username (string) Call example:
 	 * https://localhost:8443/api/admin/getQuizesTakenByUser?username=test2
 	 *
@@ -571,5 +577,34 @@ public class AdminRest {
 
 		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Quiz answers saved!"), HttpStatus.OK);
 	}
+
+	/*
+	 * Description: Fetches all quizes that are PUBLISHED the user has not taken yet Input params: username (string) Call example:
+	 * https://localhost:8443/api/admin/getNewQuizesForUser?username=test2
+	 *
+	 */
+	@Transactional
+	@GetMapping("/getAllAnswersForQuiz")
+	public ResponseEntity<?> getAllAnswersForQuiz(@RequestParam(name = "quizname") String quizname) {
+		logger.debug("/api/admin/getAllAnswersForQuiz Started");
+
+		if (quizname == null || quizname.isEmpty()) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Quiz name not provided"), HttpStatus.BAD_REQUEST);
+		}
+
+		List<QuizDTO> quizes = new ArrayList<QuizDTO>();
+		List<QuizAnswers> quizAnswersForQuizes = quizAnswersService.getAllAnswersForQuiz(quizname);
+		for (QuizAnswers quizAnswers : quizAnswersForQuizes) {
+			QuizDTO quizDTO = mapper.map(quizAnswers, QuizDTO.class);
+			quizDTO.setCreatedAt(quizAnswers.getTakenAt());
+			quizDTO.setUsername(quizAnswers.getUserId().getUsername());
+			quizDTO.setName(quizname);
+			quizes.add(quizDTO);
+		}
+
+		logger.debug("/api/admin/getAllAnswersForQuiz Finished");
+		return new ResponseEntity<>(quizes, HttpStatus.OK);
+	}
+
 
 }

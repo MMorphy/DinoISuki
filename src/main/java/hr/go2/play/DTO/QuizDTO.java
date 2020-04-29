@@ -15,6 +15,7 @@ public class QuizDTO {
 	private Object answers;
 	private int correctAnswers;
 	private String username;
+	private int usersParticipated;
 
 	public QuizDTO() {
 	}
@@ -89,6 +90,14 @@ public class QuizDTO {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public int getUsersParticipated() {
+		return usersParticipated;
+	}
+
+	public void setUsersParticipated(int usersParticipated) {
+		this.usersParticipated = usersParticipated;
 	}
 
 }

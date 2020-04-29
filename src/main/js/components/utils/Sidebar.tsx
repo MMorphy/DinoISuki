@@ -40,15 +40,15 @@ export default class Sidebar extends React.Component<{}, {}> {
 					{
 						(sessionStorage.getItem('token')) 
 							? (notificationsStore.hasUnreadMessages)
-		                        ? <Link className="font-color" to="/usernotifications" onClick={() => appStore.changeSidebarVisibility()}><h5 className="usernotifications" id="usernotifications">Poruke</h5><i className="fas fa-circle sidebar-notification-dot"></i></Link>
-								: <Link className="font-color" to="/usernotifications" onClick={() => appStore.changeSidebarVisibility()}><h5 id="usernotifications">Poruke</h5></Link>
+		                        ? <div> <Link className="font-color" to="/usernotifications" onClick={() => appStore.changeSidebarVisibility()}><h5 className="usernotifications" id="usernotifications">Poruke</h5><i className="fas fa-circle sidebar-notification-dot"></i></Link> </div>
+								: <div> <Link className="font-color" to="/usernotifications" onClick={() => appStore.changeSidebarVisibility()}><h5 id="usernotifications">Poruke</h5></Link> </div> 
 							: <div/>
 	                }
 					{
 						(sessionStorage.getItem('token')) 
 							? (quizStore.userHasUntakenQuizes)
-		                        ? <Link className="font-color" to="/userquizes" onClick={() => appStore.changeSidebarVisibility()}><h5 className="usernotifications" id="userquizes">Kvizovi</h5><i className="fas fa-circle sidebar-notification-dot"></i></Link>
-								: <Link className="font-color" to="/userquizes" onClick={() => appStore.changeSidebarVisibility()}><h5 id="userquizes">Kvizovi</h5></Link>
+		                        ? <div> <Link className="font-color" to="/userquizes" onClick={() => appStore.changeSidebarVisibility()}><h5 className="usernotifications" id="userquizes">Kvizovi</h5><i className="fas fa-circle sidebar-notification-dot"></i></Link> </div>
+								: <div> <Link className="font-color" to="/userquizes" onClick={() => appStore.changeSidebarVisibility()}><h5 id="userquizes">Kvizovi</h5></Link> </div>
 							: <div/>
 	                }
 

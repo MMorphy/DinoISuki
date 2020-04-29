@@ -21,4 +21,7 @@ public interface QuizQuestionsRepository extends JpaRepository<QuizQuestions, Lo
 	@Query(value = "SELECT qq FROM QuizQuestions qq JOIN QuizAnswers qa ON qq.id = qa.quizId WHERE qq.status = 1 and qa.userId = ?1")
 	public Collection<QuizQuestions> getQuizesTakenByUser(User user);
 
+	@Query(value = "SELECT COUNT(qa.id) FROM QuizQuestions qq JOIN QuizAnswers qa ON qq.id = qa.quizId WHERE qq.name = ?1")
+	public int getNoOfUsersParticipatedInQuiz(String quizName);
+
 }

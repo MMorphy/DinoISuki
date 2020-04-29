@@ -760,3 +760,102 @@ Output: (just as example)
     }
 ]
 
+/api/admin/addQuizAnswers
+Description: store quiz answers
+Type: put
+Input: QuizDTO
+{
+			"name": "Moj novi kviz3",
+			"noOfQuestions": 4,
+			"status": "NOT_PUBLISHED",
+			"answers": [
+				{
+				"q": "qzzzzY",
+				"a": "a1a"
+				},
+				{
+				"q": "q2",
+				"a": "a2a"
+				},
+				{
+				"q": "q3",
+				"a": "a3a"
+				}
+				],
+			"correctAnswers": 1,
+			"username": "test2"
+		}
+Example: https://localhost:8443/api/admin/addQuizAnswers
+Output:
+{
+    "message": "Quiz answers saved!"
+}
+
+/api/admin/getAllAnswersForQuiz
+Description: Fetches all answers by all users that have taken the quiz by quiz name
+Type: get
+Input: String quizname
+Example: https://localhost:8443/api/admin/getAllAnswersForQuiz?quizname=Some quiz
+Output: 
+[
+    {
+        "id": 4,
+        "createdAt": "2020-04-28T17:30:41.458+0000",
+        "name": null,
+        "noOfQuestions": 0,
+        "status": null,
+        "questions": null,
+        "answers": [
+            {
+                "answer": "a",
+                "question": "Koje je prvo slovo abecede"
+            },
+            {
+                "answer": "mačka",
+                "question": "Izbaci uljeza"
+            },
+            {
+                "answer": "2",
+                "question": "koja je najbolja ocjena u školi?"
+            },
+            {
+                "answer": "na pivu",
+                "question": "Kuda idu divlje svinje?"
+            }
+        ],
+        "correctAnswers": 2,
+        "username": "test2",
+        "usersParticipated": 0
+    },
+    {
+        "id": 7,
+        "createdAt": "2020-04-29T09:58:39.261+0000",
+        "name": null,
+        "noOfQuestions": 0,
+        "status": null,
+        "questions": null,
+        "answers": [
+            {
+                "answer": "c",
+                "question": "Koje je prvo slovo abecede"
+            },
+            {
+                "answer": "cesta",
+                "question": "Izbaci uljeza"
+            },
+            {
+                "answer": "1",
+                "question": "koja je najbolja ocjena u školi?"
+            },
+            {
+                "answer": "na pivu",
+                "question": "Kuda idu divlje svinje?"
+            }
+        ],
+        "correctAnswers": 2,
+        "username": "test3",
+        "usersParticipated": 0
+    }
+]
+
+

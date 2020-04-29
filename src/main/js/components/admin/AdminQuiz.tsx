@@ -2,23 +2,30 @@ import React from "react";
 import {observer} from "mobx-react";
 import { MDBDataTable, MDBBtn } from 'mdbreact';
 import quizStore from "../../store/QuizStore";
-import {Card} from "react-bootstrap";
+import {Card, Col, Button} from "react-bootstrap";
 import ErrorMessage from "../utils/ErrorMessage";
 import AdminQuizNew from "./AdminQuizNew";
 import AdminQuizNewQuestions from "./AdminQuizNewQuestions";
+import AdminQuizAnswers from "./AdminQuizAnswers";
+
 
 @observer
-export default class AdminQuiz extends React.Component<{}, {}> {
+export default class AdminQuiz extends React.Component<{}, {showQuizAnswers: boolean}> {
 	constructor(props: any) {
     	super(props);
     	this.state = {
-			
+			showQuizAnswers: false
 		};
 	}
 	
 	detailsAction = async () => {
 		// @ts-ignore
 		const id: number = event.srcElement.id;
+		
+		this.setState ({
+			showQuizAnswers: false
+		});
+		
 		// @ts-ignore
 		const status: string = quizStore.quizDTO[id].status;
 		if(status === 'NOT_PUBLISHED') {
@@ -26,6 +33,12 @@ export default class AdminQuiz extends React.Component<{}, {}> {
 			quizStore.setNewQuizDTO(quizStore.quizDTO[id]);
 			quizStore.setNewQuizQuestions(quizStore.quizDTO[id].questions);
 			quizStore.setDisplayNewQuizForm(false);
+		} else {
+			// view the answers
+			await quizStore.getAllAnswersForQuiz(quizStore.quizDTO[id].name);
+			this.setState ({
+				showQuizAnswers: true
+			});
 		}
 		
 	};
@@ -56,6 +69,13 @@ export default class AdminQuiz extends React.Component<{}, {}> {
 			await quizStore.updateQuiz(quizStore.updateQuizDTO);
 		}
 	};
+	
+	createNewQuiz = async () => {
+		this.setState ({
+			showQuizAnswers: false
+		});
+	}
+	
 	
 
     render() {
@@ -119,15 +139,15 @@ export default class AdminQuiz extends React.Component<{}, {}> {
 					name: quizStore.quizDTO[i].name,
 					noOfQuestions: quizStore.quizDTO[i].noOfQuestions,
 					status: quizStore.quizDTO[i].status,
-					participated: 0,
+					participated: quizStore.quizDTO[i].usersParticipated,
 					changeStatus: <MDBBtn className="admin-table-button" id={i} color="cyan" size="sm" onClick={() => this.updateStatus()}>Promijeni status</MDBBtn>,
 					view: <MDBBtn className="admin-table-button" id={i} color="cyan" size="sm" onClick={() => this.detailsAction()}>Detalji</MDBBtn>
 				}
-			)
+			);
 		}
 
 		// combined columns and rows for notifications data
-		const notificationsData = {
+		const quizData = {
 		    columns,
 		    rows
 		};
@@ -158,12 +178,12 @@ export default class AdminQuiz extends React.Component<{}, {}> {
 								hover
 								sortable
 								paginationLabel={["Prethodna", "Slijedeća"]}
-								infoLabel={["Prikazano", "do", "od", "kvozova"]}
+								infoLabel={["Prikazano", "do", "od", "kvizova"]}
 								entriesLabel="Prikaži kvizova"
 								searchLabel="Pronađi..."
 								noRecordsFoundLabel="Nema podataka"
 								tbodyTextWhite
-								data={notificationsData}
+								data={quizData}
 						    />
 	                    </div>
 	                </Card.Body>
@@ -171,16 +191,25 @@ export default class AdminQuiz extends React.Component<{}, {}> {
 	            </Card>
 
 				{
-                    quizStore.adminDisplayNewQuizForm
+                    (quizStore.adminDisplayNewQuizForm && !this.state.showQuizAnswers)
                         ? <AdminQuizNew/>
                         : <div/>
                 }
 				{
-                    (quizStore.adminDisplayNewQuizFormQuestions || !quizStore.adminDisplayNewQuizForm)
+                    ((quizStore.adminDisplayNewQuizFormQuestions || !quizStore.adminDisplayNewQuizForm) && !this.state.showQuizAnswers)
                         ? <AdminQuizNewQuestions/>
                         : <div/>
                 }
-				
+				{
+					this.state.showQuizAnswers
+                        ? 	<div>
+								<AdminQuizAnswers/>
+			                        <Col className="login-registration-button-center">
+			                            <Button type="submit" className="login-registration-button-color" onClick={() => this.createNewQuiz()}><b>Kreiraj novi kviz</b></Button>
+			                        </Col>
+							</div>
+                        : <div/>
+				}
 				
 
             </div>

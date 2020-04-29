@@ -18,4 +18,6 @@ public interface QuizQuestionsService {
 
 	public abstract List<QuizQuestions> getQuizesTakenByUser(User user);
 
+	public abstract int getNoOfUsersParticipatedInQuiz(String quizName);
+
 }

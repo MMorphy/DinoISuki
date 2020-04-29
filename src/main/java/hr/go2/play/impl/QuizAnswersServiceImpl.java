@@ -1,5 +1,6 @@
 package hr.go2.play.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -33,6 +34,11 @@ public class QuizAnswersServiceImpl implements QuizAnswersService {
 	@Override
 	public Optional<QuizAnswers> findByUserIdAndQuizId(User user, QuizQuestions quizId) {
 		return quizAnswersRepo.findByUserIdAndQuizId(user, quizId);
+	}
+
+	@Override
+	public List<QuizAnswers> getAllAnswersForQuiz(String quizName) {
+		return (List<QuizAnswers>) quizAnswersRepo.getAllAnswersForQuiz(quizName);
 	}
 
 }
