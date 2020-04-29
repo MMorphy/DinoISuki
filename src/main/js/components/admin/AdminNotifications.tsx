@@ -215,6 +215,7 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 			                            <FormLabel><h5 className="font-color font-size">Poruka</h5></FormLabel>
 			                        </Col>
 			                        <Col>
+// @ts-ignore
 			                            <FormControl as="textarea" rows="3" value={notificationsStore.newNotification.message} onChange={(e: any) => notificationsStore.newNotificationHolder(e.target.value, "message")}/>
 			                        </Col>
 			                    </FormGroup>
@@ -272,6 +273,7 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 		                            <FormLabel><h5 className="font-color font-size">Poruka</h5></FormLabel>
 		                        </Col>
 		                        <Col>
+// @ts-ignore
 		                            <FormControl as="textarea" rows="3" value={notificationsStore.editNotification.message} onChange={(e: any) => notificationsStore.editNotificationHolder(e.target.value, "message")}/>
 		                        </Col>
 		                    </FormGroup>
