@@ -113,14 +113,13 @@ export default class AdminQuizNewQuestions extends React.Component<{}, {isError:
 			const questionNumber: number = i + 1;
 			const questionLabel: string = 'Pitanje broj ' + questionNumber;
 			const questionNo: number = parseInt(`${i}`);
-			
+			// @ts-ignore-start
 			questions.push(	<FormGroup controlId={'q' + questionNo} key={'q' + questionNo}>
 								<Col> <FormLabel><h5 className="font-color font-size">{questionLabel}</h5></FormLabel> </Col>
-// @ts-ignore
 								<Col> <FormControl as="textarea" rows="3" value={quizStore.newQuizQuestions[questionNo].question} type="username" onChange={(e: any) => quizStore.newQuizEmptyQuestionHolder(e.target.value, "question", questionNo, 0)}/> </Col>
 							</FormGroup>
 			);
-								
+			// @ts-ignore-end				
 			
 			for (var j = 0; j < quizStore.newQuizQuestions[questionNo].answers.length; j++) {
 				// for each question itterating trough number of answers and creating as many forms as needed

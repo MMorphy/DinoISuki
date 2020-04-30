@@ -152,7 +152,7 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 		
         return (
             <div>
-				<Card className="my-profile-card">
+				<Card className="my-profile-card card-style-center">
 	                <Card.Header>
 	                    <div className="row">
 							<h5 className="h5-my-profile-card-title">Poruke korisnicima</h5>
@@ -215,8 +215,10 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 			                            <FormLabel><h5 className="font-color font-size">Poruka</h5></FormLabel>
 			                        </Col>
 			                        <Col>
-// @ts-ignore
-			                            <FormControl as="textarea" rows="3" value={notificationsStore.newNotification.message} onChange={(e: any) => notificationsStore.newNotificationHolder(e.target.value, "message")}/>
+										{
+											// @ts-ignore
+			                            	<FormControl as="textarea" rows="3" value={notificationsStore.newNotification.message} onChange={(e: any) => notificationsStore.newNotificationHolder(e.target.value, "message")}/>
+										}
 			                        </Col>
 			                    </FormGroup>
 							

@@ -121,7 +121,7 @@ export default class UserNotifications extends React.Component<{}, {modalVisible
 		
         return (
             <div className="about-go2play-margin">
-				<Card className="my-profile-card">
+				<Card className="my-profile-card card-style-center">
 	                <Card.Header>
 	                    <div className="row">
 							<h5 className="h5-my-profile-card-title">Korisničke poruke</h5>

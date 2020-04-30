@@ -160,7 +160,7 @@ export default class AdminSubscriptions extends React.Component<{}, {saveSubscri
 	
         return (
             <div>
-				<Card className="my-profile-card">
+				<Card className="my-profile-card card-style-center">
 	                <Card.Header>
 	                    <div className="row">
 							<h5 className="h5-my-profile-card-title">Korisničke pretplate</h5>

@@ -5,7 +5,7 @@ import quizStore from "../../store/QuizStore";
 import {Card, Form, FormGroup, Col, FormLabel} from "react-bootstrap";
 
 @observer
-export default class AdminQuizAnswers extends React.Component<{}, {quizId: number, quizQuestionsAndAnswers: any, displayQuestionsAndAnswers: boolean}> {
+export default class AdminQuizAnswers extends React.Component<{}, {quizId: number, quizQuestionsAndAnswers: any, displayQuestionsAndAnswers: boolean, username: string}> {
 	constructor(props: any) {
     	super(props);
 		let quizId: number = -1;
@@ -20,7 +20,8 @@ export default class AdminQuizAnswers extends React.Component<{}, {quizId: numbe
     	this.state = {
 			quizId: quizId,
 			quizQuestionsAndAnswers: [],
-			displayQuestionsAndAnswers: false
+			displayQuestionsAndAnswers: false,
+			username: ''
 		};
 	}
 	
@@ -31,7 +32,8 @@ export default class AdminQuizAnswers extends React.Component<{}, {quizId: numbe
 		console.log("this.state.quizId:" + this.state.quizId);
 		
 		this.setState({
-			displayQuestionsAndAnswers: false
+			displayQuestionsAndAnswers: false,
+			username: quizStore.allAnswersForQuiz[id].username
 	    });
 		
 		// recreating the quiz based on user answers
@@ -149,7 +151,7 @@ export default class AdminQuizAnswers extends React.Component<{}, {quizId: numbe
 		
         return (
             <div>
-				<Card className="my-profile-card">
+				<Card className="my-profile-card card-style-center" style={{margin:"auto", width:"92%"}}>
 	                <Card.Header>
 	                    <div className="row">
 							<h5 className="h5-my-profile-card-title">Odgovori</h5>
@@ -186,13 +188,13 @@ export default class AdminQuizAnswers extends React.Component<{}, {quizId: numbe
 								<Card className='my-profile-card'>
 									<Card.Header>
 							    	    <div className="row">
-											<h5 className="h5-my-profile-card-title">Detalji</h5>
+											<h5 className="h5-my-profile-card-title">Detaljni odgovori korisnika: {this.state.username}</h5>
 							    		</div>
 							    	</Card.Header>
 							    	<Card.Body>
 						
 										<div className="row">
-											<Form className="admin-subscription-form-width">
+											<Form style={{margin:"auto"}}>
 								
 												{this.state.quizQuestionsAndAnswers}
 								

@@ -225,7 +225,7 @@ export default class UserQuizes extends React.Component<{}, {quizQuestions: any,
 		
         return (
             <div className="about-go2play-margin">
-				<Card className="my-profile-card">
+				<Card className="my-profile-card card-style-center">
 	                <Card.Header>
 	                    <div className="row">
 							<h5 className="h5-my-profile-card-title">Kvizovi</h5>
@@ -270,7 +270,7 @@ export default class UserQuizes extends React.Component<{}, {quizQuestions: any,
 							    	<Card.Body>
 						
 										<div className="row">
-											<Form className="admin-subscription-form-width">
+											<Form style={{margin:"auto"}}>
 								
 												{this.state.quizQuestions}
 								

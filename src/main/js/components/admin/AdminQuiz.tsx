@@ -154,7 +154,7 @@ export default class AdminQuiz extends React.Component<{}, {showQuizAnswers: boo
 		
         return (
             <div>
-				<Card className="my-profile-card">
+				<Card className="my-profile-card card-style-center">
 	                <Card.Header>
 	                    <div className="row">
 							<h5 className="h5-my-profile-card-title">Kvizovi</h5>

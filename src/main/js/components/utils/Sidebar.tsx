@@ -47,8 +47,8 @@ export default class Sidebar extends React.Component<{}, {}> {
 					{
 						(sessionStorage.getItem('token')) 
 							? (quizStore.userHasUntakenQuizes)
-		                        ? <div> <Link className="font-color" to="/userquizes" onClick={() => appStore.changeSidebarVisibility()}><h5 className="usernotifications" id="userquizes">Kvizovi</h5><i className="fas fa-circle sidebar-notification-dot"></i></Link> </div>
-								: <div> <Link className="font-color" to="/userquizes" onClick={() => appStore.changeSidebarVisibility()}><h5 id="userquizes">Kvizovi</h5></Link> </div>
+		                        ? <div className="sidebar-link-fit-content"> <Link className="font-color" to="/userquizes" onClick={() => appStore.changeSidebarVisibility()}><h5 className="usernotifications" id="userquizes">Kvizovi</h5><i className="fas fa-circle sidebar-notification-dot"></i></Link> </div>
+								: <div className="sidebar-link-fit-content"> <Link className="font-color" to="/userquizes" onClick={() => appStore.changeSidebarVisibility()}><h5 id="userquizes">Kvizovi</h5></Link> </div>
 							: <div/>
 	                }
 

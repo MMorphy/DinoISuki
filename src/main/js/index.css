@@ -532,6 +532,7 @@ div.scroll-horizontal > div {
 
 .admin-transactions-MDBDataTable {
 	color: white;
+	margin: auto;
 }
 .admin-transactions-MDBDataTable table {
 	color: #f04e23;
@@ -613,4 +614,10 @@ div.scroll-horizontal > div {
 }
 .user-notifications-table-row-bold {
 	font-weight: bold;
+}
+.sidebar-link-fit-content {
+	width: fit-content;
+}
+.card-style-center {
+	text-align: center;
 }
