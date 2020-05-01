@@ -1,7 +1,9 @@
 import React from "react";
 import {Card, Tab, Tabs} from "react-bootstrap";
 import subscriptionStore from "../../store/SubscriptionStore";
+import {observer} from "mobx-react";
 
+@observer
 export default class UserSubscriptionCard extends React.Component<{}, {}> {
     render() {
         return (
@@ -10,11 +12,11 @@ export default class UserSubscriptionCard extends React.Component<{}, {}> {
                     <h5 className="h5-my-profile-card-title">Moje pretplate</h5>
                 </Card.Header>
                 <Card.Body>
-                    <Tabs defaultActiveKey={subscriptionStore.activeSubscriptions.length ? "active-subs" : "history-subs"} id="uncontrolled-tab-example" className="subscription-tabs">
+                    <Tabs defaultActiveKey={subscriptionStore.activeSubscriptions === [] ? "history-subs" : "active-subs"} id="uncontrolled-tab-example" className="subscription-tabs">
                         {
-                            subscriptionStore.activeSubscriptions.length === 0
+                            subscriptionStore.activeSubscriptions === []
                             ? <div/>
-                            : this.activeSubscriptionTab()
+                            : this.getActiveSubscriptionsTab()
                         }
 
                         <Tab eventKey="history-subs" title="Povijest pretplati">
@@ -48,16 +50,9 @@ export default class UserSubscriptionCard extends React.Component<{}, {}> {
         );
     }
 
-    componentDidMount(): void {
-        subscriptionStore.getActiveSubscriptionsByUser(sessionStorage.getItem("username")!);
-        subscriptionStore.getInactiveSubscriptionsByUser(sessionStorage.getItem("username")!);
-    }
+    private getActiveSubscriptionsTab() {
+        return <Tab eventKey="active-subs" title="Aktivne pretplate">
 
-    private activeSubscriptionTab() {
-        return (
-            <Tab eventKey="active-subs" title="Aktivne pretplate">
-
-            </Tab>
-        )
+        </Tab>;
     }
 }

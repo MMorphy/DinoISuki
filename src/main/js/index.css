@@ -404,6 +404,7 @@ h3 {
 
 .column.my-profile-card-first-column {
     width: 69%;
+    padding-left: .75em;
 }
 
 .column.my-profile-card-second-column {

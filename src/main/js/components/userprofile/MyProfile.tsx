@@ -13,6 +13,7 @@ import UserDTO from "../../model/UserDTO";
 import {action} from "mobx";
 import ContactInformationDTO from "../../model/ContactInformationDTO";
 import {History, LocationState} from "history";
+import subscriptionStore from "../../store/SubscriptionStore";
 
 interface MyProfileProps {
     history: History<LocationState>;
@@ -41,6 +42,8 @@ export default class MyProfile extends React.Component<MyProfileProps, {}> {
         if (sessionStorage.getItem('username')) {
             userStore.fetchUserProfile();
             userStore.fetchUserProfilePhoto();
+            subscriptionStore.getActiveSubscriptionsByUser();
+            subscriptionStore.getInactiveSubscriptionsByUser();
         } else {
             this.props.history.push("/login");
         }
