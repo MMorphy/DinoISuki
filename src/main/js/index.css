@@ -362,6 +362,20 @@ h3 {
     border-color: #f04e23;
 }
 
+/**MY PROFILE - SUBSCRIPTION INFORMATION*/
+.subscription-tabs * {
+    background-color: black!important;
+    border-color: black!important;
+}
+
+.subscription-tabs > .nav-link.active {
+    color: #f04e23!important;
+}
+
+.subscription-tabs > .nav-link {
+    color: white!important;
+}
+
 /**MY PROFILE - GENERAL INFORMATION*/
 .my-profile-container {
     display: flex;
