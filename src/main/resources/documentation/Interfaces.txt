@@ -858,4 +858,74 @@ Output:
     }
 ]
 
+/api/admin/getLocationWithWorkingHours
+Description: Fetch location(s) with working hours
+Type: get
+Input: String name (optional)
+Example: https://localhost:8443/api/admin/getLocationWithWorkingHours?name=Lokacija1
+Output: 
+[
+    {
+        "id": 1,
+        "name": "Lokacija1",
+        "address": "Neka adresa",
+        "workingHours": [
+            {
+                "id": 1,
+                "fromTime": "06:00:00",
+                "toTime": "06:00:00",
+                "dayType": "WORKDAY"
+            },
+            {
+                "id": 2,
+                "fromTime": "07:00:00",
+                "toTime": "07:00:00",
+                "dayType": "WEEKEND"
+            },
+            {
+                "id": 3,
+                "fromTime": "08:00:00",
+                "toTime": "08:00:00",
+                "dayType": "HOLIDAY"
+            }
+        ]
+    }
+]
+
+/api/admin/saveLocationWorkingHours
+Description: store working hours for given location
+Type: put
+Input: LocationWithWorkingHoursDTO
+{
+        
+        "name": "Skrivena lokacja",
+        
+        "workingHours": [
+        	{
+                "id": 1,
+                "fromTime": "06:00:00",
+                "toTime": "21:00:00",
+                "dayType": "WORKDAY"
+            },
+            {
+                "id": 2,
+                "fromTime": "08:00:00",
+                "toTime": "20:00:00",
+                "dayType": "WEEKEND"
+            },
+            {
+                "id": 3,
+                "fromTime": "09:00:00",
+                "toTime": "20:00:00",
+                "dayType": "HOLIDAY"
+            }
+        	]
+        
+    }
+Example: https://localhost:8443/api/admin/saveLocationWorkingHours
+Output:
+{
+    "message": "Working hours saved!"
+}
+
 

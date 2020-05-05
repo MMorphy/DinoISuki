@@ -5,6 +5,7 @@ import AdminStatisticsDTO from "../model/AdminStatisticsDTO";
 import TransactionDetailsDTO from "../model/TransactionDetailsDTO";
 import SubscriptionDTO from "../model/SubscriptionDTO";
 import AdminSubscriptionTypesDTO from "../model/AdminSubscriptionTypesDTO";
+import AdminLocationWithWorkingHoursDTO from "../model/AdminLocationWithWorkingHoursDTO";
 import UserStore from "./UserStore";
 
 class AdminStore {
@@ -17,8 +18,16 @@ class AdminStore {
 	@observable newSubscription: SubscriptionDTO = new SubscriptionDTO();
 	@observable adminSubscriptionTypesDTO: AdminSubscriptionTypesDTO[] = [];
 	@observable successfulSubscriptionSave: boolean = true;
-	@observable subscriptionSaveErrorMessage: string = '';
+	@observable errorMessage: string = '';
 	@observable responseErrorMessage: string = '';
+	@observable adminLocationWithWorkingHoursDTOList: AdminLocationWithWorkingHoursDTO[] = [];
+	@observable workingHoursDTOWorkdayTimeFrom: Date = new Date();
+	@observable workingHoursDTOWorkdayTimeTo: Date = new Date();
+	@observable workingHoursDTOWeekendTimeFrom: Date = new Date();
+	@observable workingHoursDTOWeekendTimeTo: Date = new Date();
+	@observable workingHoursDTOHolidayTimeFrom: Date = new Date();
+	@observable workingHoursDTOHolidayTimeTo: Date = new Date();
+	@observable successfulWorkingHoursSave: boolean = true;
 
     getAdminStatistics() {
         adminRepository.getAdminStatistics(sessionStorage.getItem('token')!)
@@ -125,12 +134,46 @@ class AdminStore {
 					if(error.response.data.toString().includes("Expired or invalid JWT token")) {
 						UserStore.clearSessionStorage();
 					}
-					this.subscriptionSaveErrorMessage = error.response.data.message;
+					this.errorMessage = error.response.data.message;
 				}
 				this.successfulSubscriptionSave = false;
             }));
 		return this.successfulSubscriptionSave;
     }
+
+	getLocationWithWorkingHours(name: string) {
+	        adminRepository.getLocationWithWorkingHours(name, sessionStorage.getItem('token')!)
+            .then(action((response: AxiosResponse) => {
+            	this.adminLocationWithWorkingHoursDTOList = response.data;
+            }))
+			.catch(action((error: AxiosError) => {
+				this.adminSubscriptionTypesDTO = [];
+				if(error.response) {
+					if(error.response.data.toString().includes("Expired or invalid JWT token")) {
+						UserStore.clearSessionStorage();
+					}
+				}
+            }));
+    }
+
+	@action
+	async saveLocationWorkingHours(adminLocationWithWorkingHoursDTO: AdminLocationWithWorkingHoursDTO) {
+        await adminRepository.saveLocationWorkingHours(adminLocationWithWorkingHoursDTO, sessionStorage.getItem('token')!)
+            .then(action((response: AxiosResponse) => {
+            	this.successfulWorkingHoursSave = true;
+            }))
+			.catch(action((error: AxiosError) => {
+				if(error.response) {
+					if(error.response.data.toString().includes("Expired or invalid JWT token")) {
+						UserStore.clearSessionStorage();
+					}
+					this.errorMessage = error.response.data.message;
+				}
+				this.successfulWorkingHoursSave = false;
+            }));
+		return this.successfulWorkingHoursSave;
+    }
+
 
 
 	/*** Util functions ***/
@@ -144,6 +187,40 @@ class AdminStore {
         // @ts-ignore
         this.newSubscription[key] = value;
     }
+
+	@action
+    saveWorkingHoursDTO(time: Date, dayType: string, timeType: string) {
+		switch(dayType) {
+			case 'WORKDAY': {
+				if(timeType === 'fromTime') {
+					this.workingHoursDTOWorkdayTimeFrom = time;
+				}
+				if(timeType === 'toTime') {
+					this.workingHoursDTOWorkdayTimeTo = time;
+				}
+				break;
+			}
+			case 'WEEKEND': {
+				if(timeType === 'fromTime') {
+					this.workingHoursDTOWeekendTimeFrom = time;
+				}
+				if(timeType === 'toTime') {
+					this.workingHoursDTOWeekendTimeTo = time;
+				}
+				break;
+			}
+			case 'HOLIDAY': {
+				if(timeType === 'fromTime') {
+					this.workingHoursDTOHolidayTimeFrom = time;
+				}
+				if(timeType === 'toTime') {
+					this.workingHoursDTOHolidayTimeTo = time;
+				}
+				break;
+			}
+		}
+    }
+
 
     
 }

@@ -259,7 +259,7 @@ export default class AdminSubscriptions extends React.Component<{}, {saveSubscri
 				                    (this.state.saveSubscriptionFinished && !adminStore.successfulSubscriptionSave)
 				                        ? 	<div className="updateErrorMessage">
                 								<b>Pogreška kod unosa pretplate Tekst pogreške:</b>
-												<p>{adminStore.subscriptionSaveErrorMessage}</p>
+												<p>{adminStore.errorMessage}</p>
 											</div>
 				                        : <div/>
 				                }

@@ -1,7 +1,5 @@
 package hr.go2.play.DTO;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -10,20 +8,15 @@ public class WorkingHoursDTO {
 
 	private Long id;
 
-	@JsonFormat(pattern="hh:mm:ss")
-	private String fromTime;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "CET")
+	private Date fromTime;
 
-	@JsonFormat(pattern="hh:mm:ss")
-	private String toTime;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "CET")
+	private Date toTime;
+
+	private String dayType;
 
 	public WorkingHoursDTO() {
-	}
-
-	public WorkingHoursDTO(Long id, String fromTime, String toTime) {
-		super();
-		this.id = id;
-		this.fromTime = fromTime;
-		this.toTime = toTime;
 	}
 
 	public Long getId() {
@@ -35,32 +28,27 @@ public class WorkingHoursDTO {
 	}
 
 	public Date getFromTime() {
-		Date timeFrom = null;
-		try {
-			SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss");
-			timeFrom = format.parse(this.fromTime);
-		} catch (ParseException ex) {
-			ex.printStackTrace();
-		}
-		return timeFrom;
+		return fromTime;
 	}
 
-	public void setFromTime(String fromTime) {
+	public void setFromTime(Date fromTime) {
 		this.fromTime = fromTime;
 	}
 
 	public Date getToTime() {
-		Date timeTo = null;
-		try {
-			SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss");
-			timeTo = format.parse(this.fromTime);
-		} catch (ParseException ex) {
-			ex.printStackTrace();
-		}
-		return timeTo;
+		return toTime;
 	}
 
-	public void setToTime(String toTime) {
+	public void setToTime(Date toTime) {
 		this.toTime = toTime;
 	}
+
+	public String getDayType() {
+		return dayType;
+	}
+
+	public void setDayType(String dayType) {
+		this.dayType = dayType;
+	}
+
 }

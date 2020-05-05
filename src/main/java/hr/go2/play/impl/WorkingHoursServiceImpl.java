@@ -91,4 +91,9 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
 		return (List<WorkingHours>) this.whRepo.findByDayType_Type(name);
 	}
 
+	@Override
+	public List<WorkingHours> findByFromTimeAndToTimeAndDayType(Date fromTime, Date toTime, DayType dayType) {
+		return (List<WorkingHours>) this.whRepo.findByFromTimeAndToTimeAndDayType(fromTime, toTime, dayType);
+	}
+
 }

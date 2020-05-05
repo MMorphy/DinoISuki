@@ -21,4 +21,6 @@ public interface WorkingHoursRepository extends JpaRepository<WorkingHours, Long
 	Collection<WorkingHours> findByDayType(DayType type);
 
 	Collection<WorkingHours> findByDayType_Type(String name);
+
+	Collection<WorkingHours> findByFromTimeAndToTimeAndDayType(Date fromTime, Date toTime, DayType dayType);
 }

@@ -29,8 +29,6 @@ export default class AdminQuizAnswers extends React.Component<{}, {quizId: numbe
 		// @ts-ignore
 		const id: number = event.srcElement.id;
 		
-		console.log("this.state.quizId:" + this.state.quizId);
-		
 		this.setState({
 			displayQuestionsAndAnswers: false,
 			username: quizStore.allAnswersForQuiz[id].username
@@ -46,7 +44,6 @@ export default class AdminQuizAnswers extends React.Component<{}, {quizId: numbe
 			let answers = [];
 			for (var j = 0; j < quizStore.quizDTO[this.state.quizId].questions[i].answers.length; j++) {
 				const answerNo: number = parseInt(`${j}`);
-				console.log("q:" + questionLabel + " ca:" + quizStore.quizDTO[this.state.quizId].questions[i].correctAnswer + " curr:" + quizStore.quizDTO[this.state.quizId].questions[i].answers[j] + " giv:" + quizStore.allAnswersForQuiz[id].answers[i].answer);
 				answers.push(	<Col style={{marginBottom:'10px', float: "right"}} key={questionNo + answerNo}>
 									<MDBBtn className="admin-table-button" id={questionNo + '-' + answerNo} color="cyan" style={{float:"left"}} size="sm">{quizStore.quizDTO[this.state.quizId].questions[i].answers[j]}</MDBBtn>
 									{

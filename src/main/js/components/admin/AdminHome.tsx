@@ -5,6 +5,7 @@ import AdminStatistics from "./AdminStatistics";
 import AdminTransactions from "./AdminTransactions";
 import AdminSubscriptions from "./AdminSubscriptions";
 import AdminNotifications from "./AdminNotifications";
+import AdminLocationWorkingHours from "./AdminLocationWorkingHours";
 import AdminQuiz from "./AdminQuiz";
 import {observer} from "mobx-react";
 import {History, LocationState} from "history";
@@ -26,6 +27,7 @@ export default class AdminHome extends React.Component<AdminHomeProps, {}> {
 						<Tab>Transakcije</Tab>
 						<Tab>Poruke</Tab>
 						<Tab>Kvizovi</Tab>
+						<Tab>Radno vrijeme</Tab>
 				    </TabList>
 				
 				    <TabPanel>
@@ -42,6 +44,9 @@ export default class AdminHome extends React.Component<AdminHomeProps, {}> {
 				    </TabPanel>
 					<TabPanel>
 						<AdminQuiz/>
+				    </TabPanel>
+					<TabPanel>
+						<AdminLocationWorkingHours/>
 				    </TabPanel>
 				</Tabs>
 				<br/>

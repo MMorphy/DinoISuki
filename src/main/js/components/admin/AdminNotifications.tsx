@@ -169,7 +169,7 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 	                    <div className="row">
 							<MDBDataTable className="admin-transactions-MDBDataTable"
 								autoWidth
-								reponsive
+								reponsive={"true"}
 								striped
 								bordered
 								small
@@ -275,7 +275,8 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 		                            <FormLabel><h5 className="font-color font-size">Poruka</h5></FormLabel>
 		                        </Col>
 		                        <Col>
-// @ts-ignore
+									{/*
+										 // @ts-ignore */}
 		                            <FormControl as="textarea" rows="3" value={notificationsStore.editNotification.message} onChange={(e: any) => notificationsStore.editNotificationHolder(e.target.value, "message")}/>
 		                        </Col>
 		                    </FormGroup>

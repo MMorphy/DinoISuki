@@ -186,7 +186,8 @@ export default class UserNotifications extends React.Component<{}, {modalVisible
 		                            <FormLabel><h5 className="font-color font-size">Poruka</h5></FormLabel>
 		                        </Col>
 		                        <Col>
-// @ts-ignore
+									{/*
+										 // @ts-ignore */}
 		                            <FormControl readOnly as="textarea" rows='3' value={notificationsStore.editNotification.message} />
 		                        </Col>
 		                    </FormGroup>

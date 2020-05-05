@@ -102,7 +102,7 @@ export default class AdminTransactions extends React.Component<{}, {}> {
 	                    <div className="row">
 							<MDBDataTable className="admin-transactions-MDBDataTable"
 								autoWidth
-								reponsive
+								reponsive={"true"}
 								striped
 								bordered
 								small

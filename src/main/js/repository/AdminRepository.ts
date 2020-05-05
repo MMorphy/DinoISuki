@@ -1,6 +1,8 @@
 import axios, {AxiosResponse} from 'axios';
 import SubscriptionDTO from '../model/SubscriptionDTO';
 import AdminNotificationDTO from '../model/AdminNotificationDTO';
+import AdminLocationWithWorkingHoursDTO from '../model/AdminLocationWithWorkingHoursDTO';
+
 
 class AdminRepository {
 
@@ -76,6 +78,20 @@ class AdminRepository {
 
 	updateNotification(adminNotificationDTO: AdminNotificationDTO, token: string): Promise<AxiosResponse> {
         return axios.post("/api/notifications/updateNotification", adminNotificationDTO,
+            {
+                headers: {'Authorization': `Bearer ${token}`}
+            });
+    }
+
+	getLocationWithWorkingHours(name: string, token: string): Promise<AxiosResponse> {
+        return axios.get(`/api/admin/getLocationWithWorkingHours?name=${name}`,
+            {
+                headers: {'Authorization': `Bearer ${token}`}
+            });
+    }
+
+	saveLocationWorkingHours(adminLocationWithWorkingHoursDTO: AdminLocationWithWorkingHoursDTO, token: string): Promise<AxiosResponse> {
+        return axios.post("/api/admin/saveLocationWorkingHours", adminLocationWithWorkingHoursDTO,
             {
                 headers: {'Authorization': `Bearer ${token}`}
             });

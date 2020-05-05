@@ -32,9 +32,12 @@ import hr.go2.play.DTO.ApplicationPropertiesDTO;
 import hr.go2.play.DTO.CameraDTO;
 import hr.go2.play.DTO.DiskSpaceInfo;
 import hr.go2.play.DTO.LocationDTO;
+import hr.go2.play.DTO.LocationWithWorkingHoursDTO;
 import hr.go2.play.DTO.QuizDTO;
+import hr.go2.play.DTO.WorkingHoursDTO;
 import hr.go2.play.entities.ApplicationProperties;
 import hr.go2.play.entities.Camera;
+import hr.go2.play.entities.DayType;
 import hr.go2.play.entities.Field;
 import hr.go2.play.entities.Location;
 import hr.go2.play.entities.QuizAnswers;
@@ -42,9 +45,11 @@ import hr.go2.play.entities.QuizQuestions;
 import hr.go2.play.entities.QuizStatus;
 import hr.go2.play.entities.SubscriptionStatistics;
 import hr.go2.play.entities.User;
+import hr.go2.play.entities.WorkingHours;
 import hr.go2.play.impl.CameraServiceImpl;
 import hr.go2.play.services.ApplicationPropertiesService;
 import hr.go2.play.services.CameraService;
+import hr.go2.play.services.DayTypeService;
 import hr.go2.play.services.FieldService;
 import hr.go2.play.services.LocationService;
 import hr.go2.play.services.QuizAnswersService;
@@ -52,6 +57,7 @@ import hr.go2.play.services.QuizQuestionsService;
 import hr.go2.play.services.SubscriptionService;
 import hr.go2.play.services.UserService;
 import hr.go2.play.services.VideoService;
+import hr.go2.play.services.WorkingHoursService;
 import hr.go2.play.util.Commons;
 
 @RestController
@@ -94,6 +100,12 @@ public class AdminRest {
 
 	@Autowired
 	private QuizAnswersService quizAnswersService;
+
+	@Autowired
+	private WorkingHoursService workingHoursService;
+
+	@Autowired
+	private DayTypeService dayTypeService;
 
 	//CRUD kamera
 	//CRUD Lokacija
@@ -579,8 +591,8 @@ public class AdminRest {
 	}
 
 	/*
-	 * Description: Fetches all answers by all users that have taken the quiz by quiz name 
-	 * Input params: quizname (string) 
+	 * Description: Fetches all answers by all users that have taken the quiz by quiz name
+	 * Input params: quizname (string)
 	 * Call example:
 	 * https://localhost:8443/api/admin/getAllAnswersForQuiz?quizname=Some quiz
 	 *
@@ -608,5 +620,122 @@ public class AdminRest {
 		return new ResponseEntity<>(quizes, HttpStatus.OK);
 	}
 
+	/*** Admin working hours management ***/
+
+	/*
+	 * Description: Fetch location(s) with working hours
+	 * Input parameters: String name (optional)
+	 * Call example:
+	 * https://localhost:8443/api/admin/getLocationWithWorkingHours?name=Lokacija1
+	 *
+	 */
+	@GetMapping("/getLocationWithWorkingHours")
+	public ResponseEntity<?> getLocationWithWorkingHours(@RequestParam(name = "name", required = false) String name) {
+		logger.debug("/api/admin/getLocationWithWorkingHours Started");
+
+		List<LocationWithWorkingHoursDTO> locationWithWorkingHoursDTOList = new ArrayList<LocationWithWorkingHoursDTO>();
+
+		List<Location> locations = new ArrayList<Location>();
+		if (name != null && !name.isEmpty()) {
+			Location location = locationService.findLocationByName(name);
+			if (location != null) {
+				locations.add(location);
+			}
+		} else {
+			locations = locationService.findAllLocations();
+		}
+		for (Location location : locations) {
+			LocationWithWorkingHoursDTO locationWithWorkingHoursDTO = mapper.map(location, LocationWithWorkingHoursDTO.class);
+			if (location.getContactInformation() != null) {
+				locationWithWorkingHoursDTO.setContactTel(location.getContactInformation().getTelephoneNumber());
+				locationWithWorkingHoursDTO.setContactEmail(location.getContactInformation().getEmail());
+			}
+			List<WorkingHours> wos = (List<WorkingHours>) location.getHours();
+			List<WorkingHoursDTO> workingHoursDTOList = new ArrayList<WorkingHoursDTO>();
+			for (WorkingHours wo : wos) {
+				WorkingHoursDTO workingHoursDTO = mapper.map(wo, WorkingHoursDTO.class);
+				workingHoursDTO.setDayType(wo.getDayType().getType());
+				workingHoursDTOList.add(workingHoursDTO);
+			}
+			locationWithWorkingHoursDTO.setWorkingHours(workingHoursDTOList);
+			locationWithWorkingHoursDTOList.add(locationWithWorkingHoursDTO);
+		}
+		logger.debug("/api/admin/getLocationWithWorkingHours Finished");
+		return new ResponseEntity<>(locationWithWorkingHoursDTOList, HttpStatus.OK);
+	}
+
+	/**
+	 * Desc: store working hours for given location
+	 * JSON body example:
+	 * {
+	        "name": "Skrivena lokacja",
+	        "workingHours": [
+	        	{
+	                "id": 1,
+	                "fromTime": "06:00:00",
+	                "toTime": "21:00:00",
+	                "dayType": "WORKDAY"
+	            },
+	            {
+	                "id": 2,
+	                "fromTime": "08:00:00",
+	                "toTime": "20:00:00",
+	                "dayType": "WEEKEND"
+	            },
+	            {
+	                "id": 3,
+	                "fromTime": "09:00:00",
+	                "toTime": "20:00:00",
+	                "dayType": "HOLIDAY"
+	            }
+	        	]
+	    }
+	 */
+	@PostMapping("/saveLocationWorkingHours")
+	public ResponseEntity<String> saveLocationWorkingHours(@RequestBody LocationWithWorkingHoursDTO locationWithWorkingHoursDTO) {
+		logger.debug("/api/admin/saveLocationWorkingHours Started");
+		if (locationWithWorkingHoursDTO == null || locationWithWorkingHoursDTO.getName() == null || locationWithWorkingHoursDTO.getName().isEmpty() || locationWithWorkingHoursDTO.getWorkingHours() == null || locationWithWorkingHoursDTO.getWorkingHours().size() == 0) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid working hours data"), HttpStatus.BAD_REQUEST);
+		}
+
+		Location location = locationService.findLocationByName(locationWithWorkingHoursDTO.getName());
+		if (location == null) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Location with name: " + locationWithWorkingHoursDTO.getName() + " not found"), HttpStatus.BAD_REQUEST);
+		}
+
+		List<WorkingHours> wos = new ArrayList<WorkingHours>();
+		for (WorkingHoursDTO workingHoursDTO : locationWithWorkingHoursDTO.getWorkingHours()) {
+			DayType dayType = dayTypeService.findDayTypeByType(workingHoursDTO.getDayType());
+			if (dayType == null) {
+				return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid working hours day type: " + workingHoursDTO.getDayType()), HttpStatus.BAD_REQUEST);
+			}
+
+			List<WorkingHours> storedWos = workingHoursService.findWorkingHoursByFromTimeAndToTime(workingHoursDTO.getFromTime(), workingHoursDTO.getToTime());
+			boolean foundAlreadyStoredWo = false;
+			for (WorkingHours swo : storedWos) {
+				if (swo.getDayType().getType().equals(workingHoursDTO.getDayType())) {
+					foundAlreadyStoredWo = true;
+					wos.add(swo);
+					break;
+				}
+			}
+
+			if (foundAlreadyStoredWo == false) {
+				WorkingHours wo = new WorkingHours();
+				wo.setFromTime(workingHoursDTO.getFromTime());
+				wo.setToTime(workingHoursDTO.getToTime());
+				wo.setDayType(dayType);
+				wo = workingHoursService.saveWorkingHours(wo);
+				wos.add(wo);
+			}
+
+		}
+		location.setHours(wos);
+
+		locationService.saveLocation(location);
+
+		logger.debug("/api/admin/saveLocationWorkingHours Finished");
+		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Working hours saved!"), HttpStatus.OK);
+	}
 
 }
