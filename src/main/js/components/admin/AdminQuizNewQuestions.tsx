@@ -116,7 +116,8 @@ export default class AdminQuizNewQuestions extends React.Component<{}, {isError:
 			// @ts-ignore-start
 			questions.push(	<FormGroup controlId={'q' + questionNo} key={'q' + questionNo}>
 								<Col> <FormLabel><h5 className="font-color font-size">{questionLabel}</h5></FormLabel> </Col>
-// @ts-ignore
+								{/*
+								 // @ts-ignore */}
 								<Col> <FormControl as="textarea" rows="3" value={quizStore.newQuizQuestions[questionNo].question} type="username" onChange={(e: any) => quizStore.newQuizEmptyQuestionHolder(e.target.value, "question", questionNo, 0)}/> </Col>
 							</FormGroup>
 			);
