@@ -2,6 +2,7 @@ import React from "react";
 import {observer} from "mobx-react";
 import { MDBDataTable, MDBBtn } from 'mdbreact';
 import notificationsStore from "../../store/NotificationsStore";
+import userStore from "../../store/UserStore";
 import {Card, Button, Col, Form, FormControl, FormGroup, FormLabel} from "react-bootstrap";
 import ErrorMessage from "../utils/ErrorMessage";
 import 'react-dropdown/style.css';
@@ -10,13 +11,14 @@ import {Modal} from "react-bootstrap";
 import {action} from "mobx";
 
 @observer
-export default class AdminNotifications extends React.Component<{}, {saveNotificationFinished: boolean, editNotificationFinished: boolean, modalVisible: boolean}> {
+export default class AdminNotifications extends React.Component<{}, {saveNotificationFinished: boolean, editNotificationFinished: boolean, modalVisible: boolean, randomMessageSentReport: string}> {
 	constructor(props: any) {
     	super(props);
     	this.state = {
 			saveNotificationFinished: false,
 			editNotificationFinished: false,
-			modalVisible: false
+			modalVisible: false,
+			randomMessageSentReport: ''
 		};
 	}
 	
@@ -70,6 +72,78 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 		if(success) {
 			await notificationsStore.getNotifications('', '');
 		}
+	}
+	
+	sendMessagesToRandomUsers = async () => {
+		await userStore.getAllUsers();
+		let usersWhichWillReceiveMessage: string[] = [];
+		if(userStore.allUsers.length > notificationsStore.noOfRandomRecipients) {
+			while(usersWhichWillReceiveMessage.length < notificationsStore.noOfRandomRecipients) {
+				const sendMessageToUser: string = userStore.allUsers[this.randomIntFromInterval(0, userStore.allUsers.length - 1)].username;
+				// is user already in the list
+				if(!usersWhichWillReceiveMessage.includes(sendMessageToUser)) {
+					usersWhichWillReceiveMessage.push(sendMessageToUser);
+				}
+			}
+		} else {
+			// send message to all users
+			for (var i = 0; i < userStore.allUsers.length; i++){
+				usersWhichWillReceiveMessage.push(userStore.allUsers[i].username);
+			}
+		}
+		usersWhichWillReceiveMessage = usersWhichWillReceiveMessage.sort();
+		// send the messages
+		notificationsStore.newNotificationHolder(new Date(), "createdAt");
+		notificationsStore.newNotificationHolder(notificationsStore.randomRecipientsSubject, "subject");
+		notificationsStore.newNotificationHolder(notificationsStore.randomRecipientsMessage, "message");
+		notificationsStore.newNotificationHolder(sessionStorage.getItem('username'), "srcUser");
+		notificationsStore.newNotificationHolder('UNREAD', "notificationType");
+		let successMessage: string = 'Poruka je uspješno poslana korisnicima: ';
+		let errorMessage: string = 'Slanje poruke nije uspjelo korisnicima: ';
+		for (var i = 0; i < usersWhichWillReceiveMessage.length; i++){
+			notificationsStore.newNotificationHolder(usersWhichWillReceiveMessage[i], "destUser");
+			const success: boolean = await notificationsStore.addNotification(notificationsStore.newNotification);
+			if(success) {
+				successMessage = successMessage + usersWhichWillReceiveMessage[i] + ', ';
+			} else {
+				errorMessage = errorMessage + usersWhichWillReceiveMessage[i] + ', ';
+			}
+		}
+		if(successMessage.lastIndexOf(',') != -1) {
+			successMessage = successMessage.substring(0, successMessage.lastIndexOf(','));
+		}
+		if(errorMessage.lastIndexOf(',') != -1) {
+			errorMessage = errorMessage.substring(0, errorMessage.lastIndexOf(','));
+		}
+		
+		let reportMessage: string = '';
+		if(!successMessage.endsWith(': ')) {
+			reportMessage = reportMessage + successMessage;
+		}
+		if(!errorMessage.endsWith(': ')) {
+			if(reportMessage != '') {
+				reportMessage = reportMessage + ' / ' + errorMessage;
+			} else {
+				reportMessage = reportMessage + errorMessage;
+			}
+		}
+		this.setState( {
+			randomMessageSentReport: reportMessage
+		});
+		notificationsStore.getNotifications('', '');
+	}
+	
+	randomIntFromInterval = (min: number, max: number) => {
+  		return Math.floor(Math.random() * (max - min + 1) + min);
+	}
+	
+	randomMessageModalClose = () => {
+		notificationsStore.setNoOfRandomRecipientsMethod(0);
+		notificationsStore.setRandomRecipientsSubjectMethod('');
+		notificationsStore.setRandomRecipientsMessageMethod('');
+		this.setState( {
+			randomMessageSentReport: ''
+		});
 	}
 
     render() {
@@ -246,6 +320,54 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 			                </Form>
 	                    </div>
 	                </Card.Body>
+
+					<Card.Header>
+	                    <div className="row">
+							<h5 className="h5-my-profile-card-title">Nagradne poruke</h5>
+	                    </div>
+	                </Card.Header>
+	                <Card.Body>
+	                    <div className="row">
+							<Form className="admin-subscription-form-width">
+			                    <FormGroup controlId="username">
+			                        <Col>
+			                            <FormLabel><h5 className="font-color font-size">Koliko nasumičnih korisnika će dobiti poruku?</h5></FormLabel>
+			                        </Col>
+			                        <Col>
+										{/*
+										 // @ts-ignore */}
+			                            <FormControl type="number" value={notificationsStore.noOfRandomRecipients} onChange={(e: any) => notificationsStore.setNoOfRandomRecipientsMethod(e.target.value)}/>
+			                        </Col>
+			                    </FormGroup>
+								<FormGroup>
+			                        <Col>
+			                            <FormLabel><h5 className="font-color font-size">Naslov</h5></FormLabel>
+			                        </Col>
+			                        <Col>
+			                            <FormControl value={notificationsStore.randomRecipientsSubject} onChange={(e: any) => notificationsStore.setRandomRecipientsSubjectMethod(e.target.value)}/>
+			                        </Col>
+			                    </FormGroup>
+								<FormGroup>
+			                        <Col>
+			                            <FormLabel><h5 className="font-color font-size">Poruka</h5></FormLabel>
+			                        </Col>
+			                        <Col>
+										{
+											// @ts-ignore
+			                            	<FormControl as="textarea" rows="3" value={notificationsStore.randomRecipientsMessage} onChange={(e: any) => notificationsStore.setRandomRecipientsMessageMethod(e.target.value)}/>
+										}
+			                        </Col>
+			                    </FormGroup>
+							
+			                    <FormGroup>
+			                        <Col className="login-registration-button-center">
+			                            <Button type="submit" className="login-registration-button-color" onClick={() => this.sendMessagesToRandomUsers()}><b>Pošalji poruke</b></Button>
+			                        </Col>
+			                    </FormGroup>
+			                </Form>
+	                    </div>
+	                </Card.Body>
+
 	            </Card>
 
 				<Modal show={this.state.modalVisible} onHide={() => {}} size='lg' autoFocus keyboard className='edit-modal-color modal-padding'>
@@ -302,6 +424,15 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 	                    <Button className='login-registration-button-color' onClick={() => this.deleteNotification()}><b>Obriši</b></Button>
 						<Button className='login-registration-button-color' onClick={() => this.updateNotification()}><b>Spremi</b></Button>
 	                    <Button className='admin-notifications-modal-footer-cancel-button' onClick={() => this.onModalClose()}><b>Zatvori</b></Button>
+	                </Modal.Footer>
+	            </Modal>
+
+				<Modal show={this.state.randomMessageSentReport != ''} onHide={() => {}} size='lg' autoFocus keyboard className='edit-modal-color modal-padding'>
+	                <Modal.Body>
+	                    <FormLabel><h5 className="font-color font-size">{this.state.randomMessageSentReport}</h5></FormLabel>
+	                </Modal.Body>
+	                <Modal.Footer className='admin-notifications-modal-footer'>
+	                    <Button className='admin-notifications-modal-footer-cancel-button' onClick={() => this.randomMessageModalClose()}><b>Zatvori</b></Button>
 	                </Modal.Footer>
 	            </Modal>
 

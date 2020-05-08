@@ -648,4 +648,11 @@ public class UserManagement {
 		}
 	}
 
+	@GetMapping("/getAllUsers")
+	public ResponseEntity<?> getAllUsers() {
+		List<User> users = userService.findAllUsers();
+		List<UserDTO> userDTOList = users.stream().map(user -> mapper.map(user, UserDTO.class)).collect(Collectors.toList());
+		return new ResponseEntity<List<UserDTO>>(userDTOList, HttpStatus.OK);
+	}
+
 }

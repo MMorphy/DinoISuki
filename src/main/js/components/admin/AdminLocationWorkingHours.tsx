@@ -168,7 +168,7 @@ export default class AdminLocationWorkingHours extends React.Component<{}, {moda
 	        width: 30
       	},
 		{
-	        label: 'Detalji',
+	        label: 'Radno vrijeme',
 	        field: 'view',
 	        width: 10
       	}
@@ -189,7 +189,7 @@ export default class AdminLocationWorkingHours extends React.Component<{}, {moda
 					name: adminStore.adminLocationWithWorkingHoursDTOList[i].name,
 					address: adminStore.adminLocationWithWorkingHoursDTOList[i].address,
 					contact: _contact,
-					view: <MDBBtn className="admin-table-button" id={i} color="cyan" size="sm" onClick={() => this.showEditMessageDialog()}>Detalji</MDBBtn>
+					view: <MDBBtn className="admin-table-button" id={i} color="cyan" size="sm" onClick={() => this.showEditMessageDialog()}>Uredi</MDBBtn>
 				}
 			)
 		}

@@ -77,6 +77,13 @@ class UserRepository {
                 headers: {'Authorization': `Bearer ${token}`}
             });
     }
+
+	getAllUsers(token: string): Promise<AxiosResponse> {
+        return axios.get(`/api/user/getAllUsers`,
+            {
+                headers: {'Authorization': `Bearer ${token}`}
+            });
+    }
 }
 
 const userRepository = new UserRepository();

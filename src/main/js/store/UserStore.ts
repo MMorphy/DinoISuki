@@ -3,7 +3,7 @@ import UserDTO from "../model/UserDTO";
 import ContactInformationDTO from "../model/ContactInformationDTO";
 import RoleDTO from "../model/RoleDTO";
 import userRepository from "../repository/UserRepository";
-import {AxiosResponse} from "axios";
+import {AxiosResponse, AxiosError} from "axios";
 import appStore from "./AppStore";
 import _ from 'lodash';
 
@@ -29,6 +29,8 @@ class UserStore {
     @observable confirmedPasswordForRegistration: string = "";
 
     @observable date: Date | undefined = undefined;
+
+	@observable allUsers: UserDTO[] = [];
 
     //update nakon unosa
     @action
@@ -191,6 +193,21 @@ class UserStore {
                 appStore.showUnsuccessfulPasswordUpdateMessage = true;
             }));
     }
+	
+	async getAllUsers() {
+		await userRepository.getAllUsers(sessionStorage.getItem('token')!)
+            .then(action((response: AxiosResponse) => {
+            	this.allUsers = response.data;
+            }))
+			.catch(action((error: AxiosError) => {
+				if(error.response) {
+					this.allUsers = [];
+					if(error.response.data.includes("Expired or invalid JWT token")) {
+						this.clearSessionStorage();
+					}
+				}
+            }));
+	}
 
 
     // util funkcije

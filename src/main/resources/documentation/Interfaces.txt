@@ -929,3 +929,34 @@ Output:
 }
 
 
+/api/user/getAllUsers
+Description: Fetch all users
+Type: get
+Input: none
+Example: https://localhost:8443/api/user/getAllUsers
+Output: 
+[
+    {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "enabled": true,
+        "username": "test4",
+        "password": "$2a$10$Z8d8RpMSb4sL7bengKNIBOHHVn/wYRgOfzS4vKnmeUtDAGEYxwre2",
+        "dateOfBirth": "2020-01-01"
+    },
+    {
+        "createdAt": "2020-01-30T16:19:58.016Z",
+        "enabled": true,
+        "username": "test3",
+        "password": "$2a$10$h3S8N4Hc5R5ZALQBVNM9POx4uVeXxTjtU/kSClaJlF8oHOd9qqY9i",
+        "dateOfBirth": "2019-12-31"
+    },
+    {
+        "createdAt": "2020-01-30T16:19:58.016Z",
+        "enabled": true,
+        "username": "test2",
+        "password": "$2a$10$c7x8i0wfG6UCZ9ZaaK7bj.6Um15S7ii6k6U6J8YKob6xa3JBt5l3O",
+        "dateOfBirth": "2019-12-31"
+    }
+]
+
+

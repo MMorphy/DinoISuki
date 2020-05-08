@@ -13,6 +13,9 @@ class NotificationsStore {
 	@observable editNotification: AdminNotificationDTO = new AdminNotificationDTO();
 	@observable userNotificationDTOList: AdminNotificationDTO[] = [];
 	@observable hasUnreadMessages: boolean = false;
+	@observable noOfRandomRecipients: number = 0;
+	@observable randomRecipientsSubject: string = '';
+	@observable randomRecipientsMessage: string = '';
 
 	getNotifications(srcUser: string, destUser: string) {
         adminRepository.getNotifications(srcUser, destUser, sessionStorage.getItem('token')!)
@@ -137,7 +140,23 @@ class NotificationsStore {
     private setUserNotificationDTOList(userNotificationDTOList: AdminNotificationDTO[]) {
         this.userNotificationDTOList = userNotificationDTOList;
     }
-    
+
+	@action
+    public setNoOfRandomRecipientsMethod(noOfRandomRecipients: number) {
+        this.noOfRandomRecipients = noOfRandomRecipients;
+    }
+
+	@action
+    public setRandomRecipientsSubjectMethod(randomRecipientsSubject: string) {
+        this.randomRecipientsSubject = randomRecipientsSubject;
+    }
+
+	@action
+    public setRandomRecipientsMessageMethod(randomRecipientsMessage: string) {
+        this.randomRecipientsMessage = randomRecipientsMessage;
+    }
+
+
 }
 
 const notificationsStore = new NotificationsStore();
