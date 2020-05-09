@@ -11,14 +11,15 @@ import {Modal} from "react-bootstrap";
 import {action} from "mobx";
 
 @observer
-export default class AdminNotifications extends React.Component<{}, {saveNotificationFinished: boolean, editNotificationFinished: boolean, modalVisible: boolean, randomMessageSentReport: string}> {
+export default class AdminNotifications extends React.Component<{}, {saveNotificationFinished: boolean, editNotificationFinished: boolean, modalVisible: boolean, randomMessagesSuccessMessage: string, randomMessagesErrorMessage: string}> {
 	constructor(props: any) {
     	super(props);
     	this.state = {
 			saveNotificationFinished: false,
 			editNotificationFinished: false,
 			modalVisible: false,
-			randomMessageSentReport: ''
+			randomMessagesSuccessMessage: '',
+			randomMessagesErrorMessage: ''
 		};
 	}
 	
@@ -75,13 +76,33 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 	}
 	
 	sendMessagesToRandomUsers = async () => {
+		// input validation
+		if(notificationsStore.noOfRandomRecipients < 2) {
+			this.setState( {
+				randomMessagesErrorMessage: 'Broj nasumičnih korisnika mora biti veći od 1'
+			});
+			return;
+		}
+		if(notificationsStore.randomRecipientsSubject === undefined || notificationsStore.randomRecipientsSubject === '') {
+			this.setState( {
+				randomMessagesErrorMessage: 'Naslov poruke nije unesen'
+			});
+			return;
+		}
+		if(notificationsStore.randomRecipientsMessage === undefined || notificationsStore.randomRecipientsMessage === '') {
+			this.setState( {
+				randomMessagesErrorMessage: 'Tekst poruke nije unesen'
+			});
+			return;
+		}
+		
 		await userStore.getAllUsers();
 		let usersWhichWillReceiveMessage: string[] = [];
 		if(userStore.allUsers.length > notificationsStore.noOfRandomRecipients) {
 			while(usersWhichWillReceiveMessage.length < notificationsStore.noOfRandomRecipients) {
 				const sendMessageToUser: string = userStore.allUsers[this.randomIntFromInterval(0, userStore.allUsers.length - 1)].username;
-				// is user already in the list
-				if(!usersWhichWillReceiveMessage.includes(sendMessageToUser)) {
+				// add the user if it is not already on the list or if picked user is not logged in user
+				if(!usersWhichWillReceiveMessage.includes(sendMessageToUser) && sessionStorage.getItem('username') !== sendMessageToUser) {
 					usersWhichWillReceiveMessage.push(sendMessageToUser);
 				}
 			}
@@ -98,8 +119,8 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 		notificationsStore.newNotificationHolder(notificationsStore.randomRecipientsMessage, "message");
 		notificationsStore.newNotificationHolder(sessionStorage.getItem('username'), "srcUser");
 		notificationsStore.newNotificationHolder('UNREAD', "notificationType");
-		let successMessage: string = 'Poruka je uspješno poslana korisnicima: ';
-		let errorMessage: string = 'Slanje poruke nije uspjelo korisnicima: ';
+		let successMessage: string = '';
+		let errorMessage: string = '';
 		for (var i = 0; i < usersWhichWillReceiveMessage.length; i++){
 			notificationsStore.newNotificationHolder(usersWhichWillReceiveMessage[i], "destUser");
 			const success: boolean = await notificationsStore.addNotification(notificationsStore.newNotification);
@@ -109,26 +130,16 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 				errorMessage = errorMessage + usersWhichWillReceiveMessage[i] + ', ';
 			}
 		}
-		if(successMessage.lastIndexOf(',') != -1) {
+		if(successMessage.endsWith(', ')) {
 			successMessage = successMessage.substring(0, successMessage.lastIndexOf(','));
 		}
-		if(errorMessage.lastIndexOf(',') != -1) {
-			errorMessage = errorMessage.substring(0, errorMessage.lastIndexOf(','));
+		if(errorMessage.endsWith(', ')) {
+			errorMessage = 'Korisnicima ' + errorMessage.substring(0, errorMessage.lastIndexOf(',')) + ' poruka nije isporučena';
 		}
 		
-		let reportMessage: string = '';
-		if(!successMessage.endsWith(': ')) {
-			reportMessage = reportMessage + successMessage;
-		}
-		if(!errorMessage.endsWith(': ')) {
-			if(reportMessage != '') {
-				reportMessage = reportMessage + ' / ' + errorMessage;
-			} else {
-				reportMessage = reportMessage + errorMessage;
-			}
-		}
 		this.setState( {
-			randomMessageSentReport: reportMessage
+			randomMessagesSuccessMessage: successMessage,
+			randomMessagesErrorMessage: errorMessage
 		});
 		notificationsStore.getNotifications('', '');
 	}
@@ -138,11 +149,14 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 	}
 	
 	randomMessageModalClose = () => {
-		notificationsStore.setNoOfRandomRecipientsMethod(0);
-		notificationsStore.setRandomRecipientsSubjectMethod('');
-		notificationsStore.setRandomRecipientsMessageMethod('');
+		if(this.state.randomMessagesErrorMessage === '') {
+			notificationsStore.setNoOfRandomRecipientsMethod(0);
+			notificationsStore.setRandomRecipientsSubjectMethod('');
+			notificationsStore.setRandomRecipientsMessageMethod('');
+		}
 		this.setState( {
-			randomMessageSentReport: ''
+			randomMessagesSuccessMessage: '',
+			randomMessagesErrorMessage: ''
 		});
 	}
 
@@ -427,9 +441,25 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 	                </Modal.Footer>
 	            </Modal>
 
-				<Modal show={this.state.randomMessageSentReport != ''} onHide={() => {}} size='lg' autoFocus keyboard className='edit-modal-color modal-padding'>
+				<Modal show={this.state.randomMessagesSuccessMessage != '' || this.state.randomMessagesErrorMessage != ''} onHide={() => {}} size='lg' autoFocus keyboard className='edit-modal-color modal-padding'>
 	                <Modal.Body>
-	                    <FormLabel><h5 className="font-color font-size">{this.state.randomMessageSentReport}</h5></FormLabel>
+						{
+							(this.state.randomMessagesSuccessMessage != '')
+							? 	<div>
+									<FormLabel><h5 className="font-color font-size">Poruka je uspješno poslana korisnicima: </h5></FormLabel>
+		                    		<FormLabel><h5 style={{color: "white", paddingLeft: "10px"}} className="font-size">{this.state.randomMessagesSuccessMessage}</h5></FormLabel>
+								</div>
+							: <div/>
+						}
+						{
+							(this.state.randomMessagesErrorMessage != '')
+							? 	<div>
+									<FormLabel><h5 className="font-color font-size">Greška prilikom slanja poruke: </h5></FormLabel>
+	                    			<FormLabel><h5 style={{color: "white", paddingLeft: "10px"}} className="font-size">{this.state.randomMessagesErrorMessage}</h5></FormLabel>
+								</div>
+							: <div/>
+						}
+						
 	                </Modal.Body>
 	                <Modal.Footer className='admin-notifications-modal-footer'>
 	                    <Button className='admin-notifications-modal-footer-cancel-button' onClick={() => this.randomMessageModalClose()}><b>Zatvori</b></Button>
