@@ -220,6 +220,12 @@ export default class AdminQuiz extends React.Component<{}, {showQuizAnswers: boo
 		quizStore.getQuiz('');
     }
 
+	componentWillUnmount(): void {
+		quizStore.newQuizDTOHolder('', "name");
+		quizStore.newQuizDTOHolder(0, "noOfQuestions");
+		quizStore.setNewQuizQuestionsNumber(0);
+	}
+
 
 }
 

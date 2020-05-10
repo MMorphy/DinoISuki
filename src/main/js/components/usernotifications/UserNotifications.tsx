@@ -73,6 +73,12 @@ export default class UserNotifications extends React.Component<{}, {modalVisible
 	        width: 10
 	  	},
 		{
+	        label: 'Poslana u',
+	        field: 'createdAt',
+	        sort: 'desc',
+	        width: 30
+	  	},
+		{
 	        label: 'Naslov',
 	        field: 'subject',
 	        sort: 'asc',
@@ -86,6 +92,8 @@ export default class UserNotifications extends React.Component<{}, {modalVisible
 		];
 		const rows = [];
 		for (var i = 0; i < notificationsStore.userNotificationDTOList.length; i++){
+			let createdAtStr: string = notificationsStore.userNotificationDTOList[i].createdAt.toString();
+			let createdAt: Date = new Date(createdAtStr.substring(0, createdAtStr.indexOf('.')) + 'Z');
 			let messageStr: string = notificationsStore.userNotificationDTOList[i].message;
 			if(messageStr.length > 40) {
 				messageStr = messageStr.substr(0, 37) + '...';
@@ -95,6 +103,7 @@ export default class UserNotifications extends React.Component<{}, {modalVisible
 				rows.push(
 					{
 						id: <FormLabel className="user-notifications-table-row-bold">{idText}</FormLabel>,
+						createdAt: <FormLabel className="user-notifications-table-row-bold">{createdAt.toLocaleString()}</FormLabel>,
 						subject: <FormLabel className="user-notifications-table-row-bold">{notificationsStore.userNotificationDTOList[i].subject}</FormLabel>,
 						body: <FormLabel className="user-notifications-table-row-bold">{messageStr}</FormLabel>,
 						clickEvent: () => this.showEditMessageDialog()
@@ -104,6 +113,7 @@ export default class UserNotifications extends React.Component<{}, {modalVisible
 				rows.push(
 					{
 						id: <FormLabel>{idText}</FormLabel>,
+						createdAt: <FormLabel>{createdAt.toLocaleString()}</FormLabel>,
 						subject: <FormLabel>{notificationsStore.userNotificationDTOList[i].subject}</FormLabel>,
 						body: <FormLabel>{messageStr}</FormLabel>,
 						view: <MDBBtn className="admin-table-button" id={i} color="cyan" size="sm" onClick={() => this.showEditMessageDialog()}>Detalji</MDBBtn>,

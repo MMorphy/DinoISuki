@@ -2,11 +2,14 @@ package hr.go2.play.DTO;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import hr.go2.play.entities.QuizStatus;
 
 public class QuizDTO {
 
 	private long id;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "CET")
 	private Date createdAt;
 	private String name;
 	private int noOfQuestions;

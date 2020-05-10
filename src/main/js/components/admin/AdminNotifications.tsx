@@ -60,6 +60,7 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 			notificationsStore.newNotificationHolder('', "message");
 		}
 		this.onModalClose();
+		
 	}
 	
 	updateNotification = async () => {
@@ -77,9 +78,9 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 	
 	sendMessagesToRandomUsers = async () => {
 		// input validation
-		if(notificationsStore.noOfRandomRecipients < 2) {
+		if(notificationsStore.noOfRandomRecipients < 1) {
 			this.setState( {
-				randomMessagesErrorMessage: 'Broj nasumičnih korisnika mora biti veći od 1'
+				randomMessagesErrorMessage: 'Broj nasumičnih korisnika mora biti veći od 0'
 			});
 			return;
 		}
@@ -416,7 +417,6 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 		                            <FormControl as="textarea" rows="3" value={notificationsStore.editNotification.message} onChange={(e: any) => notificationsStore.editNotificationHolder(e.target.value, "message")}/>
 		                        </Col>
 		                    </FormGroup>
-						
 							{
 			                    (this.state.editNotificationFinished && !notificationsStore.successfulNotificationSave)
 			                        ? 	<div className="updateErrorMessage">
@@ -459,7 +459,6 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 								</div>
 							: <div/>
 						}
-						
 	                </Modal.Body>
 	                <Modal.Footer className='admin-notifications-modal-footer'>
 	                    <Button className='admin-notifications-modal-footer-cancel-button' onClick={() => this.randomMessageModalClose()}><b>Zatvori</b></Button>
@@ -470,13 +469,6 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
         );
     }
 
-	componentDidMount(): void {
-		notificationsStore.getNotifications('', '');
-		// settitng default values for new notification
-		notificationsStore.newNotificationHolder(sessionStorage.getItem('username'), "srcUser");
-		notificationsStore.newNotificationHolder('UNREAD', "notificationType");
-    }
-
 	@action
     private onModalClose() {
         this.setState({
@@ -484,5 +476,20 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 	    });
     }
 
+	componentDidMount(): void {
+		notificationsStore.getNotifications('', '');
+		// settitng default values for new notification
+		notificationsStore.newNotificationHolder(sessionStorage.getItem('username'), "srcUser");
+		notificationsStore.newNotificationHolder('UNREAD', "notificationType");
+    }
+
+	componentWillUnmount(): void {
+		notificationsStore.newNotificationHolder('', "destUser");
+		notificationsStore.newNotificationHolder('', "subject");
+		notificationsStore.newNotificationHolder('', "message");
+		notificationsStore.setNoOfRandomRecipientsMethod(0);
+		notificationsStore.setRandomRecipientsSubjectMethod('');
+		notificationsStore.setRandomRecipientsMessageMethod('');
+	}
 }
 

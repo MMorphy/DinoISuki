@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import hr.go2.play.entities.Notification;
@@ -50,7 +51,7 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Override
 	public List<Notification> findNotificationsByDestUser(User destUser) {
-		return (List<Notification>) this.notificationRepo.findByDestUser(destUser);
+		return (List<Notification>) this.notificationRepo.findByDestUserOrderByCreatedAtDesc(destUser);
 	}
 
 	@Override
@@ -73,10 +74,10 @@ public class NotificationServiceImpl implements NotificationService {
 			notifications = (List<Notification>) this.notificationRepo.findBySourceUser(srcUser);
 		} else if (destUser != null) {
 			logger.debug("Source user not found. Searching by dest user.");
-			notifications = (List<Notification>) this.notificationRepo.findByDestUser(destUser);
+			notifications = (List<Notification>) this.notificationRepo.findByDestUserOrderByCreatedAtDesc(destUser);
 		} else {
 			logger.debug("Source or dest user not found. Returning all notifications.");
-			notifications = this.notificationRepo.findAll();
+			notifications = this.notificationRepo.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
 		}
 		return notifications;
 	}
@@ -125,7 +126,6 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	public void deleteAllNotifications() {
 		this.notificationRepo.deleteAll();
-
 	}
 
 	@Override

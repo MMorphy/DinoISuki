@@ -7,7 +7,7 @@ import QuizDTO from "../../model/QuizDTO";
 import ErrorMessage from "../utils/ErrorMessage";
 
 @observer
-export default class UserQuizes extends React.Component<{}, {quizQuestions: any, id: number, displayQuizQuestions: boolean}> {
+export default class UserQuizes extends React.Component<{}, {quizQuestions: any, id: number, displayQuizQuestions: boolean, currentQuizName: string}> {
 	constructor(props: any) {
     	super(props);
 		quizStore.getNewQuizesForUser(sessionStorage.getItem('username')!);
@@ -15,7 +15,8 @@ export default class UserQuizes extends React.Component<{}, {quizQuestions: any,
     	this.state = {
 			quizQuestions: [],
 			id: -1,
-			displayQuizQuestions: false
+			displayQuizQuestions: false,
+			currentQuizName: ''
 		};
 	}
 	
@@ -26,7 +27,8 @@ export default class UserQuizes extends React.Component<{}, {quizQuestions: any,
 			const _id: number = event.srcElement.id;
 			this.setState({
 		    	id: _id,
-				displayQuizQuestions: true
+				displayQuizQuestions: true,
+				currentQuizName: quizStore.quizForUserNewDTO[_id].name
 		    });
 			
 			await quizStore.initializeNewQuizAnswers(quizStore.quizForUserNewDTO[_id]);
@@ -110,13 +112,6 @@ export default class UserQuizes extends React.Component<{}, {quizQuestions: any,
 				quizStore.getNewQuizesForUser(sessionStorage.getItem('username')!);
 				quizStore.getQuizesTakenByUser(sessionStorage.getItem('username')!);
 			}
-			
-			this.setState({
-		    	id: -1,
-				displayQuizQuestions: false
-		    });
-
-			// TODO: Pozvati detalje za ovaj kviz
 		}
 		
 	}
@@ -159,7 +154,8 @@ export default class UserQuizes extends React.Component<{}, {quizQuestions: any,
 		
 		this.setState({
 	    	quizQuestions: questions,
-			displayQuizQuestions: true
+			displayQuizQuestions: true,
+			currentQuizName: quizStore.quizForUserTakenDTO[_id].name
 	    });
 		
 	}
@@ -264,7 +260,7 @@ export default class UserQuizes extends React.Component<{}, {quizQuestions: any,
 								<Card className='my-profile-card'>
 									<Card.Header>
 							    	    <div className="row">
-											<h5 className="h5-my-profile-card-title">Pitanja</h5>
+											<h5 className="h5-my-profile-card-title">Kviz: "{this.state.currentQuizName}" - pitanja</h5>
 							    		</div>
 							    	</Card.Header>
 							    	<Card.Body>

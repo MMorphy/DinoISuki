@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import hr.go2.play.entities.QuizQuestions;
@@ -32,7 +33,7 @@ public class QuizQuestionsServiceImpl implements QuizQuestionsService {
 
 	@Override
 	public List<QuizQuestions> findAll() {
-		return quizQuestionsRepo.findAll();
+		return quizQuestionsRepo.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
 	}
 
 	@Override

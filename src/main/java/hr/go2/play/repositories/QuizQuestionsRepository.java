@@ -15,10 +15,10 @@ public interface QuizQuestionsRepository extends JpaRepository<QuizQuestions, Lo
 
 	public Optional<QuizQuestions> findByName(String name);
 
-	@Query(value = "SELECT qq FROM QuizQuestions qq LEFT OUTER JOIN QuizAnswers qa ON qq.id = qa.quizId and qa.userId = ?1 WHERE qq.status = 1 AND qa.id IS NULL")
+	@Query(value = "SELECT qq FROM QuizQuestions qq LEFT OUTER JOIN QuizAnswers qa ON qq.id = qa.quizId and qa.userId = ?1 WHERE qq.status = 1 AND qa.id IS NULL ORDER BY qq.createdAt DESC")
 	public Collection<QuizQuestions> getNewQuizesForUser(User user);
 
-	@Query(value = "SELECT qq FROM QuizQuestions qq JOIN QuizAnswers qa ON qq.id = qa.quizId WHERE qq.status = 1 and qa.userId = ?1")
+	@Query(value = "SELECT qq FROM QuizQuestions qq JOIN QuizAnswers qa ON qq.id = qa.quizId WHERE qq.status = 1 and qa.userId = ?1 ORDER BY qq.createdAt DESC")
 	public Collection<QuizQuestions> getQuizesTakenByUser(User user);
 
 	@Query(value = "SELECT COUNT(qa.id) FROM QuizQuestions qq JOIN QuizAnswers qa ON qq.id = qa.quizId WHERE qq.name = ?1")

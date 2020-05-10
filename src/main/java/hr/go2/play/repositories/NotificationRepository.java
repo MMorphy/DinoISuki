@@ -20,7 +20,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
 	Collection<Notification> findBySourceUser(User srcUser);
 
-	Collection<Notification> findByDestUser(User destUser);
+	Collection<Notification> findByDestUserOrderByCreatedAtDesc(User destUser);
 
 	Collection<Notification> findByMessage(String message);
 
