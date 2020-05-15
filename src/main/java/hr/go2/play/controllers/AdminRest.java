@@ -1,22 +1,28 @@
 package hr.go2.play.controllers;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileStore;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.io.FileUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,8 +32,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import hr.go2.play.DTO.AdminStatisticsDTO;
+import hr.go2.play.DTO.AdminUploadedVideoDTO;
 import hr.go2.play.DTO.ApplicationPropertiesDTO;
 import hr.go2.play.DTO.CameraDTO;
 import hr.go2.play.DTO.DiskSpaceInfo;
@@ -44,6 +52,7 @@ import hr.go2.play.entities.QuizAnswers;
 import hr.go2.play.entities.QuizQuestions;
 import hr.go2.play.entities.QuizStatus;
 import hr.go2.play.entities.SubscriptionStatistics;
+import hr.go2.play.entities.UploadedVideo;
 import hr.go2.play.entities.User;
 import hr.go2.play.entities.WorkingHours;
 import hr.go2.play.impl.CameraServiceImpl;
@@ -55,6 +64,7 @@ import hr.go2.play.services.LocationService;
 import hr.go2.play.services.QuizAnswersService;
 import hr.go2.play.services.QuizQuestionsService;
 import hr.go2.play.services.SubscriptionService;
+import hr.go2.play.services.UploadedVideoService;
 import hr.go2.play.services.UserService;
 import hr.go2.play.services.VideoService;
 import hr.go2.play.services.WorkingHoursService;
@@ -106,6 +116,20 @@ public class AdminRest {
 
 	@Autowired
 	private DayTypeService dayTypeService;
+
+	@Autowired
+	private UploadedVideoService uploadedVideoService;
+
+	@Value("${application.admin.uploaded-video-location}")
+	String uploadedVideoLocationTemp;
+
+//	@Value("${application.admin.uploaded-video-location}")
+	String uploadedVideoLocation;
+
+	@PostConstruct
+	private void initVariables() {
+		uploadedVideoLocation = commons.getProperty("application_admin_uploadedVideoLocation", String.class);
+	}
 
 	//CRUD kamera
 	//CRUD Lokacija
@@ -736,6 +760,80 @@ public class AdminRest {
 
 		logger.debug("/api/admin/saveLocationWorkingHours Finished");
 		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Working hours saved!"), HttpStatus.OK);
+	}
+
+	// upload video
+	@PostMapping(value = "/adminUploadVideo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<?> adminUploadVideo(@RequestParam(name = "uploadVideo") MultipartFile uploadVideo, @RequestParam(name = "name") String name) {
+		logger.debug("/api/user/adminUploadVideo Started");
+
+		if (name == null || name.isEmpty()) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Video name not provided"), HttpStatus.BAD_REQUEST);
+		}
+
+		try {
+			// store the file
+			byte[] bytes = uploadVideo.getBytes();
+			createUploadedVideosFolder();
+			Path path = Paths.get(uploadedVideoLocation + "/" + uploadVideo.getOriginalFilename());
+			Files.write(path, bytes);
+
+			// store the data about the file info to database
+			UploadedVideo uploadedVideo = new UploadedVideo();
+			uploadedVideo.setLocation(uploadVideo.getOriginalFilename());
+			uploadedVideo.setUploadedAt(new Date());
+			uploadedVideo.setVideoName(name);
+			uploadedVideoService.saveVideo(uploadedVideo);
+
+		} catch (IOException e) {
+			logger.error("Unable to save file", e);
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to save file"), HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
+			logger.error("Unable to store file", e);
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to store file. " + e.getMessage()), HttpStatus.BAD_REQUEST);
+		}
+
+		logger.debug("/api/user/adminUploadVideo Finished");
+		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Successfully uploaded - " + uploadVideo.getOriginalFilename()), HttpStatus.OK);
+	}
+
+	private boolean createUploadedVideosFolder() {
+		boolean created = true;
+		File folder = new File(uploadedVideoLocation);
+		if (!folder.exists() || !folder.isDirectory()) {
+			try {
+				folder.mkdir();
+			} catch (SecurityException e) {
+				logger.error("Unable to create folder: " + uploadedVideoLocation, e);
+				created = false;
+			}
+		}
+		return created;
+	}
+
+	/*
+	 * Description: Fetch uploaded videos by admin 
+	 * Input parameters: Video name (optional) 
+	 * Call example: https://localhost:8443/api/admin/getUploadedVideo?name=test
+	 *
+	 */
+	@GetMapping("/getUploadedVideo")
+	public ResponseEntity<?> getUploadedVideo(@RequestParam(name = "name", required = false) String name) {
+		logger.debug("/api/admin/getUploadedVideo Started");
+
+		List<AdminUploadedVideoDTO> adminUploadedVideoDTOList = new ArrayList<AdminUploadedVideoDTO>();
+
+		if (name == null || name.isEmpty()) {
+			List<UploadedVideo> uploadedVideoList = uploadedVideoService.findAll();
+			adminUploadedVideoDTOList = uploadedVideoList.stream().map(uploadedVideo -> mapper.map(uploadedVideo, AdminUploadedVideoDTO.class)).collect(Collectors.toList());
+		} else {
+			UploadedVideo uploadedVideo = uploadedVideoService.findByVideoName(name);
+			AdminUploadedVideoDTO adminUploadedVideoDTO = mapper.map(uploadedVideo, AdminUploadedVideoDTO.class);
+			adminUploadedVideoDTOList.add(adminUploadedVideoDTO);
+		}
+
+		logger.debug("/api/admin/getUploadedVideo Finished");
+		return new ResponseEntity<>(adminUploadedVideoDTOList, HttpStatus.OK);
 	}
 
 }

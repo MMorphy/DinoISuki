@@ -52,6 +52,9 @@ public class Commons {
 	// user management
 	@Value("${application.users.profile-photo-location}")
 	public String application_users_profilePhotoLocation;
+	// admin
+	@Value("${application.admin.uploaded-video-location}")
+	public String application_admin_uploadedVideoLocation;
 
 	Logger logger = LoggerFactory.getLogger(Commons.class);
 

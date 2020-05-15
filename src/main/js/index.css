@@ -621,3 +621,7 @@ div.scroll-horizontal > div {
 .card-style-center {
 	text-align: center;
 }
+.progress-bar {
+	background-color: #f04e23!important;
+	padding: 20px 5px;
+}

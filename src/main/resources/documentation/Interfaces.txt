@@ -959,4 +959,28 @@ Output:
     }
 ]
 
+/api/admin/adminUploadVideo
+Description: upload video
+Type: put
+Input: MultipartFile uploadVideo, String name
+Example: https://localhost:8443/api/admin/adminUploadVideo?name=test1
+Output:
+{
+    "message": "Successfully uploaded - test.mp4"
+}
 
+/api/admin/getUploadedVideo
+Description:  Fetch uploaded videos by admin 
+Type: get
+Input: String name (optional)
+Example: https://localhost:8443/api/admin/getUploadedVideo?name=test
+Output: 
+[
+    {
+        "id": 1,
+        "location": "test.mp4",
+        "uploadedAt": "2020-05-12T20:26:33.208Z",
+        "videoName": "test",
+        "archived": false
+    }
+]

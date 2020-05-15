@@ -6,6 +6,7 @@ import TransactionDetailsDTO from "../model/TransactionDetailsDTO";
 import SubscriptionDTO from "../model/SubscriptionDTO";
 import AdminSubscriptionTypesDTO from "../model/AdminSubscriptionTypesDTO";
 import AdminLocationWithWorkingHoursDTO from "../model/AdminLocationWithWorkingHoursDTO";
+import AdminUploadedVideoDTO from "../model/AdminUploadedVideoDTO";
 import UserStore from "./UserStore";
 
 class AdminStore {
@@ -28,6 +29,8 @@ class AdminStore {
 	@observable workingHoursDTOHolidayTimeFrom: Date = new Date();
 	@observable workingHoursDTOHolidayTimeTo: Date = new Date();
 	@observable successfulWorkingHoursSave: boolean = true;
+	@observable adminUploadedVideoDTOList: AdminUploadedVideoDTO[] = [];
+	
 
     getAdminStatistics() {
         adminRepository.getAdminStatistics(sessionStorage.getItem('token')!)
@@ -108,18 +111,18 @@ class AdminStore {
     }
 
 	getSubscriptionTypes() {
-	        adminRepository.getSubscriptionTypes(sessionStorage.getItem('token')!)
-            .then(action((response: AxiosResponse) => {
-            	this.adminSubscriptionTypesDTO = response.data;
-            }))
-			.catch(action((error: AxiosError) => {
-				this.adminSubscriptionTypesDTO = [];
-				if(error.response) {
-					if(error.response.data.toString().includes("Expired or invalid JWT token")) {
-						UserStore.clearSessionStorage();
-					}
+        adminRepository.getSubscriptionTypes(sessionStorage.getItem('token')!)
+        .then(action((response: AxiosResponse) => {
+        	this.adminSubscriptionTypesDTO = response.data;
+        }))
+		.catch(action((error: AxiosError) => {
+			this.adminSubscriptionTypesDTO = [];
+			if(error.response) {
+				if(error.response.data.toString().includes("Expired or invalid JWT token")) {
+					UserStore.clearSessionStorage();
 				}
-            }));
+			}
+        }));
     }
 
 	@action
@@ -142,18 +145,18 @@ class AdminStore {
     }
 
 	getLocationWithWorkingHours(name: string) {
-	        adminRepository.getLocationWithWorkingHours(name, sessionStorage.getItem('token')!)
-            .then(action((response: AxiosResponse) => {
-            	this.adminLocationWithWorkingHoursDTOList = response.data;
-            }))
-			.catch(action((error: AxiosError) => {
-				this.adminSubscriptionTypesDTO = [];
-				if(error.response) {
-					if(error.response.data.toString().includes("Expired or invalid JWT token")) {
-						UserStore.clearSessionStorage();
-					}
+        adminRepository.getLocationWithWorkingHours(name, sessionStorage.getItem('token')!)
+        .then(action((response: AxiosResponse) => {
+        	this.adminLocationWithWorkingHoursDTOList = response.data;
+        }))
+		.catch(action((error: AxiosError) => {
+			this.adminSubscriptionTypesDTO = [];
+			if(error.response) {
+				if(error.response.data.toString().includes("Expired or invalid JWT token")) {
+					UserStore.clearSessionStorage();
 				}
-            }));
+			}
+        }));
     }
 
 	@action
@@ -174,6 +177,20 @@ class AdminStore {
 		return this.successfulWorkingHoursSave;
     }
 
+	getUploadedVideo(name: string) {
+        adminRepository.getUploadedVideo(name, sessionStorage.getItem('token')!)
+        .then(action((response: AxiosResponse) => {
+        	this.adminUploadedVideoDTOList = response.data;
+        }))
+		.catch(action((error: AxiosError) => {
+			this.adminUploadedVideoDTOList = [];
+			if(error.response) {
+				if(error.response.data.toString().includes("Expired or invalid JWT token")) {
+					UserStore.clearSessionStorage();
+				}
+			}
+        }));
+    }
 
 
 	/*** Util functions ***/

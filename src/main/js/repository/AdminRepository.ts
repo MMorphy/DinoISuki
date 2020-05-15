@@ -97,6 +97,12 @@ class AdminRepository {
             });
     }
 
+	getUploadedVideo(name: string, token: string): Promise<AxiosResponse> {
+        return axios.get(`/api/admin/getUploadedVideo?name=${name}`,
+            {
+                headers: {'Authorization': `Bearer ${token}`}
+            });
+    }
 
 }
 
