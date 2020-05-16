@@ -58,7 +58,8 @@ export default class AdminSubscriptions extends React.Component<{}, {saveSubscri
 		return new Date(moment);
 	}
 	
-	saveSubscription = async () => {
+	saveSubscription = async (e: any) => {
+		e.preventDefault();
 		this.setState({
 	      saveSubscriptionFinished: false
 	    });
@@ -251,7 +252,7 @@ export default class AdminSubscriptions extends React.Component<{}, {saveSubscri
 							
 			                    <FormGroup>
 			                        <Col className="login-registration-button-center">
-			                            <Button type="submit" className="login-registration-button-color" onClick={() => this.saveSubscription()}><b>Unesi novu pretplatu</b></Button>
+			                            <Button type="submit" className="login-registration-button-color" onClick={(e: any) => this.saveSubscription(e)}><b>Unesi novu pretplatu</b></Button>
 			                        </Col>
 			                    </FormGroup>
 

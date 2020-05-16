@@ -2,6 +2,7 @@ import axios, {AxiosResponse} from 'axios';
 import SubscriptionDTO from '../model/SubscriptionDTO';
 import AdminNotificationDTO from '../model/AdminNotificationDTO';
 import AdminLocationWithWorkingHoursDTO from '../model/AdminLocationWithWorkingHoursDTO';
+import AdminUploadedVideoDTO from '../model/AdminUploadedVideoDTO';
 
 
 class AdminRepository {
@@ -103,6 +104,15 @@ class AdminRepository {
                 headers: {'Authorization': `Bearer ${token}`}
             });
     }
+
+	updateUploadedVideo(adminUploadedVideoDTO: AdminUploadedVideoDTO, token: string): Promise<AxiosResponse> {
+        return axios.post("/api/admin/updateUploadedVideo", adminUploadedVideoDTO,
+            {
+                headers: {'Authorization': `Bearer ${token}`}
+            });
+    }
+
+
 
 }
 

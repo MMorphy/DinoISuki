@@ -1,6 +1,6 @@
 import React from "react";
 import { observer } from "mobx-react";
-import { MDBDataTable } from 'mdbreact';
+import { MDBDataTable, MDBBtn } from 'mdbreact';
 import adminStore from "../../store/AdminStore";
 import UserStore from "../../store/UserStore";
 import { Card, Button, Col, Form, FormControl, FormGroup, FormLabel, ProgressBar } from "react-bootstrap";
@@ -9,6 +9,8 @@ import 'react-dropdown/style.css';
 import 'react-datetime/css/react-datetime.css';
 import axios, {AxiosError} from 'axios';
 import {action} from "mobx";
+import AdminUploadedVideoDTO from "../../model/AdminUploadedVideoDTO";
+
 
 @observer
 export default class AdminVideoUpload extends React.Component<{}, { videoName: string, file: any, uploadPercentage: number, errorMessage: string }> {
@@ -21,11 +23,16 @@ export default class AdminVideoUpload extends React.Component<{}, { videoName: s
 			errorMessage: ''
 		};
 	}
-
-	showEditMessageDialog = async () => {
-
-	};
 	
+	@action
+	changeArchived = async () => {
+		// @ts-ignore
+		const id: number = event.srcElement.id;
+		let adminUploadedVideoDTO: AdminUploadedVideoDTO = adminStore.adminUploadedVideoDTOList[id];
+		adminUploadedVideoDTO.archived = !adminUploadedVideoDTO.archived;
+		await adminStore.updateUploadedVideo(adminUploadedVideoDTO);
+	};
+
 	setVideoName = (videoName: string) => {
 		this.setState({ videoName: videoName })
 	};
@@ -34,13 +41,10 @@ export default class AdminVideoUpload extends React.Component<{}, { videoName: s
 	setFile = ({ target: { files } }) => {
 		this.setState({ file: files[0] })
 	};
-	
 
-	dummy = async () => {
-
-	};
-
-	uploadFile = () => {
+	uploadFile = (e: any) => {
+		e.preventDefault();
+		this.setState({ errorMessage: '' });
 		if(this.state.videoName === undefined || this.state.videoName === '') {
 			this.setState({ errorMessage: 'Niste unijeli naziv snimke' });
 			return;
@@ -50,7 +54,6 @@ export default class AdminVideoUpload extends React.Component<{}, { videoName: s
 			return;
 		}
 		
-		console.log(this.state.file);
 		let uploadVideo = new FormData();
 		uploadVideo.append('uploadVideo', this.state.file)
 		const token: string = sessionStorage.getItem('token')!;
@@ -74,7 +77,6 @@ export default class AdminVideoUpload extends React.Component<{}, { videoName: s
 		
 		axios.post(`/api/admin/adminUploadVideo?name=${fileName}`, uploadVideo, options		
 		).then(res => {
-			console.log(res)
 			this.setState({ uploadPercentage: 100 }, () => {
 				setTimeout(() => {
 					this.setState({ uploadPercentage: 0 });
@@ -129,15 +131,22 @@ export default class AdminVideoUpload extends React.Component<{}, { videoName: s
 				label: 'Status',
 				field: 'archived',
 				width: 20
-			}
+			},
+			{
+		        label: 'Promijena statusa',
+		        field: 'changeArchived',
+		        width: 10
+	      	}
 		];
 		const rows = [];
 		for (var i = 0; i < adminStore.adminUploadedVideoDTOList.length; i++) {
 			let uploadedAtStr: string = adminStore.adminUploadedVideoDTOList[i].uploadedAt.toString();
 			let uploadedAt: Date = new Date(uploadedAtStr.substring(0, uploadedAtStr.indexOf('.')) + 'Z');
 			let archived: string = 'aktivan';
+			let status: string = 'Arhiviraj';
 			if (adminStore.adminUploadedVideoDTOList[i].archived) {
 				archived = 'arhiviran';
+				status = 'Aktiviraj';
 			}
 			rows.push(
 				{
@@ -145,7 +154,8 @@ export default class AdminVideoUpload extends React.Component<{}, { videoName: s
 					file: adminStore.adminUploadedVideoDTOList[i].location,
 					uploadedAt: uploadedAt.toLocaleString(),
 					videoName: adminStore.adminUploadedVideoDTOList[i].videoName,
-					archived: archived
+					archived: archived,
+					changeArchived: <MDBBtn className="admin-table-button" id={i} color="cyan" size="sm" onClick={() => this.changeArchived()}>{status}</MDBBtn>
 				}
 			)
 		}
@@ -213,7 +223,7 @@ export default class AdminVideoUpload extends React.Component<{}, { videoName: s
 
 								<FormGroup>
 									<Col className="login-registration-button-center">
-										<Button type="submit" className="login-registration-button-color" onClick={() => this.uploadFile()}><b>Unesi novu snimku</b></Button>
+										<Button type="submit" className="login-registration-button-color" onClick={(e: any) => this.uploadFile(e)}><b>Unesi novu snimku</b></Button>
 									</Col>
 								</FormGroup>
 								

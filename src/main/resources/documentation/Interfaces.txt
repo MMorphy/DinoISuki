@@ -984,3 +984,13 @@ Output:
         "archived": false
     }
 ]
+
+/api/admin/updateUploadedVideo
+Description: Update uploaded video by admin - change archived
+Type: put
+Input: AdminUploadedVideoDTO adminUploadedVideoDTO
+Example: https://localhost:8443/api/admin/updateUploadedVideo
+Output:
+{
+    "message": "Uploaded video updated!"
+}

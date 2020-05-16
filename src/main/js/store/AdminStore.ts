@@ -30,6 +30,7 @@ class AdminStore {
 	@observable workingHoursDTOHolidayTimeTo: Date = new Date();
 	@observable successfulWorkingHoursSave: boolean = true;
 	@observable adminUploadedVideoDTOList: AdminUploadedVideoDTO[] = [];
+	@observable successfulUpdateUploadedVideo: boolean = true;
 	
 
     getAdminStatistics() {
@@ -190,6 +191,24 @@ class AdminStore {
 				}
 			}
         }));
+    }
+
+	@action
+	async updateUploadedVideo(adminUploadedVideoDTO: AdminUploadedVideoDTO) {
+        await adminRepository.updateUploadedVideo(adminUploadedVideoDTO, sessionStorage.getItem('token')!)
+            .then(action((response: AxiosResponse) => {
+            	this.successfulUpdateUploadedVideo = true;
+            }))
+			.catch(action((error: AxiosError) => {
+				if(error.response) {
+					if(error.response.data.toString().includes("Expired or invalid JWT token")) {
+						UserStore.clearSessionStorage();
+					}
+					this.errorMessage = error.response.data.message;
+				}
+				this.successfulUpdateUploadedVideo = false;
+            }));
+		return this.successfulUpdateUploadedVideo;
     }
 
 

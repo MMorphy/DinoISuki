@@ -14,7 +14,8 @@ export default class AdminQuizNew extends React.Component<{}, {isError: boolean,
 		};
 	}
 	
-	createNewQuiz = async () => {
+	createNewQuiz = async (e: any) => {
+		e.preventDefault();
 		if(quizStore.adminDisplayNewQuizFormQuestions) {
 			quizStore.setDisplayNewQuizFormQuestions(false);
 			return;
@@ -95,7 +96,7 @@ export default class AdminQuizNew extends React.Component<{}, {isError: boolean,
 
 								<FormGroup>
 			                        <Col className="login-registration-button-center">
-			                            <Button type="submit" className="login-registration-button-color" onClick={() => this.createNewQuiz()}><b>Kreiraj novi kviz</b></Button>
+			                            <Button type="submit" className="login-registration-button-color" onClick={(e: any) => this.createNewQuiz(e)}><b>Kreiraj novi kviz</b></Button>
 			                        </Col>
 			                    </FormGroup>
 								{

@@ -812,8 +812,8 @@ public class AdminRest {
 	}
 
 	/*
-	 * Description: Fetch uploaded videos by admin 
-	 * Input parameters: Video name (optional) 
+	 * Description: Fetch uploaded videos by admin
+	 * Input parameters: Video name (optional)
 	 * Call example: https://localhost:8443/api/admin/getUploadedVideo?name=test
 	 *
 	 */
@@ -834,6 +834,28 @@ public class AdminRest {
 
 		logger.debug("/api/admin/getUploadedVideo Finished");
 		return new ResponseEntity<>(adminUploadedVideoDTOList, HttpStatus.OK);
+	}
+
+	/*
+	 * Description: Update uploaded video by admin - change archived
+	 * Input parameters: Video name (optional)
+	 * Call example: https://localhost:8443/api/admin/updateUploadedVideo
+	 *
+	 */
+	@PostMapping("/updateUploadedVideo")
+	public ResponseEntity<?> updateUploadedVideo(@RequestBody AdminUploadedVideoDTO adminUploadedVideoDTO) {
+		logger.debug("/api/admin/updateUploadedVideo Started");
+		if(adminUploadedVideoDTO == null || adminUploadedVideoDTO.getVideoName() == null || adminUploadedVideoDTO.getVideoName().isEmpty()) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Invalid input data"), HttpStatus.BAD_REQUEST);
+		}
+		UploadedVideo uploadedVideo = uploadedVideoService.findByVideoName(adminUploadedVideoDTO.getVideoName());
+		if(uploadedVideo == null) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to find uploaded video with name:" + adminUploadedVideoDTO.getVideoName()), HttpStatus.BAD_REQUEST);
+		}
+		uploadedVideo.setArchived(adminUploadedVideoDTO.isArchived());
+		uploadedVideoService.saveVideo(uploadedVideo);
+		logger.debug("/api/admin/updateUploadedVideo Started");
+		return new ResponseEntity<String>(commons.JSONfyReturnMessage("Uploaded video updated!"), HttpStatus.CREATED);
 	}
 
 }

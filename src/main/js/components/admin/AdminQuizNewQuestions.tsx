@@ -18,7 +18,8 @@ export default class AdminQuizNewQuestions extends React.Component<{}, {isError:
 		};
 	}
 	
-	storeQuiz = async () => {
+	storeQuiz = async (e: any) => {
+		e.preventDefault();
 		if(quizStore.newQuizQuestions[0].question === undefined || quizStore.newQuizQuestions[0].question === '') {
 			this.setState({
 		    	isError: true,
@@ -160,7 +161,7 @@ export default class AdminQuizNewQuestions extends React.Component<{}, {isError:
 
 								<FormGroup>
 			                        <Col className="login-registration-button-center" style={{textAlign:"center", display:"block"}}>
-			                            <Button type="submit" className="login-registration-button-color" onClick={() => this.storeQuiz()}><b>Spremi kviz</b></Button>
+			                            <Button type="submit" className="login-registration-button-color" onClick={(e: any) => this.storeQuiz(e)}><b>Spremi kviz</b></Button>
 										{
 						                    !quizStore.adminDisplayNewQuizForm
 						                        ? <Button type="submit" className="login-registration-button-color" style={{marginLeft: "20px"}} onClick={() => this.backToNewQuiz()}><b>Novi kviz</b></Button>

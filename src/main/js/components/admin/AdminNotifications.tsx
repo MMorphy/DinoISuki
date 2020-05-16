@@ -44,7 +44,8 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 		this.onModalClose();
   	};
 	
-	addNotification = async () => {
+	addNotification = async (e: any) => {
+		e.preventDefault();
 		this.setState({
 	      saveNotificationFinished: false
 	    });
@@ -63,7 +64,8 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 		
 	}
 	
-	updateNotification = async () => {
+	updateNotification = async (e: any) => {
+		e.preventDefault();
 		this.setState({
 	      editNotificationFinished: false
 	    });
@@ -76,7 +78,8 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 		}
 	}
 	
-	sendMessagesToRandomUsers = async () => {
+	sendMessagesToRandomUsers = async (e: any) => {
+		e.preventDefault();
 		// input validation
 		if(notificationsStore.noOfRandomRecipients < 1) {
 			this.setState( {
@@ -313,7 +316,7 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 							
 			                    <FormGroup>
 			                        <Col className="login-registration-button-center">
-			                            <Button type="submit" className="login-registration-button-color" onClick={() => this.addNotification()}><b>Unesi novu poruku</b></Button>
+			                            <Button type="submit" className="login-registration-button-color" onClick={(e: any) => this.addNotification(e)}><b>Unesi novu poruku</b></Button>
 			                        </Col>
 			                    </FormGroup>
 
@@ -376,7 +379,7 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 							
 			                    <FormGroup>
 			                        <Col className="login-registration-button-center">
-			                            <Button type="submit" className="login-registration-button-color" onClick={() => this.sendMessagesToRandomUsers()}><b>Pošalji poruke</b></Button>
+			                            <Button type="submit" className="login-registration-button-color" onClick={(e: any) => this.sendMessagesToRandomUsers(e)}><b>Pošalji poruke</b></Button>
 			                        </Col>
 			                    </FormGroup>
 			                </Form>
@@ -436,7 +439,7 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 	                </Modal.Body>
 	                <Modal.Footer className='admin-notifications-modal-footer'>
 	                    <Button className='login-registration-button-color' onClick={() => this.deleteNotification()}><b>Obriši</b></Button>
-						<Button className='login-registration-button-color' onClick={() => this.updateNotification()}><b>Spremi</b></Button>
+						<Button className='login-registration-button-color' onClick={(e: any) => this.updateNotification(e)}><b>Spremi</b></Button>
 	                    <Button className='admin-notifications-modal-footer-cancel-button' onClick={() => this.onModalClose()}><b>Zatvori</b></Button>
 	                </Modal.Footer>
 	            </Modal>
