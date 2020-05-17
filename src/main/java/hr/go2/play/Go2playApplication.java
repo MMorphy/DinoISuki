@@ -4,6 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.content.commons.repository.Store;
+import org.springframework.content.rest.StoreRestResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
@@ -18,4 +20,7 @@ public class Go2playApplication extends SpringBootServletInitializer {
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(Go2playApplication.class);
     }
+
+    @StoreRestResource(path="videos")   
+    public interface VideoStore extends Store<String> {} 
 }

@@ -15,8 +15,7 @@
 	<name>go2play</name>
 	<description>Aplikacija za Dinu i Sukija</description>
 
-<!-- Uncomment to make a war
-	<packaging>war</packaging> -->
+	<!-- Uncomment to make a war <packaging>war</packaging> -->
 
 
 	<properties>
@@ -25,12 +24,9 @@
 	</properties>
 
 	<dependencies>
-<!-- Uncomment to make a war
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency> -->
+		<!-- Uncomment to make a war <dependency> <groupId>org.springframework.boot</groupId> 
+			<artifactId>spring-boot-starter-tomcat</artifactId> <scope>provided</scope> 
+			</dependency> -->
 		<dependency>
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
@@ -112,38 +108,43 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>de.jollyday</groupId>
+			<artifactId>jollyday</artifactId>
+			<version>0.4.5</version>
+			<type>jar</type>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.xml.bind</groupId>
+					<artifactId>jaxb-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.hierynomus</groupId>
+			<artifactId>sshj</artifactId>
+			<version>0.27.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.vladmihalcea</groupId>
+			<artifactId>hibernate-types-52</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+
+
+		<dependency>
 			<groupId>com.github.paulcwarren</groupId>
 			<artifactId>spring-content-fs-boot-starter</artifactId>
-			<version>1.0.0.M4</version>
+			<version>0.13.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.paulcwarren</groupId>
 			<artifactId>spring-content-rest-boot-starter</artifactId>
-			<version>1.0.0.M4</version>
+			<version>0.13.0</version>
 		</dependency>
-		<dependency>
-	        <groupId>de.jollyday</groupId>
-	        <artifactId>jollyday</artifactId>
-	        <version>0.4.5</version>
-	        <type>jar</type>
-		    <scope>compile</scope>
-		    <exclusions>
-		      <exclusion>
-		         <groupId>javax.xml.bind</groupId>
-		         <artifactId>jaxb-api</artifactId>
-		      </exclusion>
-		    </exclusions>
-		</dependency>
-		<dependency>
-		    <groupId>com.hierynomus</groupId>
-		    <artifactId>sshj</artifactId>
-		    <version>0.27.0</version>
-		</dependency>
-		<dependency>
-		    <groupId>com.vladmihalcea</groupId>
-		    <artifactId>hibernate-types-52</artifactId>
-		    <version>2.2.2</version>
-		</dependency>
+
+
+
 	</dependencies>
 
 	<build>
