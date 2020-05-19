@@ -29,7 +29,7 @@ public interface LocationRepository extends JpaRepository<Location, Long>{
 
 	public Optional<Location> findByContactInformation_TelephoneNumber(String num);
 
-	@Query("SELECT new hr.go2.play.DTO.VideoDetailsDTO(v.id, v.startedAt, l.name) "
+	@Query("SELECT new hr.go2.play.DTO.VideoDetailsDTO(v.id, v.startedAt, l.name, v.location) "
 		+ "FROM Location l "
 		+ "JOIN l.fields f "
 		+ "JOIN f.cameras c "

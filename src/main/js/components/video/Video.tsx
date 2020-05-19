@@ -1,9 +1,7 @@
 import React from "react";
-import ReactPlayer from "react-player";
 
 interface VideoProps {
     videoName: string;
-    isVideoThumbnail: boolean;
     width: string;
     height: string;
     onStart: () => void;
@@ -11,29 +9,23 @@ interface VideoProps {
 }
 
 export default class Video extends React.Component<VideoProps, {}> {
-    private player: any = null;
-
-    ref = (player: any) => {
-        this.player = player
-    };
 
     render() {
+		const delimiter: string = "\\";
+		let parts = this.props.videoName.split(delimiter);
+		const videoLoc: string = "videos/" + parts[parts.length - 1];
         return (
             <div className="video-player-inline">
-                <ReactPlayer url={`https://localhost:8443/api/video/getVideo/${this.props.videoName}`}
-                             light={this.props.isVideoThumbnail}
-                             playing={this.props.playing}
-                             controls={true}
-                             width={this.props.width}
-                             height={this.props.height}
-                             onReady={this.props.onStart}
-                             onSeek={seconds => this.handleSeek(seconds)}
-                             ref={this.ref}/>
+				{	this.props.playing ?
+                 	<video controls autoPlay muted preload="metadata" width={this.props.width} height={this.props.height}>
+		    			<source src={videoLoc} type="video/mp4"/>
+					</video>
+				: <video preload="metadata" width={this.props.width} height={this.props.height}>
+		    			<source src={videoLoc} type="video/mp4"/>
+					</video>
+				}
             </div>
         );
     }
 
-    private handleSeek(seconds: number) {
-        this.player.seekTo(seconds, "seconds");
-    }
 }

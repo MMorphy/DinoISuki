@@ -494,16 +494,20 @@ h3 {
 
 .video-player-inline {
     display: inline-block;
+	border: white;
+    border-style: solid;
+    border-width: thin;
+    margin: 10px;
 }
 
 .video-horizontal-scroll-parent-width {
     width: 85em;
-    height: 300px;
+    height: 320px;
 }
 
 .video-horizontal-scroll-child-width {
     width: 30em;
-    height: 300px;
+    height: 320px;
 }
 
 .video-card-header-background {
@@ -517,7 +521,7 @@ h3 {
 @media (max-width: 1024px) {
     .video-horizontal-scroll-parent-width {
         width: 60em;
-        height: 240px;
+        height: 320px;
     }
 
     .video-horizontal-scroll-child-width {

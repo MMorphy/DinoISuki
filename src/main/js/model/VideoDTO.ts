@@ -5,4 +5,5 @@ export default class VideoDTO {
     @observable id : string = "";
     @observable locationName: string = "";
     @observable startedTimestamp: string = "";
+	@observable fileName: string = "";
 }

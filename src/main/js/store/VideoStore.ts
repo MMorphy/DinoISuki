@@ -34,9 +34,15 @@ class VideoStore {
 
     @action
     chooseVideo(videoId: string) {
-        this.chosenVideoId = videoId;
-        this.showChosenVideo = true;
+		this.showChosenVideo = false;
+		setTimeout( () => this.chooseMyVideo(videoId), 500);
     }
+	
+	@action
+    private chooseMyVideo = (videoId: string) =>  {
+		 this.chosenVideoId = videoId;
+        this.showChosenVideo = true;
+	}
 
     private mapTimestampStringToDateString(timestamp: string) {
         let split = timestamp.split("T")[0].split("-");

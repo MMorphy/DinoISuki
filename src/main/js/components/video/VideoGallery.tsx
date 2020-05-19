@@ -20,9 +20,9 @@ export default class VideoGallery extends React.Component<{}, {}> {
         return (
             <div className="video-gallery">
                 {
-                    videoStore.showChosenVideo
-                        ?<div><Video videoName={videoStore.chosenVideoId} isVideoThumbnail={false} playing={true} width={"1024px"} height={"720px"} onStart={() => {}}/><br/><br/><br/></div>
-                        : <div/>
+					videoStore.showChosenVideo
+                    ?	<div><Video videoName={videoStore.chosenVideoId} playing={true} width={"1024px"} height={"720px"} onStart={() => {}}/></div>
+					: 	<div/>
                 }
                 {
                     videoSlideshowHtmls
@@ -33,5 +33,9 @@ export default class VideoGallery extends React.Component<{}, {}> {
 
     componentDidMount(): void {
         videoStore.getVideoGallery();
+    }
+
+	componentDidUpdate(): void {
+        window.scrollTo(0, 100);
     }
 }

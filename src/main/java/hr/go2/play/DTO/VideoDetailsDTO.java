@@ -13,14 +13,17 @@ public class VideoDetailsDTO {
 
 	private String locationName;
 
+	private String fileName;
+
 	public VideoDetailsDTO() {
 	}
 
-	public VideoDetailsDTO(Long id, Date startedTimestamp, String locationName) {
+	public VideoDetailsDTO(Long id, Date startedTimestamp, String locationName, String fileName) {
 		super();
 		this.id = id;
 		this.startedTimestamp = startedTimestamp;
 		this.locationName = locationName;
+		this.fileName = fileName;
 	}
 
 	public Long getId() {
@@ -46,4 +49,13 @@ public class VideoDetailsDTO {
 	public void setLocationName(String locationName) {
 		this.locationName = locationName;
 	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
 }
