@@ -306,6 +306,10 @@ h3 {
     padding-top: 100px;
 }
 
+.modal-content {
+	width: fit-content;
+}
+
 /**ABOUT GO2PLAY*/
 .about-go2play-margin {
     margin-top: 100px;

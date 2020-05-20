@@ -17,9 +17,9 @@ export default class VideoSlideshow extends React.Component<VideoSlideshowProps,
         videoStore.videoGallery.forEach((video: VideoDTO, index: number) => {
             if (videoStore.areDateAndTimestampStringsEqual(this.props.date, video.startedTimestamp)) {
                 videoThumbnailHtmls.push(
-                    <div className='video-horizontal-scroll-child-width' key={index} onClick={() => videoStore.chooseVideo(video.fileName)}>
+                    <div className='video-horizontal-scroll-child-width' key={index} onClick={() => videoStore.chooseVideo(video)}>
                         <Video videoName={video.fileName} playing={false} width={"360px"} height={"240px"}
-                               onStart={() => videoStore.chooseVideo(video.fileName)} />
+                               onStart={() => videoStore.chooseVideo(video)} />
                         <br/>
                         Lokacija: {video.locationName}
                         <br/>

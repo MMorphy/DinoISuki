@@ -6,7 +6,7 @@ import VideoDTO from "../model/VideoDTO";
 class VideoStore {
 
     @observable videoGallery : Array<VideoDTO> = [];
-    @observable chosenVideoId: string = "";
+    @observable chosenVideoDTO: VideoDTO = new VideoDTO();
     @observable showChosenVideo: boolean = false;
 
     getVideoGallery() {
@@ -33,14 +33,16 @@ class VideoStore {
     }
 
     @action
-    chooseVideo(videoId: string) {
+    chooseVideo(chosenVideoDTO: VideoDTO) {
 		this.showChosenVideo = false;
-		setTimeout( () => this.chooseMyVideo(videoId), 500);
+		if(chosenVideoDTO !== undefined && chosenVideoDTO !== null && chosenVideoDTO.id !== '') {
+			setTimeout( () => this.chooseMyVideo(chosenVideoDTO), 500);
+		}
     }
-	
+
 	@action
-    private chooseMyVideo = (videoId: string) =>  {
-		 this.chosenVideoId = videoId;
+    private chooseMyVideo = (chosenVideoDTO: VideoDTO) =>  {
+		this.chosenVideoDTO = chosenVideoDTO;
         this.showChosenVideo = true;
 	}
 
