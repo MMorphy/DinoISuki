@@ -8,12 +8,14 @@ import org.json.JSONException;
 public class RestControllerTestUtility {
     private static String basicUrl = System.getProperty("ip");
     private static String psqlIP = System.getProperty("psqlIP");
-    protected static int statusSuccess = 201;
+    protected static int statusCreated = 201;
+    protected static int statusSuccesful = 200;
     protected static int statusFail = 400;
     protected static int statusUnauthorized = 401;
     protected static String defaultLoginJSON="{\"username\":\"defaultUser\",\"password\":\"thisIsThePassword\"}";
     protected static String loginURL="/api/user/login";
     protected static String registerJSON="{\"createdAt\":\"2018-05-30T16:19:58.016Z\",\"dateOfBirth\":\"1994-10-10\",\"username\":\"defaultUser\",\"password\":\"thisIsThePassword\",\"enabled\":\"false\"}";
+    protected static String registerSlavkoJSON="{\"createdAt\":\"2018-05-30T16:19:58.016Z\",\"dateOfBirth\":\"1990-10-10\",\"username\":\"slafko\",\"password\":\"thisIsThePassword\",\"enabled\":\"false\"}";
     protected static String registerURL="/api/user/createUser";
     protected static String token;
 

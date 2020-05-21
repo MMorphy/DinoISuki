@@ -32,6 +32,12 @@
                     <exclude name="getNonExistingUserTest"/>
                 </methods>
             </class>
+            <class name="rest.NotificationRestControllerTest">
+                <methods>
+                    <exclude name="deleteNotificationTest"/>
+                    <exclude name="getOtherUserNotificationTest"/>
+                </methods>
+            </class>
         </classes>
     </test>
 </suite>

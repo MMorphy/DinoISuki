@@ -12,7 +12,6 @@ public class UserManagementUpdateDeleteControllerTest {
     private String changePassJson = "{\"username\":\"defaultUser\",\"oldPassword\":\"thisIsThePassword\",\"newPassword\":\"defaultPass\"}";
     private String contactInfoJSON = "{\"username\":\"defaultUser\",\"telephoneNumber\":\"6666666662\",\"email\":\"mile.ljubitelj@diska.com\"}";
     private String addUserRoleJSON = "{\"username\":\"defaultUser\",\"role\":\"role_user\"}";
-    private String addAdminRoleJSON = "{\"username\":\"defaultUser\",\"role\":\"role_admin\"}";
     private String updateUserURL = "/api/user/updateUser";
     private String deleteUserURL = "/api/user/deleteUser";
     private String getUserURL = "/api/user/getUser/defaultUser";
@@ -53,7 +52,7 @@ public class UserManagementUpdateDeleteControllerTest {
     @Test
     public void updateUserTest(){
         int result = postWithToken(updateUserURL, updateUserJSON, token);
-        assertTrue(result == statusSuccess, "Failed to update user as expected, response code not correct! Response code: " + result);
+        assertTrue(result == statusCreated, "Failed to update user as expected, response code not correct! Response code: " + result);
     }
 
     @Test
@@ -85,7 +84,7 @@ public class UserManagementUpdateDeleteControllerTest {
     public void doubleUpdateUserTest(){
         postWithToken(updateUserURL, updateUserJSON, token);
         int result = postWithToken(updateUserURL, updateUserJSON, token);
-        assertTrue(result == statusSuccess, "Double user update failed with wrong code: " + result); //TODO: change this when functionality changes
+        assertTrue(result == statusCreated, "Double user update failed with wrong code: " + result); //TODO: change this when functionality changes
     }
 
     @Test
@@ -100,7 +99,7 @@ public class UserManagementUpdateDeleteControllerTest {
     @Test
     public void deleteUserTest(){
         int result = postWithToken(deleteUserURL, updateUserJSON, token);
-        assertTrue(result == statusSuccess, "Failed to delete user as expected, response code not correct! Response code: " + result);
+        assertTrue(result == statusCreated, "Failed to delete user as expected, response code not correct! Response code: " + result);
     }
 
     @Test
@@ -146,7 +145,7 @@ public class UserManagementUpdateDeleteControllerTest {
     @Test
     public void changePassTest(){
         int result = postWithToken(changePassURL, changePassJson, token);
-        assertTrue(result == statusSuccess, "Failed to change password as expected, response code not correct! Response code: " + result);
+        assertTrue(result == statusCreated, "Failed to change password as expected, response code not correct! Response code: " + result);
     }
 
     @Test
@@ -178,7 +177,7 @@ public class UserManagementUpdateDeleteControllerTest {
     @Test
     public void saveContactInfoTest(){
         int  result = postWithToken(contactInfoURL, contactInfoJSON, token);
-        assertTrue(result== statusSuccess, "Result is: " + result);
+        assertTrue(result== statusCreated, "Result is: " + result);
     }
 
     @Test
@@ -196,14 +195,14 @@ public class UserManagementUpdateDeleteControllerTest {
         }
         System.out.println("...done!");
         int result = postRequest(contactInfoURL, contactInfoJSON);
-        assertTrue(result == statusSuccess, "Result is: " + result);
+        assertTrue(result == statusCreated, "Result is: " + result);
     }
 
     @Test
     public void deleteContactInfoTest(){
         postWithToken(contactInfoURL, contactInfoJSON, token);
         int  result = postWithToken(deleteContactInfoURL, contactInfoJSON, token);
-        assertTrue(result== statusSuccess, "Result is: " + result);
+        assertTrue(result== statusCreated, "Result is: " + result);
     }
 
     @Test
@@ -220,13 +219,13 @@ public class UserManagementUpdateDeleteControllerTest {
         for (int i = 0; i < bulk; i++) {
             postWithToken(contactInfoURL, contactInfoJSON, token);
             int r = postWithToken(deleteContactInfoURL, contactInfoJSON, token);
-            if (r!=statusSuccess)
+            if (r!=statusCreated)
                 System.out.println("Failed in iteration # " + i);
         }
         System.out.println("...done!");
         postWithToken(contactInfoURL, contactInfoJSON, token);
         int  result = postWithToken(deleteContactInfoURL, contactInfoJSON, token);
-        assertTrue(result== statusSuccess, "Result is: " + result);
+        assertTrue(result== statusCreated, "Result is: " + result);
     }
 
     @Test

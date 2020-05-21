@@ -35,7 +35,7 @@ public class AdminRestControllerTest extends AbstractTest {
     @Test
     public void createCameraTest() {
         int result = postWithToken(createCameraUrl, createCameraJSON, token);
-        assertTrue(result == statusSuccess);
+        assertTrue(result == statusCreated);
     }
 
     @Test
@@ -48,7 +48,7 @@ public class AdminRestControllerTest extends AbstractTest {
     public void doubleCreateCameraTest() {
         postWithToken(createCameraUrl, createCameraJSON, token);
         int result = postWithToken(createCameraUrl, createCameraJSON, token);
-        assertTrue(result == statusSuccess); // should this fail?
+        assertTrue(result == statusCreated); // should this fail?
     }
 
     @Test
@@ -61,27 +61,27 @@ public class AdminRestControllerTest extends AbstractTest {
     @Test
     public void updateCameraTest() {
         int result = postWithToken(updateCameraUrl, updateCameraJSON, token);
-        assertTrue(result == statusSuccess);
+        assertTrue(result == statusCreated);
     }
 
     @Test
     public void updateSameCameraTest() {
         postWithToken(updateCameraUrl, updateCameraJSON, token);
         int result = postWithToken(updateCameraUrl, updateCameraJSON, token);
-        assertTrue(result == statusSuccess);
+        assertTrue(result == statusCreated);
     }
 
     @Test
     public void updateNonExistingCameraTest() {
         int result = postWithToken(updateCameraUrl, nonExistingCameraJSON, token);
-        assertTrue(result == statusSuccess); //Should this fail?
+        assertTrue(result == statusCreated); //Should this fail?
     }
 
     @Test
     public void deleteCameraTest() {
         postWithToken(createCameraUrl, createCameraJSON, token);
         int result = postWithToken(deleteCameraUrl, "1", token);
-        assertTrue(result == statusSuccess);
+        assertTrue(result == statusCreated);
     }
 
     @Test
@@ -113,7 +113,7 @@ public class AdminRestControllerTest extends AbstractTest {
     @Test
     public void createLocationTest() {
         int result = postWithToken(createLocationUrl, "camera", token);
-         assertTrue(result == statusSuccess);
+         assertTrue(result == statusCreated);
     }
 
 }

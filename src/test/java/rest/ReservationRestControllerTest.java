@@ -114,7 +114,7 @@ public class ReservationRestControllerTest extends AbstractTest {
     @Test
     public void addReservationTest() {
         int result = postRequest(reserveURL, reserveJson);
-        assertTrue(result == statusSuccess);
+        assertTrue(result == statusCreated);
     }
 
     @Test
@@ -127,7 +127,7 @@ public class ReservationRestControllerTest extends AbstractTest {
     @Test
     public void deleteReservationTest() {
         int result = postRequest(deleteURL, reserveJson);
-        assertTrue(result == statusSuccess);
+        assertTrue(result == statusCreated);
     }
 
     @Test
@@ -140,14 +140,14 @@ public class ReservationRestControllerTest extends AbstractTest {
     @Test
     public void updateReservationTest() {
         int result = postRequest(updateURL, reserveJson);
-        assertTrue(result == statusSuccess);
+        assertTrue(result == statusCreated);
     }
 
     @Test
     public void updateSameReservationTest() {
         postRequest(updateURL, reserveJson);
         int result = postRequest(updateURL, reserveJson);
-        assertTrue(result == statusSuccess);
+        assertTrue(result == statusCreated);
     }
 
     //TODO: handle variables!

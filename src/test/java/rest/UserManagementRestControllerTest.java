@@ -34,7 +34,7 @@ public class UserManagementRestControllerTest {
     @Test
     public void registerTest() {
         int result = postRequest(registerURL, registerJSON);
-        assertTrue(result == statusSuccess);
+        assertTrue(result == statusCreated);
     }
 
     @Test
@@ -57,14 +57,14 @@ public class UserManagementRestControllerTest {
             postRequest(registerURL, brokenJSON);
         }
         int result = postRequest(registerURL, registerJSON);
-        assertTrue(result == statusSuccess);
+        assertTrue(result == statusCreated);
     }
 
     @Test
     public void loginTest()  {
         postRequest(registerURL, registerJSON);
         int result = postRequest(loginURL, defaultLoginJSON);
-        assertTrue(result == statusSuccess);
+        assertTrue(result == statusCreated);
     }
 
     @Test
@@ -108,7 +108,7 @@ public class UserManagementRestControllerTest {
             postRequest(loginURL, fakeJSON);
         }
         int result = postRequest(loginURL, defaultLoginJSON);
-        assertTrue(result == statusSuccess);
+        assertTrue(result == statusCreated);
     }
 
 
