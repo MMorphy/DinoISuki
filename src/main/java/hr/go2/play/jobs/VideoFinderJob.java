@@ -50,6 +50,10 @@ public class VideoFinderJob extends QuartzJobBean {
 	String errorFolderLocation;
 //	@Value("${application.job.video-finder.archive-folder-location}")
 	String archiveFolderLocation;
+//	@Value("${application.users.profile-photo-location}")
+	String profilePhotoLocation;
+//	@Value("${application.admin.uploaded-video-location}")
+	String uploadedVideoLocation;
 
 	@Autowired
 	private Commons commons;
@@ -64,6 +68,30 @@ public class VideoFinderJob extends QuartzJobBean {
 		foundFolderLocation = commons.getProperty("application_job_videoFinder_foundFolderLocation", String.class);
 		errorFolderLocation = commons.getProperty("application_job_videoFinder_errorFolderLocation", String.class);
 		archiveFolderLocation = commons.getProperty("application_job_videoFinder_archiveFolderLocation", String.class);
+		// folders not used in this job
+		profilePhotoLocation = commons.getProperty("application_users_profilePhotoLocation", String.class);
+		uploadedVideoLocation = commons.getProperty("application_admin_uploadedVideoLocation", String.class);
+
+		initializeFolders();
+	}
+
+	private void initializeFolders() {
+		initFolder(new File(searchFolderLocation));
+		initFolder(new File(foundFolderLocation));
+		initFolder(new File(errorFolderLocation));
+		initFolder(new File(archiveFolderLocation));
+		initFolder(new File(profilePhotoLocation));
+		initFolder(new File(uploadedVideoLocation));
+	}
+
+	private void initFolder(File folder) {
+		if (!folder.exists() || !folder.isDirectory()) {
+			try {
+				folder.mkdir();
+			} catch (SecurityException e) {
+				logger.error("Unable to create folder: " + folder.getAbsolutePath(), e);
+			}
+		}
 	}
 
 	@Override
