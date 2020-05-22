@@ -18,14 +18,15 @@
                     <exclude name="falseRegisterTest"/>
                 </methods>
             </class>
-            <!--<class name="rest.AdminRestControllerTest">-->
-                <!--<methods>-->
-                    <!--<exclude name="createLocationTest"/>-->
-                    <!--<exclude name="doubleDeleteCameraTest"/>-->
-                    <!--<exclude name="deleteNonExistingCameraUrlTest"/>-->
-                    <!--<exclude name="deleteCameraTest"/>-->
-                <!--</methods>-->
-            <!--</class>-->
+            <class name="rest.AdminRestControllerTest">
+                <methods>
+                    <exclude name="createLocationTest"/>
+                    <exclude name="doubleDeleteCameraTest"/>
+                    <exclude name="deleteNonExistingCameraUrlTest"/>
+                    <exclude name="deleteCameraTest"/>
+                    <exclude name="updateNonExistingCameraTest"/>
+                </methods>
+            </class>
             <class name="rest.UserManagementUpdateDeleteControllerTest">
                 <methods>
                     <exclude name="doubleDeleteUserTest"/>
