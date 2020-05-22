@@ -23,8 +23,7 @@ export default class AdminLocationWorkingHours extends React.Component<{}, {moda
 	}
 	
 	showEditMessageDialog = async () => {
-		// @ts-ignore
-		const id = event.srcElement.id;
+		const id = this.getId(event);
 		
 		this.prepareWorkingHoursModal(id);
 		
@@ -34,6 +33,14 @@ export default class AdminLocationWorkingHours extends React.Component<{}, {moda
 				locationId: id
 		    });
 	};
+	
+	getId = (event: any) => {
+		let _id: any = event.srcElement.id;
+		if(_id === undefined || _id === null || _id == "") {
+			_id = event.srcElement.parentNode.id;
+		}
+		return _id;
+	}
 	
 	private onModalClose() {
         this.setState({

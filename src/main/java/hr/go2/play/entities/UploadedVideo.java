@@ -23,6 +23,7 @@ public class UploadedVideo {
 	@Column(nullable = false)
 	private Date uploadedAt;
 
+	@Column(unique = true)
 	private String videoName;
 
 	private boolean archived;

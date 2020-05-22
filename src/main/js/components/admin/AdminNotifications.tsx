@@ -25,13 +25,20 @@ export default class AdminNotifications extends React.Component<{}, {saveNotific
 	
 	showEditMessageDialog = async () => {
 		if(event !== undefined && event.srcElement !== null) {
-			// @ts-ignore
-			notificationsStore.setEditNotification(notificationsStore.adminNotificationDTOList[event.srcElement.id]);
+			notificationsStore.setEditNotification(notificationsStore.adminNotificationDTOList[this.getId(event)]);
 			this.setState({
 		    	modalVisible: true
 		    });
 		}
 	};
+	
+	getId = (event: any) => {
+		let _id: any = event.srcElement.id;
+		if(_id === undefined || _id === null || _id == "") {
+			_id = event.srcElement.parentNode.id;
+		}
+		return _id;
+	}
 	
 	deleteNotification = async () => {
 		const notificationId: number = notificationsStore.editNotification.id;

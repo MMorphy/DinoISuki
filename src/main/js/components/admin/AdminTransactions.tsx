@@ -9,8 +9,7 @@ import ErrorMessage from "../utils/ErrorMessage";
 export default class AdminTransactions extends React.Component<{}, {}> {
 	delete = async () => {
 		if(event !== undefined && event.srcElement !== null) {
-			// @ts-ignore
-			let transactionId: number = adminStore.transactionDetailsDTO[event.srcElement.id].id;
+			let transactionId: number = adminStore.transactionDetailsDTO[this.getId(event)].id;
 			let deleted: boolean = await adminStore.deleteTransactionDetails(transactionId);
 			if(deleted) {
 				await adminStore.getTransactionDetails('', '');	// does not return a Promise (void)
@@ -18,6 +17,14 @@ export default class AdminTransactions extends React.Component<{}, {}> {
 			}
 		}
   	};
+
+	getId = (event: any) => {
+		let _id: any = event.srcElement.id;
+		if(_id === undefined || _id === null || _id == "") {
+			_id = event.srcElement.parentNode.id;
+		}
+		return _id;
+	}
 
     render() {
 	

@@ -180,7 +180,7 @@ export default class UserNotifications extends React.Component<{}, {modalVisible
 		                            <FormLabel><h5 className="font-color font-size">Vrijeme kreiranja poruke</h5></FormLabel>
 		                        </Col>
 		                        <Col>
-									<FormLabel><p style={{color: 'white', margin: '0rem', fontSize: 'small'}}>{notificationsStore.editNotification.createdAt.toLocaleString()}</p></FormLabel>
+									<FormLabel><p style={{color: 'white', margin: '0rem', fontSize: 'small'}}>{(new Date(notificationsStore.editNotification.createdAt.toString().substring(0, notificationsStore.editNotification.createdAt.toString().indexOf('.')) + 'Z')).toLocaleString()}</p></FormLabel>
 		                        </Col>
 		                    </FormGroup>
 							<FormGroup>

@@ -770,6 +770,10 @@ public class AdminRest {
 		if (name == null || name.isEmpty()) {
 			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Video name not provided"), HttpStatus.BAD_REQUEST);
 		}
+		UploadedVideo existingUploadedVideo = uploadedVideoService.findByVideoName(name);
+		if (existingUploadedVideo != null) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Video with given name already exists"), HttpStatus.BAD_REQUEST);
+		}
 
 		try {
 			// store the file

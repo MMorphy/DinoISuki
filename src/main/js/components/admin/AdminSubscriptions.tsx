@@ -21,10 +21,8 @@ export default class AdminSubscriptions extends React.Component<{}, {saveSubscri
 	
 	delete = async () => {
 		if(event !== undefined && event.srcElement !== null) {
-			// @ts-ignore
-			let subscriptionId: number = adminStore.subscriptionDTOList[event.srcElement.id].id;
-			// @ts-ignore
-			let username: string = adminStore.subscriptionDTOList[event.srcElement.id].username;
+			let subscriptionId: number = adminStore.subscriptionDTOList[this.getId(event)].id;
+			let username: string = adminStore.subscriptionDTOList[this.getId(event)].username;
 			let deleted: boolean = await adminStore.deleteSubscription(username, subscriptionId);
 			if(deleted) {
 				await adminStore.getAllSubscriptions(adminStore.displayOnlyActiveSubscriptins);	// does not return a Promise (void)
@@ -32,6 +30,14 @@ export default class AdminSubscriptions extends React.Component<{}, {saveSubscri
 			}
 		} 
   	};
+
+	getId = (event: any) => {
+		let _id: any = event.srcElement.id;
+		if(_id === undefined || _id === null || _id == "") {
+			_id = event.srcElement.parentNode.id;
+		}
+		return _id;
+	}
 	
 	onlyActiveChange = async () => {
 		if(event !== undefined && event.target !== null) {

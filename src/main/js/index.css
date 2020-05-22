@@ -258,6 +258,7 @@ h3 {
 
 .modal-body.sidebar {
     background-color: black;
+	width: max-content;
 }
 
 .modal-header.sidebar {
@@ -307,6 +308,9 @@ h3 {
 }
 
 .modal-content {
+	width: fit-content;
+}
+.modal-dialog {
 	width: fit-content;
 }
 

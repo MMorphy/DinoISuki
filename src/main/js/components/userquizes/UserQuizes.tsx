@@ -23,8 +23,7 @@ export default class UserQuizes extends React.Component<{}, {quizQuestions: any,
 	takeNewQuiz = async (initial: boolean) => {
 		
 		if(initial) {
-			// @ts-ignore
-			const _id: number = event.srcElement.id;
+			const _id: number = this.getId(event);
 			this.setState({
 		    	id: _id,
 				displayQuizQuestions: true,
@@ -70,6 +69,14 @@ export default class UserQuizes extends React.Component<{}, {quizQuestions: any,
 	    	quizQuestions: questions
 	    });
 	};
+	
+	getId = (event: any) => {
+		let _id: any = event.srcElement.id;
+		if(_id === undefined || _id === null || _id == "") {
+			_id = event.srcElement.parentNode.id;
+		}
+		return _id;
+	}
 	
 	takeTheAnswer = async (questionNo: number, answerNo: number) => {
 		if(quizStore.newQuizAnswers[questionNo].answer !== undefined && quizStore.newQuizAnswers[questionNo].answer !== '') {
@@ -117,8 +124,7 @@ export default class UserQuizes extends React.Component<{}, {quizQuestions: any,
 	}
 	
 	viewQuizDetails = async () => {
-		// @ts-ignore
-		const _id: number = event.srcElement.id;
+		const _id: number = this.getId(event);
 		
 		let questions: any[] = [];
 		

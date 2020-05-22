@@ -19,8 +19,7 @@ export default class AdminQuiz extends React.Component<{}, {showQuizAnswers: boo
 	}
 	
 	detailsAction = async () => {
-		// @ts-ignore
-		const id: number = event.srcElement.id;
+		const id: number = this.getId(event);
 		
 		this.setState ({
 			showQuizAnswers: false
@@ -43,10 +42,18 @@ export default class AdminQuiz extends React.Component<{}, {showQuizAnswers: boo
 		
 	};
 	
+	getId = (event: any) => {
+		let _id: any = event.srcElement.id;
+		if(_id === undefined || _id === null || _id == "") {
+			_id = event.srcElement.parentNode.id;
+		}
+		return _id;
+	}
+	
 	updateStatus = async () => {
 		if(event !== undefined && event.srcElement !== null) {
 			// @ts-ignore
-			quizStore.setUpdateQuizDTO(quizStore.quizDTO[event.srcElement.id]);
+			quizStore.setUpdateQuizDTO(quizStore.quizDTO[this.getId(event)]);
 			let newStatus: string = 'NOT_PUBLISHED';
 			// @ts-ignore
 			const oldStatus: string = quizStore.updateQuizDTO.status;

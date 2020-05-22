@@ -26,8 +26,7 @@ export default class AdminQuizAnswers extends React.Component<{}, {quizId: numbe
 	}
 	
 	answerDetailsAction = async () => {
-		// @ts-ignore
-		const id: number = event.srcElement.id;
+		const id: number = this.getId(event);
 		
 		this.setState({
 			displayQuestionsAndAnswers: false,
@@ -74,6 +73,14 @@ export default class AdminQuizAnswers extends React.Component<{}, {quizId: numbe
 	    });
 		
 	};
+	
+	getId = (event: any) => {
+		let _id: any = event.srcElement.id;
+		if(_id === undefined || _id === null || _id == "") {
+			_id = event.srcElement.parentNode.id;
+		}
+		return _id;
+	}
 
     render() {
 		// data for table of user answers

@@ -26,12 +26,19 @@ export default class AdminVideoUpload extends React.Component<{}, { videoName: s
 	
 	@action
 	changeArchived = async () => {
-		// @ts-ignore
-		const id: number = event.srcElement.id;
+		const id: number = this.getId(event);
 		let adminUploadedVideoDTO: AdminUploadedVideoDTO = adminStore.adminUploadedVideoDTOList[id];
 		adminUploadedVideoDTO.archived = !adminUploadedVideoDTO.archived;
 		await adminStore.updateUploadedVideo(adminUploadedVideoDTO);
 	};
+	
+	getId = (event: any) => {
+		let _id: any = event.srcElement.id;
+		if(_id === undefined || _id === null || _id == "") {
+			_id = event.srcElement.parentNode.id;
+		}
+		return _id;
+	}
 
 	setVideoName = (videoName: string) => {
 		this.setState({ videoName: videoName })
