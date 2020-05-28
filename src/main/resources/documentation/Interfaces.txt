@@ -994,3 +994,47 @@ Output:
 {
     "message": "Uploaded video updated!"
 }
+
+/api/user/storeUserSession
+Description: Store info about user session
+Type: put
+Input: UserSessionDTO
+{
+	"id": "",
+	"username": "test3",
+	"userAgent": "userAgent123",
+	"sessionStart": "2020-01-30T16:19:58.016Z"
+}
+Example: https://localhost:8443/api/user/storeUserSession
+Output: UserSessionDTO
+{
+    "id": 13,
+    "username": "test3",
+    "userAgent": "userAgent12345678bla",
+    "sessionStart": "2020-05-27T17:19:58.016Z",
+    "sessionEnd": null
+}
+
+/api/user/findActiveUserSessions
+Description: Fetch all still active user sessions
+Type: get
+Input: String username
+Example: https://localhost:8443/api/user/findActiveUserSessions?username=test2
+Output: 
+[
+    {
+        "id": 18,
+        "username": "test2",
+        "userAgent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:76.0) Gecko/20100101 Firefox/76.0",
+        "sessionStart": "2020-05-28T18:05:04.491Z",
+        "sessionEnd": null
+    },
+    {
+        "id": 19,
+        "username": "test2",
+        "userAgent": "Mozilla/5.0 (Linux; Android 9; Redmi Note 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.83 Mobile Safari/537.36",
+        "sessionStart": "2020-05-28T18:06:20.856Z",
+        "sessionEnd": null
+    }
+]
+

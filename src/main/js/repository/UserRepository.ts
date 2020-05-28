@@ -1,6 +1,7 @@
 import UserDTO from "../model/UserDTO";
 import axios, {AxiosResponse} from 'axios';
 import ContactInformationDTO from "../model/ContactInformationDTO";
+import UserSessionDTO from "../model/UserSessionDTO";
 
 class UserRepository {
 
@@ -80,6 +81,22 @@ class UserRepository {
 
 	getAllUsers(token: string): Promise<AxiosResponse> {
         return axios.get(`/api/user/getAllUsers`,
+            {
+                headers: {'Authorization': `Bearer ${token}`}
+            });
+    }
+
+	storeUserSession(userSessionDTO: UserSessionDTO, token: string): Promise<AxiosResponse> {
+        return axios.post("/api/user/storeUserSession", userSessionDTO,
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+    }
+
+	findActiveUserSessions(username: string, token: string): Promise<AxiosResponse> {
+        return axios.get(`/api/user/findActiveUserSessions?username=${username}`,
             {
                 headers: {'Authorization': `Bearer ${token}`}
             });

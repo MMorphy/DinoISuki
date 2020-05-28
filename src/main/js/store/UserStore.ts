@@ -6,6 +6,7 @@ import userRepository from "../repository/UserRepository";
 import {AxiosResponse, AxiosError} from "axios";
 import appStore from "./AppStore";
 import _ from 'lodash';
+import UserSessionDTO from "../model/UserSessionDTO";
 
 class UserStore {
     @observable userProfileDto: UserDTO = new UserDTO();
@@ -31,6 +32,9 @@ class UserStore {
     @observable date: Date | undefined = undefined;
 
 	@observable allUsers: UserDTO[] = [];
+	@observable activeUserSessions: UserSessionDTO[] = [];
+	@observable activeUserSessionDTO: UserSessionDTO = new UserSessionDTO();
+	
 
     //update nakon unosa
     @action
@@ -208,6 +212,37 @@ class UserStore {
 				}
             }));
 	}
+	
+	storeUserSession(userSessionDTO: UserSessionDTO) {
+        userRepository.storeUserSession(userSessionDTO, sessionStorage.getItem('token')!)
+            .then(action((response: AxiosResponse) => {
+				userSessionDTO = response.data;
+				this.saveActiveUserSessionDTO(userSessionDTO);
+            	// any other action required?
+            }))
+			.catch(action((error: AxiosError) => {
+				if(error.response) {
+					if(error.response.data.toString().includes("Expired or invalid JWT token")) {
+						this.clearSessionStorage();
+					}
+				}
+            }));
+    }
+
+	async findActiveUserSessions(username: string) {
+		await userRepository.findActiveUserSessions(username, sessionStorage.getItem('token')!)
+            .then(action((response: AxiosResponse) => {
+            	this.activeUserSessions = response.data;
+            }))
+			.catch(action((error: AxiosError) => {
+				if(error.response) {
+					this.activeUserSessions = [];
+					if(error.response.data.includes("Expired or invalid JWT token")) {
+						this.clearSessionStorage();
+					}
+				}
+            }));
+	}
 
 
     // util funkcije
@@ -285,6 +320,13 @@ class UserStore {
     resetDate() {
         this.date = undefined;
     }
+
+	@action
+    saveActiveUserSessionDTO(activeUserSessionDTO: UserSessionDTO) {
+        this.activeUserSessionDTO = activeUserSessionDTO;
+    }
+
+
 
 }
 

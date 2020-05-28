@@ -9,6 +9,7 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -50,9 +51,11 @@ import hr.go2.play.DTO.PasswordDTO;
 import hr.go2.play.DTO.RoleDTO;
 import hr.go2.play.DTO.UserDTO;
 import hr.go2.play.DTO.UserRoleDTO;
+import hr.go2.play.DTO.UserSessionDTO;
 import hr.go2.play.entities.ContactInformation;
 import hr.go2.play.entities.Role;
 import hr.go2.play.entities.User;
+import hr.go2.play.entities.UserSession;
 import hr.go2.play.impl.UserServiceImpl;
 import hr.go2.play.jwt.JwtTokenProvider;
 import hr.go2.play.repositories.ContactInformationRepository;
@@ -60,6 +63,7 @@ import hr.go2.play.repositories.RoleRepository;
 import hr.go2.play.repositories.UserRepository;
 import hr.go2.play.services.ContactInformationService;
 import hr.go2.play.services.RoleService;
+import hr.go2.play.services.UserSessionService;
 import hr.go2.play.util.Commons;
 
 @RestController
@@ -110,6 +114,9 @@ public class UserManagement {
 
 	@Autowired
 	private RoleService roleService;
+
+	@Autowired
+	private UserSessionService userSessionService;
 
     /**
      * Desc: User login
@@ -653,6 +660,79 @@ public class UserManagement {
 		List<User> users = userService.findAllUsers();
 		List<UserDTO> userDTOList = users.stream().map(user -> mapper.map(user, UserDTO.class)).collect(Collectors.toList());
 		return new ResponseEntity<List<UserDTO>>(userDTOList, HttpStatus.OK);
+	}
+
+	/**
+	 * Desc: Store info about user session
+	 * JSON body example:
+	 * {
+			"id": "",
+			"username": "test3",
+			"userAgent": "userAgent123",
+			"sessionStart": "2020-01-30T16:19:58.016Z"
+		}
+	 * @param UserSessionDTO
+	 * @return
+	 */
+	@PostMapping("/storeUserSession")
+	public ResponseEntity<?> storeUserSession(@RequestBody UserSessionDTO userSessionDTO) {
+		logger.debug("/api/user/storeUserSession Started");
+		if (userSessionDTO == null || userSessionDTO.getUsername() == null || userSessionDTO.getUsername().isEmpty()) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Username not provided"), HttpStatus.BAD_REQUEST);
+		}
+		if (userSessionDTO.getUserAgent() == null || userSessionDTO.getUserAgent().isEmpty()) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("User agent info not provided"), HttpStatus.BAD_REQUEST);
+		}
+		if (userSessionDTO.getSessionStart() == null) {
+			userSessionDTO.setSessionStart(new Date());
+		}
+		User user = userService.findUserByUsername(userSessionDTO.getUsername());
+		if (user == null) {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("User doesn't exist!"), HttpStatus.BAD_REQUEST);
+		}
+		// closing hanging user sessions
+		Date olderThan = new Date();
+		Calendar c = Calendar.getInstance();
+		c.setTime(olderThan);
+		c.add(Calendar.HOUR, -3); // 3 hours before now
+		olderThan = c.getTime();
+		closeAllUserSessionsOlderThan(user, olderThan);
+
+		UserSession userSession = mapper.map(userSessionDTO, UserSession.class);
+		userSession.setUserId(user);
+
+		userSession = userSessionService.save(userSession);
+		userSessionDTO.setId(userSession.getId());
+		logger.debug("/api/user/storeUserSession Ended");
+		return new ResponseEntity<UserSessionDTO>(userSessionDTO, HttpStatus.OK);
+	}
+
+	private void closeAllUserSessionsOlderThan(User user, Date olderThan) {
+		// closing user sessions that were left open/hanging
+		userSessionService.closeSessions(user, olderThan);
+	}
+
+	/*
+	 * Description: Fetch all still active user sessions
+	 * Input parameters: String username
+	 * Call example: https://localhost:8443/api/user/storeUserSession
+	 *
+	 */
+	@GetMapping("/findActiveUserSessions")
+	public ResponseEntity<?> findActiveUserSessions(@RequestParam(name = "username") String username) {
+		User user = userService.findUserByUsername(username);
+		if (user != null) {
+			List<UserSession> userSessionList = userSessionService.findOpenSessionsByUser(user);
+			List<UserSessionDTO> userSessionDTOList = new ArrayList<UserSessionDTO>();
+			for (UserSession userSession : userSessionList) {
+				UserSessionDTO userSessionDTO = mapper.map(userSession, UserSessionDTO.class);
+				userSessionDTO.setUsername(username);
+				userSessionDTOList.add(userSessionDTO);
+			}
+			return new ResponseEntity<List<UserSessionDTO>>(userSessionDTOList, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>(commons.JSONfyReturnMessage("Unable to find user"), HttpStatus.NOT_ACCEPTABLE);
+		}
 	}
 
 }

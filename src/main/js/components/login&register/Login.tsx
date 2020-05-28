@@ -9,13 +9,21 @@ import ErrorMessage from "../utils/ErrorMessage";
 import {action} from "mobx";
 import notificationsStore from "../../store/NotificationsStore";
 import quizStore from "../../store/QuizStore";
+import UserSessionDTO from "../../model/UserSessionDTO";
 
 interface LoginProps {
     history: History<LocationState>;
 }
 
 @observer
-export default class Login extends React.Component<LoginProps, {}>  {
+export default class Login extends React.Component<LoginProps, {unsuccessfulLoginMessage: string}>  {
+	constructor(props: any) {
+    	super(props);
+    	this.state = {
+			unsuccessfulLoginMessage: 'Neuspješna prijava! Pokušaj ponovo.'
+		};
+	}
+	
     render() {
         document.title = "Prijava";
 
@@ -49,7 +57,7 @@ export default class Login extends React.Component<LoginProps, {}>  {
                     <Col>
                     {
                         appStore.unsuccessfulLogin
-                            ? <ErrorMessage errorMessage={"Neuspješna prijava! Pokušaj ponovo."} loginButton={false}/>
+                            ? <ErrorMessage errorMessage={this.state.unsuccessfulLoginMessage} loginButton={false}/>
                             : <div/>
                     }
                     </Col>
@@ -69,18 +77,38 @@ export default class Login extends React.Component<LoginProps, {}>  {
         appStore.unsuccessfulLogin = false;
     }
 
-    private login(e: any) {
+	@action
+    private async login(e: any) {
         e.preventDefault();
-		
+
         userStore.login()
             .then(async () => {
 				notificationsStore.getUserNotifications(userStore.userLoginDto.username);
 				quizStore.getNewQuizesForUser(userStore.userLoginDto.username);
+				await userStore.findActiveUserSessions(userStore.userLoginDto.username);
+				if(userStore.activeUserSessions.length >= 2) {
+					this.setState ({
+						unsuccessfulLoginMessage: 'Dostignut je maksimalan broj istovremenih sesija.'
+					});
+		            appStore.unsuccessfulLogin = true;
+					return;
+				} else {
+					this.storeUserSession();
+				}
                 this.props.history.push("/");
             })
             .catch(action(() => {
-                appStore.unsuccessfulLogin = true
+                appStore.unsuccessfulLogin = true;
                 })
             );
     }
+
+	private storeUserSession() {
+		let userSessionDTO: UserSessionDTO = new UserSessionDTO();
+		userSessionDTO.username = userStore.userLoginDto.username;
+		userSessionDTO.userAgent = navigator.userAgent;
+		userSessionDTO.sessionStart = new Date();
+		userStore.storeUserSession(userSessionDTO);
+	}
+	
 }

@@ -6,6 +6,7 @@ import {Link} from "react-router-dom";
 import userStore from "../../store/UserStore";
 import notificationsStore from "../../store/NotificationsStore";
 import quizStore from "../../store/QuizStore";
+import UserSessionDTO from "../../model/UserSessionDTO";
 
 
 @observer
@@ -81,8 +82,13 @@ export default class Sidebar extends React.Component<{}, {}> {
     }
 
     private logout() {
+		// pre-logout actions
 		notificationsStore.setHasUnreadMessages(false);
 		quizStore.setUserHasUntakenQuizes(false);
+		let activeUserSessionDTO: UserSessionDTO = userStore.activeUserSessionDTO;
+		activeUserSessionDTO.sessionEnd = new Date();
+		userStore.storeUserSession(activeUserSessionDTO);
+		
         userStore.clearSessionStorage();
         appStore.changeSidebarVisibility();
     }
