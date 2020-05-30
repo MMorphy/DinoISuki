@@ -53,6 +53,8 @@ import hr.go2.play.DTO.UserDTO;
 import hr.go2.play.DTO.UserRoleDTO;
 import hr.go2.play.DTO.UserSessionDTO;
 import hr.go2.play.entities.ContactInformation;
+import hr.go2.play.entities.Notification;
+import hr.go2.play.entities.NotificationStatus;
 import hr.go2.play.entities.Role;
 import hr.go2.play.entities.User;
 import hr.go2.play.entities.UserSession;
@@ -62,6 +64,8 @@ import hr.go2.play.repositories.ContactInformationRepository;
 import hr.go2.play.repositories.RoleRepository;
 import hr.go2.play.repositories.UserRepository;
 import hr.go2.play.services.ContactInformationService;
+import hr.go2.play.services.NotificationService;
+import hr.go2.play.services.NotificationStatusService;
 import hr.go2.play.services.RoleService;
 import hr.go2.play.services.UserSessionService;
 import hr.go2.play.util.Commons;
@@ -117,6 +121,12 @@ public class UserManagement {
 
 	@Autowired
 	private UserSessionService userSessionService;
+
+	@Autowired
+	private NotificationStatusService notificationStatusService;
+
+	@Autowired
+	private NotificationService notificationService;
 
     /**
      * Desc: User login
@@ -188,8 +198,23 @@ public class UserManagement {
 		}
 
 		userService.saveUser(user);
+		addInitialNotification(user);
         return new ResponseEntity<String>(commons.JSONfyReturnMessage("User created successfully"), HttpStatus.CREATED);
     }
+
+	private void addInitialNotification(User user) {
+		Notification notification = new Notification();
+		notification.setDestUser(user);
+		notification.setSourceUser(user);
+		notification.setCreatedAt(new Date());
+		notification.setSubject("Dobrodošli na The Ball!");
+		notification.setMessage("Dobrodošli na The Ball! Ovdje možeš uživati u snimkama svojih sportskih dostignuća, kao i snimkama članova svog tima ili suparnika. Prije početka, upoznaj se sa uvijetima korištenja The Ball usluge. Lijepi pozdrav, The Ball tim.");
+		List<NotificationStatus> notificationStatusList = notificationStatusService.findNotificationsStatusesByType("UNREAD");
+		if (notificationStatusList.size() > 0) {
+			notification.setStatus(notificationStatusList.get(0));
+		}
+		notificationService.saveNotification(notification);
+	}
 
     /**
 	 * Desc: Update existing user
