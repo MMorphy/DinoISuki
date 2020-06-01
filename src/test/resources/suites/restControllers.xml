@@ -29,6 +29,8 @@
             </class>
             <class name="rest.UserManagementUpdateDeleteControllerTest">
                 <methods>
+                    <exclude name="deleteUserTest"/>
+                    <exclude name="deleteUserWithBodyTest"/>
                     <exclude name="doubleDeleteUserTest"/>
                     <exclude name="getNonExistingUserTest"/>
                 </methods>
