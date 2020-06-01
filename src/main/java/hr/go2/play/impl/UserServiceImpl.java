@@ -81,9 +81,6 @@ public class UserServiceImpl implements UserService, org.springframework.securit
 
 	@Override
 	public void deleteUserById(Long id) {
-		if (this.findUserById(id) != null && this.findUserById(id).getContactInformation() != null && this.findUserById(id).getContactInformation().getId() != null) {
-			this.contactService.deleteContactInformationById(this.findUserById(id).getContactInformation().getId());
-		}
 		this.userRepo.deleteById(id);
 	}
 

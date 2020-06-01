@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -53,7 +54,7 @@ public class User {
 	@JoinColumn(name = "user_id")
 	private Collection<Subscription> subscriptions;
 
-	@OneToOne()
+	@OneToOne(cascade = CascadeType.REMOVE)
 	@Fetch(value = FetchMode.JOIN)
 	@JoinColumn(name = "contact_information_id")
 	private ContactInformation contactInformation;

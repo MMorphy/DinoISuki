@@ -26,7 +26,6 @@ public class ContactInformation {
 	public ContactInformation() {}
 
 	public ContactInformation(Long id, String telephoneNumber, String email) {
-		super();
 		this.id = id;
 		this.telephoneNumber = telephoneNumber;
 		this.email = email;

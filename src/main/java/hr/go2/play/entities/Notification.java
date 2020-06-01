@@ -16,6 +16,8 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 
 @Entity
@@ -34,11 +36,13 @@ public class Notification {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name = "src_user_id")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User sourceUser;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name = "dest_user_id")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User destUser;
 
 	@Column()

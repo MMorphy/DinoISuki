@@ -58,7 +58,6 @@ import hr.go2.play.entities.NotificationStatus;
 import hr.go2.play.entities.Role;
 import hr.go2.play.entities.User;
 import hr.go2.play.entities.UserSession;
-import hr.go2.play.impl.UserServiceImpl;
 import hr.go2.play.jwt.JwtTokenProvider;
 import hr.go2.play.repositories.ContactInformationRepository;
 import hr.go2.play.repositories.RoleRepository;
@@ -67,6 +66,7 @@ import hr.go2.play.services.ContactInformationService;
 import hr.go2.play.services.NotificationService;
 import hr.go2.play.services.NotificationStatusService;
 import hr.go2.play.services.RoleService;
+import hr.go2.play.services.UserService;
 import hr.go2.play.services.UserSessionService;
 import hr.go2.play.util.Commons;
 
@@ -105,7 +105,7 @@ public class UserManagement {
     RoleRepository roleRepo;
 
     @Autowired
-    private UserServiceImpl userService;
+	private UserService userService;
 
     @Autowired
     private Commons commons;
